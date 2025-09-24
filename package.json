@@ -10,7 +10,7 @@
         "@iconify/vue": "^5.0.0",
         "@tailwindcss/vite": "^4.1.13",
         "@vitejs/plugin-vue": "^6.0.1",
-        "axios": "^1.11.0",
+        "axios": "^1.12.2",
         "concurrently": "^9.0.1",
         "daisyui": "^5.1.13",
         "laravel-vite-plugin": "^2.0.0",
