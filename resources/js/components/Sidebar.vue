@@ -58,10 +58,7 @@
                     </button>
 
                     <!-- submenu -->
-                    <ul
-                        v-if="lin.children && lin.open"
-                        class="ml-4 pl-4 border-l border-gray-200 dark:border-white/10"
-                    >
+                    <ul v-if="lin.children && lin.open">
                         <li
                             v-for="(child, childIndex) in lin.children"
                             :key="childIndex"
@@ -97,8 +94,11 @@ const links = ref([
         active: true,
         open: false,
         children: [
-            { name: "DS. Giới thiệu" },
-            { name: "Tạo thông tin giới thiệu" },
+            { name: "DS. Giới thiệu", to: "/admin/introductions" },
+            {
+                name: "Tạo thông tin giới thiệu",
+                to: "/admin/introductions/create",
+            },
         ],
     },
     {
@@ -106,7 +106,16 @@ const links = ref([
         icon: "icon-park-outline:chart-line",
         active: false,
         open: false,
-        children: [{ name: "DS. Dự án" }, { name: "Tạo dự án mới" }],
+        children: [
+            {
+                name: "DS. Dự án",
+                to: "#",
+            },
+            {
+                name: "Tạo dự án mới",
+                to: "#",
+            },
+        ],
     },
     {
         name: "Sơ đồ phân lô",
@@ -114,9 +123,18 @@ const links = ref([
         active: false,
         open: false,
         children: [
-            { name: "DS. Sơ đồ phân lô" },
-            { name: "Tạo sơ đồ phân lô" },
-            { name: "Khách hàng ký gửi" },
+            {
+                name: "DS. Sơ đồ phân lô",
+                to: "#",
+            },
+            {
+                name: "Tạo sơ đồ phân lô",
+                to: "#",
+            },
+            {
+                name: "Khách hàng ký gửi",
+                to: "#",
+            },
         ],
     },
     {
@@ -124,7 +142,16 @@ const links = ref([
         icon: "mdi:hand-heart",
         active: false,
         open: false,
-        children: [{ name: "DS. Hoạt động" }, { name: "Tạo hoạt động mới" }],
+        children: [
+            {
+                name: "DS. Hoạt động",
+                to: "#",
+            },
+            {
+                name: "Tạo hoạt động mới",
+                to: "#",
+            },
+        ],
     },
     {
         name: "Cơ hội nghề nghiệp",
@@ -132,9 +159,18 @@ const links = ref([
         active: false,
         open: false,
         children: [
-            { name: "DS. Tuyển dụng" },
-            { name: "DS. Ứng viên" },
-            { name: "Tạo tin tuyển dụng mới" },
+            {
+                name: "DS. Tuyển dụng",
+                to: "#",
+            },
+            {
+                name: "DS. Ứng viên",
+                to: "#",
+            },
+            {
+                name: "Tạo tin tuyển dụng mới",
+                to: "#",
+            },
         ],
     },
     {
@@ -142,21 +178,38 @@ const links = ref([
         icon: "mdi:newspaper-variant-outline",
         active: false,
         open: false,
-        children: [{ name: "DS. Tin tức" }, { name: "Tạo tin tức mới" }],
+        children: [
+            {
+                name: "DS. Tin tức",
+                to: "#",
+            },
+            {
+                name: "Tạo tin tức mới",
+                to: "#",
+            },
+        ],
     },
     {
         name: "Liên hệ",
         icon: "line-md:email",
         active: false,
         open: false,
-        children: [{ name: "DS. Liên hệ" }],
+        children: [
+            {
+                name: "DS. Liên hệ",
+                to: "#",
+            },
+        ],
     },
     {
         name: "Hệ thống",
         icon: "mdi:cog-outline",
         active: false,
         open: false,
-        children: [{ name: "Người dùng" }, { name: "Phân quyền" }],
+        children: [
+            { name: "Người dùng", to: "/admin/users" },
+            { name: "Phân quyền", to: "/admin/roles" },
+        ],
     },
 ]);
 
