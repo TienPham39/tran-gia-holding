@@ -18,4 +18,5 @@ Route::post('/register', [RegisterController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
-Route::middleware('auth:sanctum')->get('/user', [AuthController::class, 'user']);
+// routes/api.php
+Route::middleware('auth:sanctum')->post('/logout', [AuthController::class, 'logout']);
