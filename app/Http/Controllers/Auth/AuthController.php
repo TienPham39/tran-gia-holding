@@ -41,15 +41,15 @@ class AuthController extends Controller
     ], 200);
   }
 
-  public function user(Request $request)
-  {
-    return $request->user();
-  }
-
   public function logout(Request $request)
   {
     $request->user()->tokens()->delete();
 
     return response()->json(["message" => "Đăng xuất thành công"]);
+  }
+
+  public function user(Request $request)
+  {
+    return $request->user();
   }
 }
