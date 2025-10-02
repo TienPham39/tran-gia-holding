@@ -86,7 +86,7 @@
 
 <script>
 import { defineComponent, ref, onMounted } from "vue";
-import axios from "axios";
+import api from "../../../api";
 import { Modal, message } from "ant-design-vue";
 import { createVNode } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
@@ -125,8 +125,8 @@ export default defineComponent({
 
     async function getUsers(page = 1) {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/api/users?page=${page}`
+        const response = await api.get(
+          `/users?page=${page}`
         );
         users.value = response.data.data;
         pagination.value.total = response.data.total;
@@ -151,8 +151,8 @@ export default defineComponent({
         cancelText: "Hủy",
         async onOk() {
           try {
-            const response = await axios.delete(
-              `http://localhost:8000/api/users/${id}`
+            const response = await api.delete(
+              `api/users/${id}`
             );
             if (response.status === 200) {
               message.success(response.data.message);

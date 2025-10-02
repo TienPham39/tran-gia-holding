@@ -205,7 +205,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../../../api";
 import { defineComponent, onMounted, ref, reactive, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
@@ -234,8 +234,8 @@ export default defineComponent({
 
     async function getUsersEdit() {
       try {
-        const response = await axios.get(
-          `http://localhost:8000/api/users/${route.params.id}/edit`
+        const response = await api.get(
+          `/users/${route.params.id}/edit`
         );
         user.id = response.data.users.id;
         user.user_name = response.data.users.user_name;
@@ -265,8 +265,8 @@ export default defineComponent({
 
     async function updateUser() {
       try {
-        const response = await axios.put(
-          `http://localhost:8000/api/users/${route.params.id}`,
+        const response = await api.put(
+          `/users/${route.params.id}`,
           user
         );
         if (response.status == 200) {
@@ -280,8 +280,8 @@ export default defineComponent({
 
     async function updateUserStatus(id, status) {
       try {
-        const response = await axios.put(
-          `http://localhost:8000/api/users/${id}/status`,
+        const response = await api.put(
+          `/users/${id}/status`,
           { status }
         );
         if (response.status == 200) {
