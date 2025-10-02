@@ -110,14 +110,31 @@ class UserController extends Controller
             "roles_id.exists" => "Vai trò không hợp lệ",
         ]);
 
-        User::find($id)->update([
+        $user = User::findOrFail($id);
+
+        $data = [
             "user_name" => $validated["user_name"],
             "name" => $validated["name"],
             "email" => $validated["email"],
             "roles_id" => $validated["roles_id"],
-        ]);
+            "status" => $request->status ?? $user->status,
+        ];
 
-        if ($request["change_password"] == true) {
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('avatars', $filename, 'public');
+            $data['avatar'] = '/storage/' . $path;
+        }
+
+        // User::find($id)->update([
+        //     "user_name" => $validated["user_name"],
+        //     "name" => $validated["name"],
+        //     "email" => $validated["email"],
+        //     "roles_id" => $validated["roles_id"],
+        // ]);
+
+        if ($request->change_password) {
             $validated = $request->validate([
                 "password" => "required|confirmed|min:6",
             ], [
@@ -125,11 +142,17 @@ class UserController extends Controller
                 "password.confirmed" => "Mật khẩu xác nhận không khớp",
                 "password.min" => "Mật khẩu tối thiểu 6 ký tự",
             ]);
-            User::find($id)->update([
-                "password" => Hash::make($validated["password"]),
-                "change_password_at" => now()
-            ]);
+
+            $data["password"] = Hash::make($validated["password"]);
+            $data["change_password_at"] = now();
         }
+
+        $user->update($data);
+
+        return response()->json([
+            'message' => 'Cập nhật thành công',
+            'user' => $user,
+        ], 200);
     }
 
     public function destroy($id)

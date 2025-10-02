@@ -4,10 +4,7 @@
   >
     <!-- Drawer toggle -->
     <nav class="flex-none lg:hidden">
-      <label
-        @click="$emit('toggle-drawer')"
-        class="btn btn-square btn-ghost"
-      >
+      <label @click="$emit('toggle-drawer')" class="btn btn-square btn-ghost">
         <Icon
           icon="line-md:close-to-menu-alt-transition"
           class="inline-block w-5 h-5"
@@ -36,10 +33,7 @@
           class="btn btn-ghost btn-circle avatar"
         >
           <div class="w-10 rounded-full">
-            <img
-              src="/images/Tommy-Shelby.jpg"
-              alt="User"
-            />
+            <img src="/images/Tommy-Shelby.jpg" alt="User" />
           </div>
         </button>
         <ul
@@ -48,7 +42,7 @@
         >
           <li><a>Profile</a></li>
           <li><a>Settings</a></li>
-          <li><a>Logout</a></li>
+          <li><a @click="handleLogout">Logout</a></li>
         </ul>
       </div>
     </section>
@@ -57,4 +51,24 @@
 
 <script setup>
 defineEmits(["toggle-drawer"]);
+import { useRouter } from "vue-router";
+import { message } from "ant-design-vue";
+import api from "../api";
+
+const router = useRouter();
+
+async function handleLogout() {
+  try {
+    const res = await api.post("/logout");
+    // Xoá token ở localStorage
+    localStorage.removeItem("auth_token");
+    delete api.defaults.headers.common["Authorization"];
+
+    message.success("Đăng xuất thành công!");
+    router.push({ name: "Register" });
+  } catch (error) {
+    console.log(error);
+    message.error("Có lỗi khi đăng xuất")
+  }
+}
 </script>

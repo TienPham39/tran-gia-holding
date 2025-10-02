@@ -5,16 +5,27 @@
         <!-- Cột Avatar -->
         <div class="col-span-1 flex flex-col items-center ml-6">
           <img
-            src="/images/avatar_default.png"
+            :src="avatarPreview || user.avatar || '/images/avatar_default.png'"
             alt="Avatar"
-            class="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] object-cover rounded max-w-full"
+            class="w-[200px] h-[200px] object-cover rounded-2xl mb-2"
           />
+          <!-- Nút chọn ảnh -->
           <a-button
             class="mb-6 px-4 py-2 flex items-center justify-center text-white font-medium border bg-blue-600 rounded shadow"
+            @click="$refs.fileInput.click()"
           >
             <UploadOutlined />
             <span>Chọn ảnh</span>
           </a-button>
+
+          <!-- input file thật, ẩn đi -->
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            class="hidden"
+            @change="handleAvatarChange"
+          />
         </div>
 
         <!-- Cột Form -->
@@ -31,7 +42,7 @@
           <div class="col-span-2">
             <a-input
               placeholder="Tên tài khoản"
-              v-model:value="user_name"
+              v-model:value="user.user_name"
               class="w-full"
               allow-clear
               :status="errors.user_name ? 'error' : ''"
@@ -49,7 +60,7 @@
           <div class="col-span-2">
             <a-input
               placeholder="Họ & tên"
-              v-model:value="name"
+              v-model:value="user.name"
               class="w-full"
               allow-clear
               :status="errors.name ? 'error' : ''"
@@ -67,7 +78,7 @@
           <div class="col-span-2">
             <a-input
               placeholder="Email"
-              v-model:value="email"
+              v-model:value="user.email"
               class="w-full"
               allow-clear
               :status="errors.email ? 'error' : ''"
@@ -206,7 +217,7 @@
 
 <script>
 import api from "../../../api";
-import { defineComponent, onMounted, ref, reactive, toRefs } from "vue";
+import { defineComponent, ref, reactive, toRefs } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { message } from "ant-design-vue";
 import dayjs from "dayjs";
@@ -228,16 +239,26 @@ export default defineComponent({
       change_password: false,
       login_at: "",
       change_password_at: "",
+      avatar: null,
     });
 
     const errors = ref({});
+    const avatarFile = ref(null);
+    const avatarPreview = ref(null);
+
+    function handleAvatarChange(e) {
+      const file = e.target.files[0];
+      if (file) {
+        avatarFile.value = file;
+        avatarPreview.value = URL.createObjectURL(file);
+      }
+    }
 
     async function getUsersEdit() {
       try {
-        const response = await api.get(
-          `/users/${route.params.id}/edit`
-        );
+        const response = await api.get(`/users/${route.params.id}/edit`);
         user.id = response.data.users.id;
+        user.avatar = response.data.users.avatar;
         user.user_name = response.data.users.user_name;
         user.name = response.data.users.name;
         user.email = response.data.users.email;
@@ -265,25 +286,40 @@ export default defineComponent({
 
     async function updateUser() {
       try {
-        const response = await api.put(
-          `/users/${route.params.id}`,
-          user
+        const formData = new FormData();
+        formData.append("user_name", user.user_name);
+        formData.append("name", user.name);
+        formData.append("email", user.email);
+        formData.append("roles_id", user.roles_id);
+        formData.append("status", user.status);
+
+        if (avatarFile.value) {
+          formData.append("avatar", avatarFile.value);
+        }
+
+        if (user.password && user.password === user.password_confirmation) {
+          formData.append("password", user.password);
+          formData.append("password_confirmation", user.password_confirmation);
+        }
+
+        const response = await api.post(
+          `/users/${route.params.id}?_method=PUT`,
+          formData,
+          { headers: { "Content-Type": "multipart/form-data" } }
         );
-        if (response.status == 200) {
+
+        if (response.status === 200) {
           message.success("Cập nhật thành công");
           router.push({ name: "admin-users" });
         }
       } catch (error) {
-        errors.value = error.response.data.errors;
+        errors.value = error.response?.data?.errors || {};
       }
     }
 
     async function updateUserStatus(id, status) {
       try {
-        const response = await api.put(
-          `/users/${id}/status`,
-          { status }
-        );
+        const response = await api.put(`/users/${id}/status`, { status });
         if (response.status == 200) {
           message.success(response.data.message);
           router.push({ name: "admin-users" });
@@ -305,7 +341,11 @@ export default defineComponent({
       filterOption,
       updateUser,
       updateUserStatus,
+      handleAvatarChange,
       ...toRefs(user),
+      user,
+      avatarFile,
+      avatarPreview,
       errors,
     };
   },
