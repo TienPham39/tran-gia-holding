@@ -29,6 +29,7 @@ import {
   UploadOutlined,
   UserOutlined,
 } from "@ant-design/icons-vue";
+
 const app = createApp(App);
 
 app.component("Icon", Icon);
