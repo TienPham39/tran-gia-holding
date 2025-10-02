@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import api from "../../../api";
 import { defineComponent, onMounted, ref, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { message } from "ant-design-vue";
@@ -179,7 +179,7 @@ export default defineComponent({
 
     async function createUsers() {
       try {
-        const response = await axios.post("http://localhost:8000/api/users", {
+        const response = await api.post("/users", {
           ...user,
         });
         if (response.status == 200) {
@@ -207,8 +207,8 @@ export default defineComponent({
 
     async function getUsersCreate() {
       try {
-        const response = await axios.get(
-          "http://localhost:8000/api/user/create",
+        const response = await api.get(
+          "/api/user/create",
           { ...role }
         );
         role.value = response.data.roles;
