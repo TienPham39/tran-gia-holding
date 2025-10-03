@@ -65,7 +65,7 @@ async function handleLogout() {
     delete api.defaults.headers.common["Authorization"];
 
     message.success("Đăng xuất thành công!");
-    router.push({ name: "Register" });
+    router.push({ name: "Auth" });
   } catch (error) {
     console.log(error);
     message.error("Có lỗi khi đăng xuất")
