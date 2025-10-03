@@ -45,13 +45,14 @@ class UserController extends Controller
     {
         // Validate and store the blog post...
         $validated = $request->validate([
-            "user_name" => "required",
+            "user_name" => "required|unique:users,user_name,",
             "name" => "required",
-            "email" => "required|email|unique:users,email",
+            "email" => "required|email|unique:users,email,",
             "password" => "required|confirmed|min:6",
             "roles_id" => "required|exists:roles,id",
         ], [
             "user_name.required" => "Nhập tên tài khoản",
+            "user_name.unique" => "Tên tài khoản đã tồn tại",
             "name.required" => "Nhập họ & tên",
             "email.required" => "Nhập email",
             "email.email" => "Email không đúng định dạng",
@@ -63,19 +64,28 @@ class UserController extends Controller
             "roles_id.exists" => "Vai trò không hợp lệ",
         ]);
 
-        $user = User::create([
+        $data = [
             "user_name" => $validated['user_name'],
             "name" => $validated["name"],
             "email" => $validated["email"],
             "password" => Hash::make($validated["password"]),
             "status" => $request["status"] ?? 'active',
             "roles_id" => $validated["roles_id"],
-        ]);
+        ];
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('avatars', $filename, 'public');
+            $data['avatar'] = '/storage/' . $path;
+        }
+
+        $user = User::create($data);
 
         return response()->json([
             'message' => 'Tạo người dùng thành công',
             'user' => $user,
-        ], 201);
+        ], 200);
     }
 
     public function edit($id)

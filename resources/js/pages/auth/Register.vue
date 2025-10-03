@@ -93,6 +93,20 @@
           >
             Đăng nhập
           </button>
+
+          <!-- Nút Google Login -->
+          <div class="mt-4">
+            <button
+              type="button"
+              @click="loginWithGoogle"
+              class="w-full h-11 flex items-center justify-center gap-2 border border-gray-300 rounded-md bg-white hover:bg-gray-50 shadow-sm"
+            >
+              <img src="/images/google_logo.png" alt="Google" class="w-5 h-5" />
+              <span class="text-gray-700 font-medium"
+                >Đăng nhập bằng Google</span
+              >
+            </button>
+          </div>
         </form>
 
         <!-- Register Form -->
@@ -192,7 +206,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import api from "../../api";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
@@ -237,6 +251,23 @@ async function handleLoginSubmit() {
     }
   }
 }
+
+function loginWithGoogle() {
+  window.location.href = "http://localhost:8000/auth/google";
+}
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+
+  if (token) {
+    localStorage.setItem("auth_token", token);
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    message.success("Đăng nhập Google thành công");
+    router.push({ name: "admin-analytics" });
+  }
+});
 
 async function handleSubmit() {
   try {
