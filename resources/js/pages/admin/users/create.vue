@@ -5,16 +5,27 @@
         <!-- Cột Avatar -->
         <div class="col-span-1 flex flex-col items-center">
           <img
-            src="/images/avatar_default.png"
+            :src="avatarPreview || '/images/avatar_default.png'"
             alt="Avatar"
-            class="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] object-cover rounded max-w-full"
+            class="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] object-cover rounded-2xl max-w-full mb-2"
           />
+          <!-- Nút chọn ảnh -->
           <a-button
             class="mb-6 px-4 py-2 flex items-center justify-center text-white font-medium border bg-blue-600 rounded shadow"
+            @click="$refs.fileInput.click()"
           >
             <UploadOutlined />
             <span>Chọn ảnh</span>
           </a-button>
+
+          <!-- input file thật -->
+          <input
+            ref="fileInput"
+            type="file"
+            accept="image/*"
+            class="hidden"
+            @change="handleAvatarChange"
+          />
         </div>
 
         <!-- Cột Form -->
@@ -134,6 +145,7 @@
             </small>
           </div>
         </div>
+
         <div
           class="gap-4 col-span-2 text-center font-semibold sm:col-span-3 flex flex-col md:flex-row md:justify-end md:items-end cursor-pointer"
         >
@@ -173,44 +185,52 @@ export default defineComponent({
       password_confirmation: "",
       status: "active",
       roles_id: null,
+      avatar: null,
     });
 
     const errors = ref({});
+    const avatarFile = ref(null);
+    const avatarPreview = ref(null);
+
+    function handleAvatarChange(e) {
+      const file = e.target.files[0];
+      if (file) {
+        avatarFile.value = file;
+        avatarPreview.value = URL.createObjectURL(file);
+      }
+    }
 
     async function createUsers() {
       try {
-        const response = await api.post("/users", {
-          ...user,
+        const formData = new FormData();
+        formData.append("user_name", user.user_name);
+        formData.append("name", user.name);
+        formData.append("email", user.email);
+        formData.append("password", user.password);
+        formData.append("password_confirmation", user.password_confirmation);
+        formData.append("status", user.status);
+        formData.append("roles_id", user.roles_id);
+
+        if (avatarFile.value) {
+          formData.append("avatar", avatarFile.value);
+        }
+
+        const response = await api.post("/users", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
+
         if (response.status == 200) {
           message.success("Tạo người dùng thành công!");
           router.push({ name: "admin-users" });
         }
-
-        // Reset form
-        Object.assign(user, {
-          user_name: "",
-          name: "",
-          email: "",
-          password: "",
-          password_confirmation: "",
-          status: "active",
-          roles_id: [],
-        });
-
-        errors.value = {};
       } catch (error) {
-        console.error("Lỗi khi tạo user:", error);
         errors.value = error.response?.data?.errors || {};
       }
     }
 
     async function getUsersCreate() {
       try {
-        const response = await api.get(
-          "/api/user/create",
-          { ...role }
-        );
+        const response = await api.get("/user/create", { ...role });
         role.value = response.data.roles;
       } catch (error) {
         console.error("Lỗi khi load role user:", error);
@@ -225,7 +245,15 @@ export default defineComponent({
       getUsersCreate();
     });
 
-    return { role, filterOption, createUsers, ...toRefs(user), errors };
+    return {
+      role,
+      filterOption,
+      createUsers,
+      avatarPreview,
+      handleAvatarChange,
+      ...toRefs(user),
+      errors,
+    };
   },
 });
 </script>

@@ -161,7 +161,7 @@ const links = ref([
     open: false,
     children: [
       { name: "Người dùng", to: "/admin/users" },
-      { name: "Phân quyền", to: "/admin/roles" },
+      // { name: "Phân quyền", to: "/admin/roles" },
     ],
   },
 ]);

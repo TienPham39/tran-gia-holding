@@ -152,7 +152,7 @@ export default defineComponent({
         async onOk() {
           try {
             const response = await api.delete(
-              `api/users/${id}`
+              `/users/${id}`
             );
             if (response.status === 200) {
               message.success(response.data.message);
