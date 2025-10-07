@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
 
 // User routes (chỉ cho admin/manager sau này sẽ thêm middleware checkRole)
 Route::middleware(['auth:sanctum', 'checkRole:1,2'])->group(function () {

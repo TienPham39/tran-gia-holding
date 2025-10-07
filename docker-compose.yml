@@ -1,59 +1,124 @@
+# services:
+#     app: # Laravel PHP
+#         build:
+#             context: .
+#             dockerfile: Dockerfile
+#         container_name: tran_gia_laravel
+#         working_dir: /var/www
+#         volumes:
+#             - .:/var/www:cached
+#         networks:
+#             - laravel
+
+#     node:
+#         image: node:20
+#         container_name: node_app
+#         working_dir: /var/www
+#         volumes:
+#             - .:/var/www
+#         command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+#         networks:
+#             - laravel
+#         ports:
+#             - "5173:5173"
+
+#     mysql: # Database
+#         image: mysql:8.0
+#         container_name: mysql_db
+#         restart: unless-stopped
+#         environment:
+#             MYSQL_ROOT_PASSWORD: root123
+#             MYSQL_DATABASE: trangia_db
+#             MYSQL_USER: trangia_user
+#             MYSQL_PASSWORD: trangia_pass
+#         ports:
+#             - "3307:3306"
+#         volumes:
+#             - db_data:/var/lib/mysql
+#         networks:
+#             - laravel
+
+#     nginx:
+#         image: nginx:alpine
+#         container_name: nginx_server
+#         ports:
+#             - "8000:80"
+#         volumes:
+#             - .:/var/www
+#             - ./docker/nginx/conf.d:/etc/nginx/conf.d
+#         depends_on:
+#             - app
+#             - node
+#         networks:
+#             - laravel
+
+# volumes:
+#     db_data:
+
+# networks:
+#     laravel:
+
 services:
-    app: # Laravel PHP
-        build:
-            context: .
-            dockerfile: Dockerfile
-        container_name: tran_gia_laravel
-        working_dir: /var/www
-        volumes:
-            - .:/var/www
-        networks:
-            - laravel
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    networks:
+      - laravel
+    expose:
+      - 9000
+    restart: unless-stopped
 
-    node:
-        image: node:20
-        container_name: node_app
-        working_dir: /var/www
-        volumes:
-            - .:/var/www
-        command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
-        networks:
-            - laravel
-        ports:
-            - "5173:5173"
+  node:
+    image: node:20
+    container_name: vite_node
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+      - /var/www/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+    ports:
+      - "5173:5173"
+    networks:
+      - laravel
 
-    mysql: # Database
-        image: mysql:8.0
-        container_name: mysql_db
-        restart: unless-stopped
-        environment:
-            MYSQL_ROOT_PASSWORD: root123
-            MYSQL_DATABASE: trangia_db
-            MYSQL_USER: trangia_user
-            MYSQL_PASSWORD: trangia_pass
-        ports:
-            - "3307:3306"
-        volumes:
-            - db_data:/var/lib/mysql
-        networks:
-            - laravel
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: trangia_db
+      MYSQL_USER: trangia_user
+      MYSQL_PASSWORD: trangia_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - laravel
 
-    nginx:
-        image: nginx:alpine
-        container_name: nginx_server
-        ports:
-            - "8000:80"
-        volumes:
-            - .:/var/www
-            - ./docker/nginx/conf.d:/etc/nginx/conf.d
-        depends_on:
-            - app
-            - node
-        networks:
-            - laravel
+  nginx:
+    image: nginx:alpine
+    container_name: nginx_server
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
+      - node
+    networks:
+      - laravel
+    restart: unless-stopped
 
 volumes:
-    db_data:
+  db_data:
 
 networks:
-    laravel:
+  laravel:

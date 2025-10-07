@@ -85,8 +85,9 @@
             <a
               href="#"
               class="text-sm text-blue-600 hover:text-blue-700 font-medium"
-              >Quên mật khẩu?</a
             >
+              Quên mật khẩu?
+            </a>
           </div>
 
           <button
