@@ -137,13 +137,6 @@ class UserController extends Controller
             $data['avatar'] = '/storage/' . $path;
         }
 
-        // User::find($id)->update([
-        //     "user_name" => $validated["user_name"],
-        //     "name" => $validated["name"],
-        //     "email" => $validated["email"],
-        //     "roles_id" => $validated["roles_id"],
-        // ]);
-
         if ($request->change_password) {
             $validated = $request->validate([
                 "password" => "required|confirmed|min:6",
