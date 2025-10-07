@@ -20,5 +20,5 @@ Route::middleware(['auth:sanctum', 'checkRole:1,2'])->group(function () {
 });
 
 // Public routes
-Route::post('/register', [RegisterController::class, 'store']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [RegisterController::class, 'store']);
