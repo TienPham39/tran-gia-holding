@@ -4,6 +4,7 @@ const admin = [
     component: () => import("../layouts/admin.vue"),
     meta: { requiresAuth: true },
     children: [
+      // Dashboard / Analytics
       {
         path: "analytics",
         name: "admin-analytics",
@@ -25,6 +26,12 @@ const admin = [
         path: "users/:id/edit",
         name: "admin-users-edit",
         component: () => import("../pages/admin/users/edit.vue"),
+      },
+      {
+        path: "profile",
+        name: "admin-profile",
+        component: () => import("../pages/admin/profile/index.vue"),
+        meta: { title: "Hồ sơ cá nhân" },
       },
     ],
   },

@@ -24,25 +24,52 @@
     </section>
 
     <!-- Actions -->
-    <section class="flex gap-6">
+    <section class="flex gap-6 items-center mr-2">
       <!-- Avatar dropdown -->
-      <div class="dropdown dropdown-end">
+      <div class="dropdown dropdown-end" v-if="user">
         <button
           tabindex="0"
           role="button"
           class="btn btn-ghost btn-circle avatar"
         >
           <div class="w-10 rounded-full">
-            <img src="/images/Tommy-Shelby.jpg" alt="User" />
+            <img
+              :src="user.avatar || '/images/Tommy-Shelby.jpg'"
+              :alt="user.name"
+            />
           </div>
         </button>
+
+        <!-- Dropdown menu -->
         <ul
           tabindex="0"
           class="mt-5 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-58 space-y-3 font-semibold text-base"
         >
-          <li><a>Profile</a></li>
+          <li>
+            <RouterLink
+              to="/admin/profile"
+              class="block hover:text-blue-600 transition"
+            >
+              Profile
+            </RouterLink>
+          </li>
+          
           <li><a>Settings</a></li>
-          <li><a @click="handleLogout">Logout</a></li>
+
+          <!-- Logout button -->
+          <li>
+            <button
+              class="flex items-center gap-2 text-red-600 hover:text-red-700 disabled:opacity-50"
+              :disabled="isLoggingOut"
+              @click="handleLogout"
+            >
+              <template v-if="!isLoggingOut"> Logout </template>
+              <template v-else>
+                <LoadingOutlined spin />
+                <span>Đang đăng xuất...</span>
+              </template>
+            </button>
+          </li>
         </ul>
       </div>
     </section>
@@ -51,24 +78,41 @@
 
 <script setup>
 defineEmits(["toggle-drawer"]);
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { message } from "ant-design-vue";
+import { LoadingOutlined } from "@ant-design/icons-vue";
 import api from "../api";
 
 const router = useRouter();
+const isLoggingOut = ref(false);
+const user = ref(null);
+
+onMounted(async () => {
+  try {
+    const res = await api.get("/user");
+    user.value = res.data;
+  } catch (error) {
+    console.log("Không thể get user", error);
+  }
+});
 
 async function handleLogout() {
+  // Chặn Multiple Click
+  if (isLoggingOut.value) return;
+  isLoggingOut.value = true;
+
   try {
-    const res = await api.post("/logout");
-    // Xoá token ở localStorage
+    await api.post("/logout");
+  } catch (error) {
+    console.warn("Logout error:", error);
+  } finally {
+    // Luôn xóa token và reset trạng thái
     localStorage.removeItem("auth_token");
     delete api.defaults.headers.common["Authorization"];
-
     message.success("Đăng xuất thành công!");
+    isLoggingOut.value = false;
     router.push({ name: "Auth" });
-  } catch (error) {
-    console.log(error);
-    message.error("Có lỗi khi đăng xuất")
   }
 }
 </script>

@@ -92,9 +92,16 @@
 
           <button
             type="submit"
-            class="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-200"
+            :disabled="isSubmitting"
+            class="w-full h-11 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-200"
           >
-            Đăng nhập
+            <template v-if="!isSubmitting">
+              <span>Đăng nhập</span>
+            </template>
+            <template v-else>
+              <LoadingOutlined spin class="text-base" />
+              <span class="ml-1">Đang đăng nhập...</span>
+            </template>
           </button>
 
           <!-- Divider -->
@@ -159,7 +166,7 @@
         <form
           v-else
           class="space-y-5 animate-fadeIn"
-          @submit.prevent="handleSubmit()"
+          @submit.prevent="handleRegisterSubmit()"
         >
           <div class="space-y-2">
             <label
@@ -241,9 +248,16 @@
 
           <button
             type="submit"
-            class="w-full h-11 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-200"
+            :disabled="isSubmitting"
+            class="w-full h-11 flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-md hover:shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Đăng ký
+            <template v-if="!isSubmitting">
+              <span>Đăng ký</span>
+            </template>
+            <template v-else>
+              <LoadingOutlined spin />
+              <span>Đang đăng ký...</span>
+            </template>
           </button>
         </form>
       </div>
@@ -256,6 +270,7 @@ import { ref, reactive, onMounted } from "vue";
 import api from "../../api";
 import { message } from "ant-design-vue";
 import { useRouter } from "vue-router";
+import { LoadingOutlined } from "@ant-design/icons-vue";
 
 const errors = ref({});
 const router = useRouter();
@@ -270,31 +285,45 @@ const formRegisterData = reactive({
   password_confirmation: "",
 });
 
+const isSubmitting = ref(false);
+
 const formLoginData = reactive({
   email: "",
   password: "",
 });
 
 async function handleLoginSubmit() {
-  try {
-    const res = await api.post("/login", formLoginData);
-    errors.value = {};
-    if (res.status === 200) {
-      localStorage.setItem("auth_token", res.data.token);
-      axios.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${res.data.token}`;
+  if (isSubmitting.value) return;
+  errors.value = {};
 
-      message.success("Đăng nhập thành công");
-      router.push({ name: "admin-analytics" });
-    }
+  const { email, password } = formLoginData;
+  if (!email || !password) {
+    if (!email) errors.value.email = ["Vui lòng nhập email"];
+    if (!password) errors.value.password = ["Vui lòng nhập mật khẩu"];
+    return;
+  }
+  isSubmitting.value = true;
+
+  try {
+    const { data } = await api.post("/login", formLoginData);
+
+    localStorage.setItem("auth_token", data.token);
+    api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
+
+    message.success("Đăng nhập thành công");
+    router.push({ name: "admin-analytics" });
   } catch (error) {
-    if (error.response && error.response.status === 422) {
-      errors.value = error.response.data.errors;
+    const res = error.response;
+    if (res?.status === 422) {
+      errors.value = res.data.errors;
+    } else if (res?.status === 401) {
+      message.error(res.data.message);
+    } else {
+      console.error("Login error:", error);
+      message.error("Đã xảy ra lỗi khi đăng nhập");
     }
-    if (error.response && error.response.status === 401) {
-      message.error(error.response.data.message);
-    }
+  } finally {
+    isSubmitting.value = false;
   }
 }
 
@@ -315,16 +344,29 @@ onMounted(() => {
   }
 });
 
-async function handleSubmit() {
+async function handleRegisterSubmit() {
+  if (isSubmitting.value) return;
+  isSubmitting.value = true;
+  errors.value = {};
+
   try {
-    const res = await api.post("/register", formRegisterData);
-    errors.value = {};
-    if (res.status == 200) {
-      message.success("Đăng ký tài khoản thành công");
-      activeTab.value = "login";
+    if (!formRegisterData.email || !formRegisterData.password) {
+      message.warning("Vui lòng nhập đầy đủ thông tin");
+      return;
     }
+
+    const res = await api.post("/register", formRegisterData);
+
+    message.success("Đăng ký tài khoản thành công");
+    activeTab.value = "login";
   } catch (error) {
-    errors.value = error.response.data.errors;
+    if (error.response?.status === 422) {
+      errors.value = error.response.data.errors;
+    } else {
+      message.error("Đăng ký thất bại, vui lòng thử lại");
+    }
+  } finally {
+    isSubmitting.value = false;
   }
 }
 </script>
