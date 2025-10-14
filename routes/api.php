@@ -16,6 +16,7 @@ Route::middleware(['auth:sanctum', 'checkRole:1,2'])->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy']);
     Route::put('/users/{id}/status', [UserController::class, 'updateStatus']);
 
+    Route::get('/user', [AuthController::class, 'user']);
     // Logout chỉ cho user đã login
     Route::post('/logout', [AuthController::class, 'logout']);
 });
@@ -23,3 +24,4 @@ Route::middleware(['auth:sanctum', 'checkRole:1,2'])->group(function () {
 // Public routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [RegisterController::class, 'store']);
+

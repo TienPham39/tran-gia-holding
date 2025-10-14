@@ -27,7 +27,7 @@ class User extends Authenticatable
         'roles_id',
         'login_at',
         'change_password_at',
-        'avatar'
+        'avatar',
     ];
 
     /**
@@ -40,6 +40,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public $timestamps = true;
+
     /**
      * Get the attributes that should be cast.
      *
@@ -51,7 +53,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'login_at' => 'datetime',
             'change_password_at' => 'datetime',
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
+
+    public function activities()
+    {
+        return $this->hasMany(UserActivity::class);
+    }
+
 }

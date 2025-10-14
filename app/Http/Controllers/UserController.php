@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+use App\Models\UserActivity;
+
 
 class UserController extends Controller
 {
@@ -152,6 +155,20 @@ class UserController extends Controller
 
         $user->update($data);
 
+        UserActivity::create([
+            'user_id' => auth()->id() ?? $user->id,
+            'action' => 'update_profile',
+            'description' => 'Cập nhật thông tin hồ sơ cá nhân',
+        ]);
+
+        if ($request->change_password) {
+            UserActivity::create([
+                'user_id' => auth()->id() ?? $user->id,
+                'action' => 'change_password',
+                'description' => 'Thay đổi mật khẩu tài khoản',
+            ]);
+        }
+
         return response()->json([
             'message' => 'Cập nhật thành công',
             'user' => $user,
@@ -161,6 +178,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
+
+        if (Auth::id() == $id) {
+            return response()->json([
+                'message' => 'Không thể xóa tài khoản của chính bạn'
+            ], 403);
+        }
 
         if (!$user) {
             return response()->json([
