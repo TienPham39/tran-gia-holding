@@ -10,8 +10,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        display: ["Inter", "sans-serif"],
-        sans: ["Instrument Sans", "sans-serif"],
+        sans: ["Inter", "ui-sans-serif", "system-ui", "sans-serif"],
       },
     },
   },

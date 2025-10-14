@@ -1,4 +1,5 @@
 import "./bootstrap";
+import "../css/app.css";
 import { createApp } from "vue";
 import router from "../js/router/index.js";
 import { Icon } from "@iconify/vue";
@@ -28,6 +29,7 @@ import {
   PlusOutlined,
   UploadOutlined,
   UserOutlined,
+  LoadingOutlined
 } from "@ant-design/icons-vue";
 
 const app = createApp(App);
@@ -38,6 +40,7 @@ app.component("DeleteOutlined", DeleteOutlined);
 app.component("PlusOutlined", PlusOutlined);
 app.component("UploadOutlined", UploadOutlined);
 app.component("UserOutlined", UserOutlined);
+app.component("LoadingOutlined", LoadingOutlined);
 
 app.use(router);
 app.use(Card);
