@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use App\Models\UserActivity;
+
 
 class AuthController extends Controller
 {
@@ -32,6 +34,14 @@ class AuthController extends Controller
     }
 
     $user = Auth::user();
+    $user->update(['login_at' => now()]);
+
+    UserActivity::create([
+        'user_id' => $user->id,
+        'action' => 'login',
+        'description' => 'Đăng nhập hệ thống',
+    ]);
+    
     $token = $user->createToken('spa-token')->plainTextToken;
 
     return response()->json([
@@ -44,7 +54,6 @@ class AuthController extends Controller
   public function logout(Request $request)
   {
     $request->user()->tokens()->delete();
-
     return response()->json(["message" => "Đăng xuất thành công"]);
   }
 
