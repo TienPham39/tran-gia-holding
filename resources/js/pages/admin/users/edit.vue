@@ -292,6 +292,7 @@ export default defineComponent({
         formData.append("email", user.email);
         formData.append("roles_id", user.roles_id);
         formData.append("status", user.status);
+        formData.append("change_password", user.change_password ? 1 : 0);
 
         if (avatarFile.value) {
           formData.append("avatar", avatarFile.value);

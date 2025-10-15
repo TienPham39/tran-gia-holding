@@ -20,11 +20,17 @@ import {
   Input,
   Tag, 
   Space,
-  Checkbox
+  Checkbox,
+  Modal,
+  message
 } from "ant-design-vue";
 
 import {
   EditOutlined,
+  EyeInvisibleOutlined,
+  LockOutlined,
+  KeyOutlined,
+  SafetyOutlined,
   DeleteOutlined,
   PlusOutlined,
   UploadOutlined,
@@ -41,6 +47,10 @@ app.component("PlusOutlined", PlusOutlined);
 app.component("UploadOutlined", UploadOutlined);
 app.component("UserOutlined", UserOutlined);
 app.component("LoadingOutlined", LoadingOutlined);
+app.component("EyeInvisibleOutlined", EyeInvisibleOutlined);
+app.component("LockOutlined", LockOutlined);
+app.component("KeyOutlined", KeyOutlined);
+app.component("SafetyOutlined", SafetyOutlined);
 
 app.use(router);
 app.use(Card);
@@ -56,5 +66,8 @@ app.use(Input);
 app.use(Tag);
 app.use(Space);
 app.use(Checkbox);
+app.use(Modal);
+
+app.config.globalProperties.$message = message;
 
 app.mount("#app");
