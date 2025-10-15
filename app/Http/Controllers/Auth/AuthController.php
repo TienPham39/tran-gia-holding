@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use App\Models\User;
 use App\Models\UserActivity;
 
@@ -13,28 +14,33 @@ class AuthController extends Controller
 {
   public function login(Request $request)
   {
-    $validate = $request->validate([
+    $validator = Validator::make($request->all(), [
       "email" => "required|email",
       "password" => "required|string|min:6",
     ], [
-      // email
       "email.required" => "Vui lòng nhập email",
       "email.email" => "Email không đúng định dạng",
-
-      // password
       "password.required" => "Vui lòng nhập mật khẩu",
       "password.string" => "Mật khẩu phải là chuỗi ký tự",
       "password.min" => "Mật khẩu phải có ít nhất 6 ký tự",
     ]);
 
-    if (!Auth::attempt($validate)) {
+    // Nếu validate fail → trả JSON 422
+    if ($validator->fails()) {
+      return response()->json([
+        "errors" => $validator->errors(),
+      ], 422);
+    }
+
+    // Nếu sai tài khoản hoặc mật khẩu
+    if (!Auth::attempt($request->only('email', 'password'))) {
       return response()->json([
         "message" => "Sai email hoặc mật khẩu"
       ], 401);
     }
 
     $user = Auth::user();
-    
+    $user->update(['login_at' => now()]);
     $token = $user->createToken('spa-token')->plainTextToken;
 
     return response()->json([
@@ -52,6 +58,8 @@ class AuthController extends Controller
 
   public function user(Request $request)
   {
-    return $request->user();
+    $user = $request->user()->load('role');
+
+    return response()->json($user);
   }
 }
