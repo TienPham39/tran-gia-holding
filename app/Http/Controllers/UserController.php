@@ -155,20 +155,6 @@ class UserController extends Controller
 
         $user->update($data);
 
-        UserActivity::create([
-            'user_id' => auth()->id() ?? $user->id,
-            'action' => 'update_profile',
-            'description' => 'Cập nhật thông tin hồ sơ cá nhân',
-        ]);
-
-        if ($request->change_password) {
-            UserActivity::create([
-                'user_id' => auth()->id() ?? $user->id,
-                'action' => 'change_password',
-                'description' => 'Thay đổi mật khẩu tài khoản',
-            ]);
-        }
-
         return response()->json([
             'message' => 'Cập nhật thành công',
             'user' => $user,
