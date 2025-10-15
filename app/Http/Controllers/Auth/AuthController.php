@@ -34,13 +34,6 @@ class AuthController extends Controller
     }
 
     $user = Auth::user();
-    $user->update(['login_at' => now()]);
-
-    UserActivity::create([
-        'user_id' => $user->id,
-        'action' => 'login',
-        'description' => 'Đăng nhập hệ thống',
-    ]);
     
     $token = $user->createToken('spa-token')->plainTextToken;
 
