@@ -317,7 +317,7 @@ async function handleLoginSubmit() {
     if (res?.status === 422) {
       errors.value = res.data.errors;
     } else if (res?.status === 401) {
-      message.error(res.data.message);
+      errors.value = { email: [res.data.message] };
     } else {
       console.error("Login error:", error);
       message.error("Đã xảy ra lỗi khi đăng nhập");
