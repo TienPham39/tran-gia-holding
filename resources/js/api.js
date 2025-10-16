@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "./router";
 import { message } from "ant-design-vue";
 
 const api = axios.create({
@@ -26,13 +27,20 @@ api.interceptors.request.use(
 
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem("auth_token");
-      delete api.defaults.headers.common["Authorization"];
-      // message.warning("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
-      // window.location.href = "/auth";
+  async (error) => {
+    const { response } = error;
+
+    if (response?.status === 401) {
+      if (router.currentRoute.value.name !== "Auth") {
+        localStorage.removeItem("auth_token");
+        delete api.defaults.headers.common["Authorization"];
+
+        message.warning("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+
+        await router.push({ name: "Auth" });
+      }
     }
+
     return Promise.reject(error);
   }
 );
