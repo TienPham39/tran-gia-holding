@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\User;
 use App\Models\UserActivity;
-
+use Carbon\Carbon;
 
 class AuthController extends Controller
 {
@@ -41,7 +42,18 @@ class AuthController extends Controller
 
     $user = Auth::user();
     $user->update(['login_at' => now()]);
-    $token = $user->createToken('spa-token')->plainTextToken;
+
+    $tokenResult = $user->createToken('spa-token');
+    $token = $tokenResult->plainTextToken;
+
+    // Gán thời gian hết hạn 12 tiếng cho token
+    $latestToken = PersonalAccessToken::where('tokenable_id', $user->id)
+      ->latest('id')
+      ->first();
+
+    if ($latestToken) {
+      $latestToken->update(['expires_at' => now()->addHours(12)]);
+    }
 
     return response()->json([
       "message" => "Đăng nhập thành công",

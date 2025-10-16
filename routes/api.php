@@ -17,7 +17,7 @@ Route::middleware(['auth:sanctum', 'checkRole:1,2'])->group(function () {
 });
 
 // Các route cho user đăng nhập (không giới hạn role)
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
     Route::put('/user/change-password', [UserController::class, 'changePassword']);
     Route::post('/logout', [AuthController::class, 'logout']);
