@@ -31,7 +31,11 @@
                     user.status === 'active' ? 'bg-blue-600' : 'bg-red-600'
                   "
                 ></span>
-                {{ user.status === "active" ? "Hoạt động" : "Không hoạt động" }}
+                {{
+                  user.status === "active"
+                    ? "Đang hoạt động"
+                    : "Không hoạt động"
+                }}
               </span>
             </div>
           </div>
@@ -44,6 +48,136 @@
           <Icon icon="mdi:pencil-outline" class="w-4 h-4 text-white" />
           <span>Chỉnh sửa hồ sơ</span>
         </button>
+
+        <!-- Modal chỉnh sửa hồ sơ (Ant Design Vue style) -->
+        <a-modal
+          v-model:open="isEditModalOpen"
+          title="Chỉnh sửa hồ sơ"
+          ok-text="Lưu thay đổi"
+          cancel-text="Hủy"
+          :confirm-loading="isSaving"
+          width="700px"
+          centered
+          @ok="handleSaveProfile"
+          @cancel="resetEditForm"
+        >
+          <div class="space-y-6 py-2">
+            <!-- Avatar Upload -->
+            <div
+              class="flex flex-col items-center gap-4 p-6 rounded-lg bg-gray-200 border border-gray-200"
+            >
+              <div class="relative group">
+                <img
+                  :src="
+                    previewUrl || user.avatar || '/images/avatar_default.png'
+                  "
+                  alt="Avatar preview"
+                  class="h-32 w-32 rounded-full object-cover ring-4 ring-white shadow-md"
+                />
+                <label
+                  for="avatar-upload"
+                  class="absolute inset-0 flex items-center justify-center rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                >
+                  <Icon icon="mdi:camera-outline" class="h-8 w-8 text-white" />
+                </label>
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  @change="handleAvatarChange"
+                  class="hidden"
+                />
+              </div>
+              <div class="text-center">
+                <p class="text-sm font-medium text-gray-900">Ảnh đại diện</p>
+                <p class="text-xs text-gray-500 mt-1">
+                  Nhấp vào ảnh để thay đổi (JPG, PNG, tối đa 2MB)
+                </p>
+              </div>
+            </div>
+
+            <!-- Form Fields -->
+            <div class="grid gap-6 sm:grid-cols-2">
+              <!-- Họ và tên -->
+              <div class="space-y-2 sm:col-span-2">
+                <label
+                  class="flex items-center gap-2 text-sm font-medium text-gray-700"
+                >
+                  <Icon
+                    icon="mdi:account-outline"
+                    class="h-4 w-4 text-blue-600"
+                  />
+                  Họ và tên
+                </label>
+                <a-input
+                  v-model:value="editForm.name"
+                  placeholder="Nhập họ và tên"
+                  class="h-11"
+                />
+                <small v-if="errors.name" class="text-red-600">
+                  {{ errors.name[0] }}
+                </small>
+              </div>
+
+              <!-- Tên tài khoản -->
+              <div class="space-y-2">
+                <label
+                  class="flex items-center gap-2 text-sm font-medium text-gray-700"
+                >
+                  <Icon icon="mdi:account" class="h-4 w-4 text-green-600" />
+                  Tên tài khoản
+                </label>
+                <a-input
+                  v-model:value="editForm.user_name"
+                  placeholder="Nhập tên tài khoản"
+                  class="h-11"
+                />
+                <small v-if="errors.user_name" class="text-red-600">
+                  {{ errors.user_name[0] }}
+                </small>
+              </div>
+
+              <!-- Email -->
+              <div class="space-y-2">
+                <label
+                  class="flex items-center gap-2 text-sm font-medium text-gray-700"
+                >
+                  <Icon
+                    icon="mdi:email-outline"
+                    class="h-4 w-4 text-indigo-600"
+                  />
+                  Email
+                </label>
+                <a-input
+                  v-model:value="editForm.email"
+                  placeholder="Nhập email"
+                  class="h-11"
+                />
+                <small v-if="errors.email" class="text-red-600">
+                  {{ errors.email[0] }}
+                </small>
+              </div>
+            </div>
+
+            <!-- Info Box -->
+            <div
+              class="rounded-lg bg-blue-50 border border-blue-200 p-4 flex items-start gap-3"
+            >
+              <Icon
+                icon="mdi:shield-outline"
+                class="h-5 w-5 text-blue-600 mt-0.5"
+              />
+              <div>
+                <p class="text-sm font-semibold text-gray-900">Lưu ý bảo mật</p>
+                <p class="text-xs text-gray-600 leading-relaxed">
+                  Thông tin cá nhân của bạn được bảo vệ và chỉ hiển thị theo cài
+                  đặt quyền riêng tư. Hãy đảm bảo email của bạn luôn chính xác
+                  để nhận thông báo quan trọng.
+                </p>
+              </div>
+            </div>
+          </div>
+        </a-modal>
       </div>
 
       <!-- Main Info -->
@@ -91,14 +225,6 @@
                       disabled
                       class="bg-gray-50 pr-11 border-gray-200 hover:border-blue-400 focus:border-blue-500 rounded-lg"
                     />
-                    <!-- <button
-                      type="button"
-                      @click="showCurrentPassword = !showCurrentPassword"
-                      class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-blue-600 transition"
-                    >
-                      <EyeInvisibleOutlined v-if="showCurrentPassword" />
-                      <EyeOutlined v-else />
-                    </button> -->
                   </div>
                 </div>
 
@@ -149,7 +275,7 @@
             @after-close="resetPasswordForm"
           >
             <div class="space-y-4 py-2">
-              <div class="space-y-2">
+              <!-- <div class="space-y-2">
                 <label class="font-medium text-sm">Mật khẩu hiện tại</label>
                 <a-input-password
                   v-model:value="currentPassword"
@@ -158,7 +284,7 @@
                 <small v-if="errors.current_password" class="text-red-600">
                   {{ errors.current_password[0] }}
                 </small>
-              </div>
+              </div> -->
 
               <div class="space-y-2">
                 <label class="font-medium text-sm">Mật khẩu mới</label>
@@ -210,8 +336,10 @@
             <div class="flex justify-between text-gray-700">
               <span>Trạng thái</span>
               <span
-                class="px-3 py-0.5 text-xs font-medium rounded-full bg-blue-100 text-blue-700"
-                >{{ user.status === "active" ? "Hoạt động" : "Đã khóa" }}</span
+                class="px-3 py-0.5 text-xs font-medium rounded-full bg-blue-900 text-white"
+                >{{
+                  user.status === "active" ? "Đang hoạt động" : "Đã khóa"
+                }}</span
               >
             </div>
             <div class="flex justify-between text-gray-700">
@@ -344,7 +472,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, reactive } from "vue";
 import { message } from "ant-design-vue";
 import api from "../../../api";
 import dayjs from "dayjs";
@@ -362,7 +490,6 @@ const user = ref({
   user_name: "",
   role: {},
   created_at: "",
-  bio: "",
 });
 
 const now = ref(dayjs());
@@ -374,10 +501,15 @@ const newPassword = ref("");
 const confirmPassword = ref("");
 const errors = ref({});
 
-const handleCancelModal = () => {
-  isPasswordModalOpen.value = false;
-  resetPasswordForm();
-};
+const isEditModalOpen = ref(false);
+const isSaving = ref(false);
+const previewUrl = ref(null);
+const editForm = reactive({
+  name: "",
+  user_name: "",
+  email: "",
+  avatar: null,
+});
 
 const resetPasswordForm = () => {
   currentPassword.value = "";
@@ -403,6 +535,9 @@ const handlePasswordChange = async () => {
       message.success("Đổi mật khẩu thành công!");
       isPasswordModalOpen.value = false;
       resetPasswordForm();
+
+      const newUser = await api.get("/user");
+      user.value = newUser.data;
     }
   } catch (error) {
     if (error.response?.status === 422) {
@@ -421,7 +556,68 @@ const handlePasswordChange = async () => {
 };
 
 const handleEdit = () => {
-  message.info("Chức năng chỉnh sửa hồ sơ đang được phát triển!");
+  editForm.name = user.value.name;
+  editForm.user_name = user.value.user_name;
+  editForm.email = user.value.email;
+  previewUrl.value = user.value.avatar;
+  isEditModalOpen.value = true;
+};
+
+const handleAvatarChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    editForm.avatar = file;
+    previewUrl.value = URL.createObjectURL(file);
+  }
+};
+
+const resetEditForm = () => {
+  isEditModalOpen.value = false;
+  editForm.name = "";
+  editForm.user_name = "";
+  editForm.email = "";
+  editForm.avatar = null;
+  previewUrl.value = null;
+};
+
+const handleSaveProfile = async () => {
+  isSaving.value = true;
+  try {
+    const formData = new FormData();
+    formData.append("name", editForm.name?.trim() || "");
+    formData.append("user_name", editForm.user_name?.trim() || "");
+    formData.append("email", editForm.email?.trim() || "");
+    if (editForm.avatar) {
+      formData.append("avatar", editForm.avatar);
+    }
+
+    formData.append("_method", "PUT");
+
+    const { data } = await api.post("/user/profile", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+
+    message.success("Cập nhật hồ sơ thành công!");
+    user.value = data.user;
+    resetEditForm();
+  } catch (error) {
+    if (error.response?.status === 422) {
+      const data = error.response.data;
+      if (data.errors) {
+        errors.value = data.errors;
+      } else if (data.message) {
+        errors.value = { current_password: [data.message] };
+      }
+    } else {
+      message.error("Không thể cập nhật hồ sơ. Vui lòng thử lại!");
+    }
+  } finally {
+    isSaving.value = false;
+  }
 };
 
 const formatDate = (dateStr) => {

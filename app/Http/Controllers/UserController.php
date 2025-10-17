@@ -205,10 +205,10 @@ class UserController extends Controller
     public function changePassword(Request $request)
     {
         $request->validate([
-            'current_password' => 'required',
+            // 'current_password' => 'required',
             'new_password' => 'required|min:6|confirmed',
         ], [
-            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại !',
+            // 'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại !',
             'new_password.required' => 'Vui lòng nhập mật khẩu mới !',
             'new_password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự !',
             'new_password.confirmed' => 'Xác nhận mật khẩu không khớp',
@@ -217,11 +217,11 @@ class UserController extends Controller
         $user = Auth::user();
 
         // Kiểm tra mật khẩu hiện tại
-        if (!\Hash::check($request->current_password, $user->password)) {
-            return response()->json([
-                'message' => 'Mật khẩu hiện tại không đúng!',
-            ], 422);
-        }
+        // if (!\Hash::check($request->current_password, $user->password)) {
+        //     return response()->json([
+        //         'message' => 'Mật khẩu hiện tại không đúng!',
+        //     ], 422);
+        // }
 
         // Cập nhật mật khẩu mới
         $user->update([
@@ -231,6 +231,86 @@ class UserController extends Controller
 
         return response()->json([
             'message' => 'Cập nhật mật khẩu thành công!',
+        ], 200);
+    }
+
+    public function updateProfile(request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'user_name' => 'required|string|max:255',
+            'email' => 'nullable|email|unique:users,email,' . $user->id,
+            'avatar' => 'nullable|image|max:2048',
+        ], [
+            'name.required' => 'Vui lòng nhập họ và tên',
+            'user_name.required' => 'Vui lòng nhập tên tài khoản',
+            'email.email' => 'Email không đúng định dạng',
+            'email.unique' => 'Email đã tồn tại',
+            'avatar.image' => 'Tệp tải lên phải là hình ảnh',
+            'avatar.max' => 'Ảnh không được vượt quá 2MB',
+        ]);
+
+        if ($request->hasFile('avatar')) {
+            $file = $request->file('avatar');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $path = $file->storeAs('avatars', $filename, 'public');
+            $validated['avatar'] = '/storage/' . $path;
+        }
+
+        $user->update($validated);
+
+        return response()->json([
+            'message' => 'Cập nhật hồ sơ thành công!',
+            'user' => $user->fresh(),
+        ], 200);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required|min:6|confirmed'
+        ], [
+            "new_password.required" => "Nhập password mới",
+            "new_password.confirmed" => "Mật khẩu xác nhận không khớp",
+            "new_password.min" => "Mật khẩu mới tối thiểu 6 ký tự",
+        ]);
+        $user = $request->user();
+        $user->password = bcrypt($request->new_password);
+        $user->save();
+
+        return response()->json(['message' => 'Đặt mật khẩu mới thành công!']);
+    }
+
+    public function setPassword(Request $request)
+    {
+        $request->validate([
+            'new_password' => 'required|min:6|confirmed',
+        ], [
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới!',
+            'new_password.min' => 'Mật khẩu mới phải có ít nhất 6 ký tự!',
+            'new_password.confirmed' => 'Xác nhận mật khẩu không khớp!',
+        ]);
+
+        $user = $request->user();
+
+        // Nếu user không phải đăng nhập bằng Google thì không cho set password
+        if ($user->provider !== 'google') {
+            return response()->json([
+                'message' => 'Chỉ người dùng đăng nhập bằng Google mới có thể đặt mật khẩu theo cách này.',
+            ], 403);
+        }
+
+        // Cập nhật mật khẩu mới
+        $user->update([
+            'password' => \Hash::make($request->new_password),
+            'change_password_at' => now(),
+        ]);
+
+        return response()->json([
+            'message' => 'Đặt mật khẩu mới thành công!',
+            'user' => $user,
         ], 200);
     }
 }

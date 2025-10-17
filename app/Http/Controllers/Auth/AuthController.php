@@ -10,6 +10,7 @@ use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\User;
 use App\Models\UserActivity;
 use Carbon\Carbon;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
@@ -70,8 +71,7 @@ class AuthController extends Controller
 
   public function user(Request $request)
   {
-    $user = $request->user()->load('role');
-
+    $user = Auth::user()->load('role');
     return response()->json($user);
   }
 }
