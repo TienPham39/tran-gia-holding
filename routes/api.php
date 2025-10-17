@@ -19,8 +19,13 @@ Route::middleware(['auth:sanctum', 'checkRole:1,2'])->group(function () {
 // Các route cho user đăng nhập (không giới hạn role)
 Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
     Route::get('/user', [AuthController::class, 'user']);
+    Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::put('/user/change-password', [UserController::class, 'changePassword']);
+    // routes/api.php
+    Route::put('/user/reset-password', [UserController::class, 'resetPassword']);
+    Route::put('/user/set-password', [UserController::class, 'setPassword']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
 });
 
 // Public routes
