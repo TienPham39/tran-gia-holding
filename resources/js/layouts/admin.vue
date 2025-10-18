@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import Navbar from "../components/Navbar.vue";
-import Sidebar from "../components/SideBar.vue";
+import Navbar from "../components/admin/Navbar.vue";
+import Sidebar from "../components/admin/Sidebar.vue";
 
 // chỉ giữ drawer toggle
 const toggleDrawer = () => {
