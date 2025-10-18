@@ -59,9 +59,9 @@ class User extends Authenticatable
         ];
     }
 
-    public function activities()
+    public function role()
     {
-        return $this->hasMany(UserActivity::class);
+        return $this->belongsTo(Role::class, 'roles_id');
     }
 
 }

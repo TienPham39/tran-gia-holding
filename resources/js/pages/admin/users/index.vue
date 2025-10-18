@@ -6,9 +6,9 @@
       <template #extra>
         <router-link
           :to="{ name: 'admin-users-create' }"
-          class="flex items-center gap-2"
+          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold !text-white !bg-blue-900 rounded-full shadow hover:!bg-blue-800 transition-all duration-200"
         >
-          <PlusOutlined /> Tạo người dùng
+          <span>Tạo người dùng</span>
         </router-link>
       </template>
 
@@ -56,7 +56,9 @@
             >
               Active
             </a-tag>
-            <a-tag v-else class="!text-white !bg-red-600 font-semibold">Inactive</a-tag>
+            <a-tag v-else class="!text-white !bg-red-600 font-semibold"
+              >Inactive</a-tag
+            >
           </template>
 
           <!-- Hành động -->
@@ -125,9 +127,7 @@ export default defineComponent({
 
     async function getUsers(page = 1) {
       try {
-        const response = await api.get(
-          `/users?page=${page}`
-        );
+        const response = await api.get(`/users?page=${page}`);
         users.value = response.data.data;
         pagination.value.total = response.data.total;
         pagination.value.current = response.data.current_page;
@@ -151,9 +151,7 @@ export default defineComponent({
         cancelText: "Hủy",
         async onOk() {
           try {
-            const response = await api.delete(
-              `/users/${id}`
-            );
+            const response = await api.delete(`/users/${id}`);
             if (response.status === 200) {
               message.success(response.data.message);
               getUsers();

@@ -5,29 +5,37 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Laravel\Sanctum\PersonalAccessToken;
 use App\Models\User;
 use App\Models\UserActivity;
-
+use Carbon\Carbon;
+use Laravel\Socialite\Facades\Socialite;
 
 class AuthController extends Controller
 {
   public function login(Request $request)
   {
-    $validate = $request->validate([
+    $validator = Validator::make($request->all(), [
       "email" => "required|email",
       "password" => "required|string|min:6",
     ], [
-      // email
       "email.required" => "Vui lòng nhập email",
       "email.email" => "Email không đúng định dạng",
-
-      // password
       "password.required" => "Vui lòng nhập mật khẩu",
       "password.string" => "Mật khẩu phải là chuỗi ký tự",
       "password.min" => "Mật khẩu phải có ít nhất 6 ký tự",
     ]);
 
-    if (!Auth::attempt($validate)) {
+    // Nếu validate fail → trả JSON 422
+    if ($validator->fails()) {
+      return response()->json([
+        "errors" => $validator->errors(),
+      ], 422);
+    }
+
+    // Nếu sai tài khoản hoặc mật khẩu
+    if (!Auth::attempt($request->only('email', 'password'))) {
       return response()->json([
         "message" => "Sai email hoặc mật khẩu"
       ], 401);
@@ -36,13 +44,17 @@ class AuthController extends Controller
     $user = Auth::user();
     $user->update(['login_at' => now()]);
 
-    UserActivity::create([
-        'user_id' => $user->id,
-        'action' => 'login',
-        'description' => 'Đăng nhập hệ thống',
-    ]);
-    
-    $token = $user->createToken('spa-token')->plainTextToken;
+    $tokenResult = $user->createToken('spa-token');
+    $token = $tokenResult->plainTextToken;
+
+    // Gán thời gian hết hạn 12 tiếng cho token
+    $latestToken = PersonalAccessToken::where('tokenable_id', $user->id)
+      ->latest('id')
+      ->first();
+
+    if ($latestToken) {
+      $latestToken->update(['expires_at' => now()->addHours(12)]);
+    }
 
     return response()->json([
       "message" => "Đăng nhập thành công",
@@ -59,6 +71,7 @@ class AuthController extends Controller
 
   public function user(Request $request)
   {
-    return $request->user();
+    $user = Auth::user()->load('role');
+    return response()->json($user);
   }
 }

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import admin from "./admin.js";
 import Register from "../pages/auth/Register.vue";
+import { message } from "ant-design-vue";
 
 const routes = [
   ...admin,
@@ -8,6 +9,7 @@ const routes = [
     path: "/auth",
     name: "Auth",
     component: Register,
+    meta: { guestOnly: true },
   },
 ];
 
@@ -16,19 +18,20 @@ const router = createRouter({
   routes,
 });
 
-// Check login trước khi vào route
+// Middleware kiểm tra đăng nhập
 router.beforeEach((to, from, next) => {
   const token = localStorage.getItem("auth_token");
 
+  // Nếu route yêu cầu login mà chưa có token
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (!token) {
-      // Chưa login → về trang /auth (tab login)
+      message.warning("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
       return next({ name: "Auth" });
     }
   }
 
-  // Nếu đang login rồi mà lại vào /auth → redirect sang admin
-  if (to.name === "Auth" && token) {
+  // Nếu đã login mà vào lại /auth thì chuyển sang dashboard
+  if (to.matched.some((record) => record.meta.guestOnly) && token) {
     return next({ name: "admin-analytics" });
   }
 
