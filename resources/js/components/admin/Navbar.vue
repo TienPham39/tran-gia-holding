@@ -82,7 +82,7 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { message } from "ant-design-vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
-import api from "../api";
+import api from "../../api";
 
 const router = useRouter();
 const isLoggingOut = ref(false);
