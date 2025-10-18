@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Client\HomeController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
+use Inertia\Inertia;
 
 Route::get('/auth/google', function () {
   return Socialite::driver('google')
@@ -42,6 +44,12 @@ Route::get('/auth/google/callback', function () {
   return redirect('http://localhost:8000/auth?token=' . $plainTextToken . '&expires_at=' . urlencode($tokenModel->expires_at));
 });
 
-// Route catch-all của Vue phải đặt cuối cùng
-Route::view('/{any}', 'app')->where('any', '^(?!api).*$');
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
+Route::get('/auth', function () {
+    return Inertia::render('auth/Register');
+})->name('auth');
+
+Route::get('/admin/dashboard', function () {
+    return Inertia::render('admin/admin');
+})->name('admin.dashboard');
