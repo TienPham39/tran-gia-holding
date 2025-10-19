@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserActivity;
-
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -19,17 +19,12 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::where("users.id", "!=", "2")
-            ->join('roles', 'users.roles_id', '=', 'roles.id')  // join bảng roles
-            ->select('users.*', 'roles.name as role')  // Lấy thêm thông tin role
-            ->paginate(5);  // Phân trang với 5 bản ghi mỗi trang
-
-        return response()->json([
-            'data' => $users->items(),  // Dữ liệu người dùng
-            'total' => $users->total(),  // Tổng số người dùng
-            'current_page' => $users->currentPage(),
-            'per_page' => $users->perPage(),
-            'last_page' => $users->lastPage(),
+        $users = User::where("users.id", "!=", 2)
+            ->join('roles', 'users.roles_id', '=', 'roles.id')
+            ->select('users.*', 'roles.name as role')
+            ->paginate(5);
+        return Inertia::render('admin/users/index', [
+            'users' => $users,
         ]);
     }
 
@@ -179,9 +174,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return response()->json([
-            'message' => 'Xóa người dùng thành công'
-        ], 200);
+        return Inertia::location(route('admin.users.index'));
     }
 
     public function updateStatus(Request $request, $id)
