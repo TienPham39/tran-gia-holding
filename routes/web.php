@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
@@ -80,4 +81,10 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
   Route::put('/user/reset-password', [UserController::class, 'resetPassword']);
   Route::put('/user/set-password', [UserController::class, 'setPassword']);
   Route::post('/logout', [AuthController::class, 'logout']);
+});
+
+Route::prefix('contacts')->group(function () {
+    Route::get('/', [ContactController::class, 'index']);         
+    Route::post('/', [ContactController::class, 'store']);        
+    Route::put('/{id}/read', [ContactController::class, 'markAsRead']);
 });
