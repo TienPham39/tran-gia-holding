@@ -9,6 +9,7 @@
     @inertiaHead
 </head>
 <body class="antialiased">
+    @routes
     @inertia
 </body>
 </html>

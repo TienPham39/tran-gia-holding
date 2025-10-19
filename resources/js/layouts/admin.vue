@@ -4,7 +4,7 @@
     <div class="drawer-content flex flex-col">
       <Navbar @toggle-drawer="toggleDrawer" />
       <main class="flex-1 p-4 bg-base">
-        <router-view />
+        <slot />
       </main>
     </div>
     <Sidebar />
