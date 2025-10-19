@@ -4,12 +4,12 @@
   >
     <a-card title="Quản lý người dùng" :bordered="false">
       <template #extra>
-        <router-link
-          :to="{ name: 'admin-users-create' }"
+        <Link
+          :href="route('admin.users.create')"
           class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold !text-white !bg-blue-900 rounded-full shadow hover:!bg-blue-800 transition-all duration-200"
         >
           <span>Tạo người dùng</span>
-        </router-link>
+        </Link>
       </template>
 
       <a-table
@@ -64,13 +64,12 @@
           <!-- Hành động -->
           <template v-if="column.key === 'action'">
             <a-space>
-              <router-link
-                :to="{ name: 'admin-users-edit', params: { id: record.id } }"
-              >
+              <Link :href="route('admin.users.edit', record.id)">
                 <a-button type="link" class="text-blue-600">
                   <EditOutlined />
                 </a-button>
-              </router-link>
+              </Link>
+
               <a-button
                 @click="deleteUser(record.id)"
                 type="link"
@@ -96,7 +95,7 @@ import {
   EditOutlined,
 } from "@ant-design/icons-vue";
 import admin from "../../../layouts/admin.vue";
-import { usePage, router } from "@inertiajs/vue3";
+import { usePage, router, Link } from "@inertiajs/vue3";
 
 defineOptions({
   layout: admin,
@@ -135,7 +134,7 @@ const columns = [
 function handleTableChange(paginationData) {
   router.visit(`/admin/users?page=${paginationData.current}`, {
     preserveScroll: true,
-    preserveState: true,
+    preserveState: false,
   });
 }
 
