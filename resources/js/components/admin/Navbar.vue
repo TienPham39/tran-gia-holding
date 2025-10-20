@@ -34,8 +34,9 @@
         >
           <div class="w-10 rounded-full">
             <img
-              :src="user.avatar || '/images/Tommy-Shelby.jpg'"
+              :src="getAvatarUrl(user.avatar)"
               :alt="user.name"
+              class="object-cover"
             />
           </div>
         </button>
@@ -46,14 +47,14 @@
           class="mt-5 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-58 space-y-3 font-semibold text-base"
         >
           <li>
-            <RouterLink
-              to="/admin/profile"
+            <Link
+              href="/admin/profile"
               class="block hover:text-blue-600 transition"
             >
               Profile
-            </RouterLink>
+            </Link>
           </li>
-          
+
           <li><a>Settings</a></li>
 
           <!-- Logout button -->
@@ -79,12 +80,11 @@
 <script setup>
 defineEmits(["toggle-drawer"]);
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { router, Link } from "@inertiajs/vue3";
 import { message } from "ant-design-vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import api from "../../api";
 
-const router = useRouter();
 const isLoggingOut = ref(false);
 const user = ref(null);
 
@@ -97,8 +97,12 @@ onMounted(async () => {
   }
 });
 
+function getAvatarUrl(avatar) {
+  if (!avatar) return "/images/Tommy-Shelby.jpg";
+  return avatar.startsWith("http") ? avatar : `${avatar}`;
+}
+
 async function handleLogout() {
-  // Chặn Multiple Click
   if (isLoggingOut.value) return;
   isLoggingOut.value = true;
 
@@ -110,9 +114,11 @@ async function handleLogout() {
     // Luôn xóa token và reset trạng thái
     localStorage.removeItem("auth_token");
     delete api.defaults.headers.common["Authorization"];
+
     message.success("Đăng xuất thành công!");
     isLoggingOut.value = false;
-    router.push({ name: "Auth" });
+
+    router.visit("/auth");
   }
 }
 </script>
