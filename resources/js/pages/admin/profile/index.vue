@@ -7,9 +7,10 @@
       >
         <div class="flex items-center gap-4">
           <img
-            :src="user.avatar || '/images/avatar_default.png'"
+            :src="getAvatarUrl(user.avatar)"
             alt="avatar"
             class="w-24 h-24 rounded-xl object-cover border border-gray-200"
+            @error="(e) => (e.target.src = '/images/avatar_default.png')"
           />
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">
@@ -647,6 +648,16 @@ const fromNow = (time) => {
   else if (hours < 24) return `${hours} giờ trước`;
   else return `${days} ngày trước`;
 };
+
+function getAvatarUrl(avatar) {
+  if (!avatar) return "/images/avatar_default.png";
+  if (avatar.startsWith("http")) return avatar;
+  if (avatar.startsWith("/storage/")) return avatar;
+  if (avatar.startsWith("avatars/")) return `/storage/${avatar}`;
+  if (avatar.startsWith("images/")) return `/${avatar}`;
+  return "/images/avatar_default.png";
+}
+
 
 onMounted(async () => {
   try {
