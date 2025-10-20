@@ -34,9 +34,10 @@ class UserController extends Controller
             ->select('id as value', 'name as label')
             ->get();
 
-        return response()->json([
-            'roles' => $roles,
-        ]);
+        // return response()->json([
+        //     'roles' => $roles,
+        // ]);
+        return Inertia::render('admin/users/create', ['roles' => $roles]);
     }
 
     public function store(Request $request)
@@ -72,18 +73,16 @@ class UserController extends Controller
         ];
 
         if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('avatars', $filename, 'public');
-            $data['avatar'] = '/storage/' . $path;
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = '/storage/' . $path;
         }
 
-        $user = User::create($data);
+        $validated['password'] = bcrypt($validated['password']);
+        User::create($validated);
 
-        return response()->json([
-            'message' => 'Tạo người dùng thành công',
-            'user' => $user,
-        ], 200);
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'Tạo người dùng thành công!');
     }
 
     public function edit($id)

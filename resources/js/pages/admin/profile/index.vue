@@ -478,6 +478,11 @@ import api from "../../../api";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/vi";
+import admin from "../../../layouts/admin.vue";
+
+defineOptions({
+  layout: admin,
+});
 
 dayjs.extend(relativeTime);
 dayjs.locale("vi");

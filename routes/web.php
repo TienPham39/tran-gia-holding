@@ -64,12 +64,15 @@ Route::get('/admin/dashboard', function () {
 // User routes (chỉ cho admin/manager sau này sẽ thêm middleware checkRole)
 Route::middleware(['auth:sanctum', 'checkRole:1,2'])->prefix('admin')->group(function () {
   Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
-  Route::get('/user/create', [UserController::class, 'create'])->name('admin.users.create');
+  Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
   Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
   Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
   Route::put('/users/{id}', [UserController::class, 'update'])->name('admin.users.update');
   Route::post('/admin/users/{id}/destroy', [UserController::class, 'destroy'])->name('admin.users.destroy');
   Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->name('admin.users.status');
+  Route::get('/profile', function () {
+    return Inertia::render('admin/profile/index');
+  })->name('admin.profile');
 });
 
 // Các route cho user đăng nhập (không giới hạn role)
@@ -84,7 +87,7 @@ Route::middleware(['auth:sanctum', 'check.token.expiry'])->group(function () {
 });
 
 Route::prefix('contacts')->group(function () {
-    Route::get('/', [ContactController::class, 'index']);         
-    Route::post('/', [ContactController::class, 'store']);        
-    Route::put('/{id}/read', [ContactController::class, 'markAsRead']);
+  Route::get('/', [ContactController::class, 'index']);
+  Route::post('/', [ContactController::class, 'store']);
+  Route::put('/{id}/read', [ContactController::class, 'markAsRead']);
 });
