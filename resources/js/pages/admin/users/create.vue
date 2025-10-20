@@ -1,5 +1,5 @@
 <template>
-  <form @submit.prevent="createUsers()">
+  <form @submit.prevent="submit">
     <a-card title="Tạo tài khoản mới">
       <div class="grid sm:grid-cols-3 items-start">
         <!-- Cột Avatar -->
@@ -9,7 +9,6 @@
             alt="Avatar"
             class="w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] object-cover rounded-2xl max-w-full mb-2"
           />
-          <!-- Nút chọn ảnh -->
           <a-button
             class="mb-6 px-4 py-2 flex items-center justify-center text-white font-medium border bg-blue-600 rounded shadow"
             @click="$refs.fileInput.click()"
@@ -17,8 +16,6 @@
             <UploadOutlined />
             <span>Chọn ảnh</span>
           </a-button>
-
-          <!-- input file thật -->
           <input
             ref="fileInput"
             type="file"
@@ -33,125 +30,129 @@
           <!-- Tên tài khoản -->
           <label class="col-span-1 flex items-center md:justify-end">
             <span class="text-red-600 mr-1">*</span>
-            <span :class="{ 'text-red-600': errors.user_name }"
-              >Tên tài khoản:</span
-            >
+            <span :class="{ 'text-red-600': form.errors.user_name }">
+              Tên tài khoản:
+            </span>
           </label>
           <div class="col-span-2">
             <a-input
               placeholder="Tên tài khoản"
-              v-model:value="user_name"
+              v-model:value="form.user_name"
               class="w-full"
               allow-clear
-              :status="errors.user_name ? 'error' : ''"
+              :status="form.errors.user_name ? 'error' : ''"
             />
-            <small v-if="errors.user_name" class="text-red-600">
-              {{ errors.user_name[0] }}
+            <small v-if="form.errors.user_name" class="text-red-600">
+              {{ form.errors.user_name }}
             </small>
           </div>
 
           <!-- Họ & tên -->
           <label class="col-span-1 flex items-center md:justify-end">
             <span class="text-red-600 mr-1">*</span>
-            <span :class="{ 'text-red-600': errors.name }">Họ & tên:</span>
+            <span :class="{ 'text-red-600': form.errors.name }">Họ & tên:</span>
           </label>
           <div class="col-span-2">
             <a-input
               placeholder="Họ & tên"
-              v-model:value="name"
+              v-model:value="form.name"
               class="w-full"
               allow-clear
-              :status="errors.name ? 'error' : ''"
+              :status="form.errors.name ? 'error' : ''"
             />
-            <small v-if="errors.name" class="text-red-600">
-              {{ errors.name[0] }}
+            <small v-if="form.errors.name" class="text-red-600">
+              {{ form.errors.name }}
             </small>
           </div>
 
           <!-- Email -->
           <label class="col-span-1 flex items-center md:justify-end">
             <span class="text-red-600 mr-1">*</span>
-            <span :class="{ 'text-red-600': errors.email }">Email:</span>
+            <span :class="{ 'text-red-600': form.errors.email }">Email:</span>
           </label>
           <div class="col-span-2">
             <a-input
               placeholder="Email"
-              v-model:value="email"
+              v-model:value="form.email"
               class="w-full"
               allow-clear
-              :status="errors.email ? 'error' : ''"
+              :status="form.errors.email ? 'error' : ''"
             />
-            <small v-if="errors.email" class="text-red-600">
-              {{ errors.email[0] }}
+            <small v-if="form.errors.email" class="text-red-600">
+              {{ form.errors.email }}
             </small>
           </div>
 
           <!-- Password -->
           <label class="col-span-1 flex items-center md:justify-end">
             <span class="text-red-600 mr-1">*</span>
-            <span :class="{ 'text-red-600': errors.password }">Password:</span>
+            <span :class="{ 'text-red-600': form.errors.password }">
+              Password:
+            </span>
           </label>
           <div class="col-span-2">
             <a-input-password
               placeholder="Password"
-              v-model:value="password"
+              v-model:value="form.password"
               class="w-full"
               allow-clear
-              :status="errors.password ? 'error' : ''"
+              :status="form.errors.password ? 'error' : ''"
             />
-            <small v-if="errors.password" class="text-red-600">
-              {{ errors.password[0] }}
+            <small v-if="form.errors.password" class="text-red-600">
+              {{ form.errors.password }}
             </small>
           </div>
 
-          <!-- Xác nhận Pass -->
+          <!-- Xác nhận Password -->
           <label class="col-span-1 flex items-center md:justify-end">
             <span class="text-red-600 mr-1">*</span>
-            <span :class="{ 'text-red-600': errors.password }"
-              >Xác nhận mật khẩu:</span
-            >
+            <span :class="{ 'text-red-600': form.errors.password_confirmation }">
+              Xác nhận mật khẩu:
+            </span>
           </label>
           <div class="col-span-2">
             <a-input-password
               placeholder="Xác nhận mật khẩu"
-              v-model:value="password_confirmation"
+              v-model:value="form.password_confirmation"
               class="w-full"
               allow-clear
-              :status="errors.password ? 'error' : ''"
+              :status="form.errors.password_confirmation ? 'error' : ''"
             />
-            <small v-if="errors.password" class="text-red-600">
-              {{ errors.password[0] }}
+            <small v-if="form.errors.password_confirmation" class="text-red-600">
+              {{ form.errors.password_confirmation }}
             </small>
           </div>
 
           <!-- Vai trò -->
           <label class="col-span-1 flex items-center md:justify-end text-start">
             <span class="text-red-600 mr-1">*</span>
-            <span :class="{ 'text-red-600': errors.roles_id }">Vai trò:</span>
+            <span :class="{ 'text-red-600': form.errors.roles_id }">Vai trò:</span>
           </label>
           <div class="col-span-2 mb-6">
             <a-select
               show-search
               placeholder="Chọn vai trò"
               class="w-full"
-              :options="role"
+              :options="roles"
               :filter-option="filterOption"
               allow-clear
-              v-model:value="roles_id"
-              :status="errors.roles_id ? 'error' : ''"
+              v-model:value="form.roles_id"
+              :status="form.errors.roles_id ? 'error' : ''"
             />
-            <small v-if="errors.roles_id" class="text-red-600">
-              {{ errors.roles_id[0] }}
+            <small v-if="form.errors.roles_id" class="text-red-600">
+              {{ form.errors.roles_id }}
             </small>
           </div>
         </div>
 
+        <!-- Buttons -->
         <div
           class="gap-4 col-span-2 text-center font-semibold sm:col-span-3 flex flex-col md:flex-row md:justify-end md:items-end cursor-pointer"
         >
           <a-button
             html-type="submit"
             class="!bg-blue-600 !text-white hover:!bg-blue-500 px-6"
+            :loading="form.processing"
           >
             Lưu
           </a-button>
@@ -159,7 +160,7 @@
           <a-button
             class="!bg-gray-300 hover:!bg-gray-200 !text-black shadow-sm px-6"
           >
-            <router-link :to="{ name: 'admin-users' }"> Hủy </router-link>
+            <Link href="/admin/users">Hủy</Link>
           </a-button>
         </div>
       </div>
@@ -167,93 +168,49 @@
   </form>
 </template>
 
-<script>
-import api from "../../../api";
-import { defineComponent, onMounted, ref, reactive, toRefs } from "vue";
-import { useRouter } from "vue-router";
+<script setup>
+import { ref } from "vue";
+import { useForm, Link } from "@inertiajs/vue3";
 import { message } from "ant-design-vue";
+import { UploadOutlined } from "@ant-design/icons-vue";
+import admin from "../../../layouts/admin.vue";
 
-export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const role = ref([]);
-    const user = reactive({
-      user_name: "",
-      name: "",
-      email: "",
-      password: "",
-      password_confirmation: "",
-      status: "active",
-      roles_id: null,
-      avatar: null,
-    });
+defineOptions({ layout: admin });
+defineProps({ roles: Array });
 
-    const errors = ref({});
-    const avatarFile = ref(null);
-    const avatarPreview = ref(null);
-
-    function handleAvatarChange(e) {
-      const file = e.target.files[0];
-      if (file) {
-        avatarFile.value = file;
-        avatarPreview.value = URL.createObjectURL(file);
-      }
-    }
-
-    async function createUsers() {
-      try {
-        const formData = new FormData();
-        formData.append("user_name", user.user_name);
-        formData.append("name", user.name);
-        formData.append("email", user.email);
-        formData.append("password", user.password);
-        formData.append("password_confirmation", user.password_confirmation);
-        formData.append("status", user.status);
-        formData.append("roles_id", user.roles_id);
-
-        if (avatarFile.value) {
-          formData.append("avatar", avatarFile.value);
-        }
-
-        const response = await api.post("/users", formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        if (response.status == 200) {
-          message.success("Tạo người dùng thành công!");
-          router.push({ name: "admin-users" });
-        }
-      } catch (error) {
-        errors.value = error.response?.data?.errors || {};
-      }
-    }
-
-    async function getUsersCreate() {
-      try {
-        const response = await api.get("/user/create", { ...role });
-        role.value = response.data.roles;
-      } catch (error) {
-        console.error("Lỗi khi load role user:", error);
-      }
-    }
-
-    const filterOption = (input, option) => {
-      return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-    };
-
-    onMounted(() => {
-      getUsersCreate();
-    });
-
-    return {
-      role,
-      filterOption,
-      createUsers,
-      avatarPreview,
-      handleAvatarChange,
-      ...toRefs(user),
-      errors,
-    };
-  },
+const form = useForm({
+  user_name: "",
+  name: "",
+  email: "",
+  password: "",
+  password_confirmation: "",
+  status: "active",
+  roles_id: null,
+  avatar: null,
 });
+
+const avatarPreview = ref(null);
+
+const handleAvatarChange = (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    form.avatar = file;
+    avatarPreview.value = URL.createObjectURL(file);
+  }
+};
+
+const filterOption = (input, option) =>
+  option.label.toLowerCase().includes(input.toLowerCase());
+
+const submit = () => {
+  form.post(route("admin.users.store"), {
+    forceFormData: true,
+    onSuccess: () => {
+      message.success("Tạo người dùng thành công!");
+    },
+    onError: () => {
+      message.error("Không thể tạo người dùng. Vui lòng kiểm tra lại!");
+    },
+  });
+};
 </script>
