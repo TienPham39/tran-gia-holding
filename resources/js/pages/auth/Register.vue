@@ -338,8 +338,11 @@ onMounted(() => {
     localStorage.setItem("auth_token", token);
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
+    // Xóa token khỏi URL để tránh chạy lại vòng lặp
+    window.history.replaceState({}, document.title, "/auth");
+
     message.success("Đăng nhập Google thành công");
-    router.push({ name: "admin-analytics" });
+    router.visit("/admin/dashboard");
   }
 });
 
