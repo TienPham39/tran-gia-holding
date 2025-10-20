@@ -4,12 +4,12 @@
   >
     <a-card title="Quản lý người dùng" :bordered="false">
       <template #extra>
-        <router-link
-          :to="{ name: 'admin-users-create' }"
+        <Link
+          :href="route('admin.users.create')"
           class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold !text-white !bg-blue-900 rounded-full shadow hover:!bg-blue-800 transition-all duration-200"
         >
           <span>Tạo người dùng</span>
-        </router-link>
+        </Link>
       </template>
 
       <a-table
@@ -64,13 +64,12 @@
           <!-- Hành động -->
           <template v-if="column.key === 'action'">
             <a-space>
-              <router-link
-                :to="{ name: 'admin-users-edit', params: { id: record.id } }"
-              >
+              <Link :href="route('admin.users.edit', record.id)">
                 <a-button type="link" class="text-blue-600">
                   <EditOutlined />
                 </a-button>
-              </router-link>
+              </Link>
+
               <a-button
                 @click="deleteUser(record.id)"
                 type="link"
@@ -86,101 +85,79 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, ref, onMounted } from "vue";
+<script setup>
+import { ref, onMounted, createVNode } from "vue";
 import api from "../../../api";
 import { Modal, message } from "ant-design-vue";
-import { createVNode } from "vue";
-import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import {
+  ExclamationCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons-vue";
+import admin from "../../../layouts/admin.vue";
+import { usePage, router, Link } from "@inertiajs/vue3";
 
-export default defineComponent({
-  setup() {
-    const users = ref([]);
-    const pagination = ref({
-      current: 1, // Trang hiện tại
-      pageSize: 5, // Số bản ghi mỗi trang
-      total: 0, // Tổng số bản ghi
-    });
+defineOptions({
+  layout: admin,
+});
+const { props } = usePage();
+const users = ref(props.users.data);
+const pagination = ref({
+  current: props.users.current_page,
+  total: props.users.total,
+  pageSize: props.users.per_page,
+});
 
-    const columns = [
-      { title: "#", key: "index" },
-      { title: "Avatar", dataIndex: "avatar", key: "avatar", align: "center" },
-      { title: "Tài khoản", dataIndex: "user_name", key: "user_name" },
-      { title: "Họ tên", dataIndex: "name", key: "name" },
-      { title: "Email", dataIndex: "email", key: "email" },
-      {
-        title: "Role",
-        dataIndex: "role",
-        key: "role",
-        align: "center",
-        responsive: ["sm"],
-      },
-      {
-        title: "Tình trạng",
-        dataIndex: "status",
-        key: "status",
-        align: "center",
-        responsive: ["sm"],
-      },
-      { title: "Hành động", key: "action", fixed: "right", align: "center" },
-    ];
+const columns = [
+  { title: "#", key: "index" },
+  { title: "Avatar", dataIndex: "avatar", key: "avatar", align: "center" },
+  { title: "Tài khoản", dataIndex: "user_name", key: "user_name" },
+  { title: "Họ tên", dataIndex: "name", key: "name" },
+  { title: "Email", dataIndex: "email", key: "email" },
+  {
+    title: "Role",
+    dataIndex: "role",
+    key: "role",
+    align: "center",
+    responsive: ["sm"],
+  },
+  {
+    title: "Tình trạng",
+    dataIndex: "status",
+    key: "status",
+    align: "center",
+    responsive: ["sm"],
+  },
+  { title: "Hành động", key: "action", fixed: "right", align: "center" },
+];
 
-    async function getUsers(page = 1) {
-      try {
-        const response = await api.get(`/users?page=${page}`);
-        users.value = response.data.data;
-        pagination.value.total = response.data.total;
-        pagination.value.current = response.data.current_page;
-        pagination.value.pageSize = response.data.per_page;
-      } catch (error) {
-        console.error("Lỗi khi load users:", error);
-      }
-    }
+function handleTableChange(paginationData) {
+  router.visit(`/admin/users?page=${paginationData.current}`, {
+    preserveScroll: true,
+    preserveState: false,
+  });
+}
 
-    const handleTableChange = (pagination) => {
-      getUsers(pagination.current); // Gọi lại hàm getUsers khi trang thay đổi
-    };
-
-    async function deleteUser(id) {
-      Modal.confirm({
-        title: "Bạn có chắc chắn muốn xóa người dùng này?",
-        icon: createVNode(ExclamationCircleOutlined),
-        content: "Hành động này sẽ xóa vĩnh viễn và không thể hoàn tác.",
-        okText: "Xóa",
-        okType: "danger",
-        cancelText: "Hủy",
-        async onOk() {
-          try {
-            const response = await api.delete(`/users/${id}`);
-            if (response.status === 200) {
-              message.success(response.data.message);
-              getUsers();
-            }
-          } catch (error) {
-            console.error(error);
-            message.error(
-              error.response?.data?.message || "Xóa người dùng thất bại"
-            );
-          }
+async function deleteUser(id) {
+  Modal.confirm({
+    title: "Bạn có chắc chắn muốn xóa người dùng này?",
+    icon: createVNode(ExclamationCircleOutlined),
+    content: "Hành động này sẽ xóa vĩnh viễn và không thể hoàn tác.",
+    okText: "Xóa",
+    okType: "danger",
+    cancelText: "Hủy",
+    async onOk() {
+      await router.post(route("admin.users.destroy", id), {
+        preserveScroll: true,
+        onSuccess: () => {
+          message.success("Xóa người dùng thành công!");
+          router.reload({ only: ["users"] }); // 🔁 chỉ reload props 'users'
         },
-        onCancel() {
-          console.log("Người dùng đã hủy xóa");
+        onError: () => {
+          message.error("Xóa người dùng thất bại!");
         },
       });
-    }
-
-    onMounted(() => {
-      getUsers(pagination.value.current);
-    });
-
-    return {
-      users,
-      columns,
-      pagination,
-      getUsers,
-      handleTableChange,
-      deleteUser,
-    };
-  },
-});
+    },
+  });
+}
 </script>

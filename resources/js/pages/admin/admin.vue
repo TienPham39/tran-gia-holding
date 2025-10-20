@@ -4,7 +4,7 @@
     <div class="drawer-content flex flex-col">
       <Navbar @toggle-drawer="toggleDrawer" />
       <main class="flex-1 p-4 bg-base">
-        <slot />
+        <router-view />
       </main>
     </div>
     <Sidebar />
@@ -12,8 +12,8 @@
 </template>
 
 <script setup>
-import Navbar from "../components/admin/Navbar.vue";
-import Sidebar from "../components/admin/Sidebar.vue";
+import Navbar from "../../components/admin/Navbar.vue";
+import Sidebar from "../../components/admin/Sidebar.vue";
 
 // chỉ giữ drawer toggle
 const toggleDrawer = () => {

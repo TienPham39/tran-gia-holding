@@ -269,11 +269,10 @@
 import { ref, reactive, onMounted } from "vue";
 import api from "../../api";
 import { message } from "ant-design-vue";
-import { useRouter } from "vue-router";
 import { LoadingOutlined } from "@ant-design/icons-vue";
+import { router } from "@inertiajs/vue3";
 
 const errors = ref({});
-const router = useRouter();
 
 const activeTab = ref("login");
 
@@ -311,7 +310,7 @@ async function handleLoginSubmit() {
     api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
     message.success("Đăng nhập thành công");
-    router.push({ name: "admin-analytics" });
+    router.visit('/admin/dashboard');
   } catch (error) {
     const res = error.response;
     if (res?.status === 422) {
