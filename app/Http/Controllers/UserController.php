@@ -87,46 +87,52 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $users = User::find($id);
+        $user = User::find($id);
         $roles = DB::table('roles')
             ->select('id as value', 'name as label')
             ->get();
-        return response()->json([
-            'users' => $users,
+        // return response()->json([
+        //     'users' => $users,
+        //     'roles' => $roles,
+        // ]);
+        return Inertia::render('admin/users/edit', [
+            'user' => $user,
             'roles' => $roles,
         ]);
     }
 
     public function update(Request $request, $id)
     {
-        // Validate and store the blog post...
-        $validated = $request->validate([
-            "user_name" => "required",
-            "name" => "required",
-            "email" => "required|email|unique:users,email," . $id,
-            "roles_id" => "required|exists:roles,id",
-        ], [
-            "user_name.required" => "Nhập tên tài khoản",
-            "name.required" => "Nhập họ & tên",
-
-            "email.required" => "Nhập email",
-            "email.email" => "Email không đúng định dạng",
-            "email.unique" => "Email đã tồn tại",
-
-            "roles_id.required" => "Chọn vai trò",
-            "roles_id.exists" => "Vai trò không hợp lệ",
-        ]);
-
         $user = User::findOrFail($id);
 
+        // Validate thông tin cơ bản
+        $validated = $request->validate([
+            'user_name' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'roles_id' => 'required|exists:roles,id',
+            'avatar' => 'nullable|image|max:2048',
+        ], [
+            'user_name.required' => 'Vui lòng nhập tên tài khoản',
+            'name.required' => 'Vui lòng nhập họ và tên',
+            'email.required' => 'Vui lòng nhập email',
+            'email.email' => 'Email không đúng định dạng',
+            'email.unique' => 'Email đã tồn tại',
+            'roles_id.required' => 'Vui lòng chọn vai trò',
+            'roles_id.exists' => 'Vai trò không hợp lệ',
+            'avatar.image' => 'Tệp tải lên phải là hình ảnh',
+            'avatar.max' => 'Ảnh đại diện không được vượt quá 2MB',
+        ]);
+
         $data = [
-            "user_name" => $validated["user_name"],
-            "name" => $validated["name"],
-            "email" => $validated["email"],
-            "roles_id" => $validated["roles_id"],
-            "status" => $request->status ?? $user->status,
+            'user_name' => $validated['user_name'],
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'roles_id' => $validated['roles_id'],
+            'status' => $request->status ?? $user->status,
         ];
 
+        // Nếu có file avatar mới
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
             $filename = time() . '_' . $file->getClientOriginalName();
@@ -134,25 +140,34 @@ class UserController extends Controller
             $data['avatar'] = '/storage/' . $path;
         }
 
-        if ($request->change_password) {
-            $validated = $request->validate([
-                "password" => "required|confirmed|min:6",
+        // Nếu admin tick “Đổi mật khẩu”
+        if ($request->boolean('change_password')) {
+            $request->validate([
+                'password' => 'required|confirmed|min:6',
             ], [
-                "password.required" => "Nhập password",
-                "password.confirmed" => "Mật khẩu xác nhận không khớp",
-                "password.min" => "Mật khẩu tối thiểu 6 ký tự",
+                'password.required' => 'Vui lòng nhập mật khẩu mới',
+                'password.confirmed' => 'Xác nhận mật khẩu không khớp',
+                'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
             ]);
 
-            $data["password"] = Hash::make($validated["password"]);
-            $data["change_password_at"] = now();
+            $data['password'] = Hash::make($request->password);
+            $data['change_password_at'] = now();
         }
 
         $user->update($data);
 
-        return response()->json([
-            'message' => 'Cập nhật thành công',
-            'user' => $user,
-        ], 200);
+        // Nếu là request AJAX (từ Vue / Inertia)
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'message' => 'Cập nhật người dùng thành công!',
+                'user' => $user->fresh(),
+            ], 200);
+        }
+
+        // Nếu là form submit thông thường (non-AJAX)
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'Cập nhật người dùng thành công!');
     }
 
     public function destroy($id)
