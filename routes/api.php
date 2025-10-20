@@ -10,6 +10,10 @@ use Illuminate\Support\Str;
 use Laravel\Sanctum\PersonalAccessToken;
 use Carbon\Carbon;
 
+// Route::post('/login', [AuthController::class, 'login']);
+
+// Route::post('/register', [RegisterController::class, 'store']);
+
 Route::get('/auth/google', function () {
   return Socialite::driver('google')
     ->with(['prompt' => 'select_account'])

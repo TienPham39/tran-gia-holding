@@ -254,7 +254,6 @@ const submitForm = async () => {
     message.success(res.data.message || "Cập nhật người dùng thành công!");
     errors.value = null;
   } catch (error) {
-    console.error("Lỗi cập nhật:", error);
     if (error.response?.status === 422) {
       errors.value = error.response.data.errors || {};
       const firstError = Object.values(error.response.data.errors)[0][0];
