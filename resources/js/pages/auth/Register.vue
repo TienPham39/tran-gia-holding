@@ -269,11 +269,10 @@
 import { ref, reactive, onMounted } from "vue";
 import api from "../../api";
 import { message } from "ant-design-vue";
-import { useRouter } from "vue-router";
 import { LoadingOutlined } from "@ant-design/icons-vue";
+import { router } from "@inertiajs/vue3";
 
 const errors = ref({});
-const router = useRouter();
 
 const activeTab = ref("login");
 
@@ -311,7 +310,7 @@ async function handleLoginSubmit() {
     api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
     message.success("Đăng nhập thành công");
-    router.push({ name: "admin-analytics" });
+    router.visit('/admin/dashboard');
   } catch (error) {
     const res = error.response;
     if (res?.status === 422) {
@@ -339,8 +338,11 @@ onMounted(() => {
     localStorage.setItem("auth_token", token);
     axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
+    // Xóa token khỏi URL để tránh chạy lại vòng lặp
+    window.history.replaceState({}, document.title, "/auth");
+
     message.success("Đăng nhập Google thành công");
-    router.push({ name: "admin-analytics" });
+    router.visit("/admin/dashboard");
   }
 });
 

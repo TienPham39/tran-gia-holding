@@ -47,6 +47,7 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { Doughnut, Line } from "vue-chartjs";
+import admin from "../../../layouts/admin.vue";
 import {
   Chart as ChartJS,
   Title,
@@ -58,6 +59,10 @@ import {
   PointElement,
   ArcElement,
 } from "chart.js";
+
+defineOptions({
+  layout: admin,
+})
 
 ChartJS.register(
   Title,

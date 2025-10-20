@@ -13,7 +13,7 @@
       <!-- Logo -->
       <header class="mb-2 flex justify-center p-2">
         <img
-          src="/images/logo-green.png"
+          src="/images/homepage/logo.png"
           alt="Logo"
           class="hidden md:block h-12 max-h-14 w-auto object-contain"
         />
@@ -28,14 +28,15 @@
           :key="index"
         >
           <!-- Nếu không có children thì navigate thẳng -->
-          <RouterLink
+          <Link
             v-if="!lin.children"
-            :to="lin.to"
+            :href="lin.to"
+            :class="{ 'bg-gray-200 font-semibold': currentUrl === lin.to }"
             class="flex items-center w-full text-left hover:bg-gray-100 text-black"
           >
             <Icon :icon="lin.icon" class="h-5 w-5" />
             <span class="ml-2">{{ lin.name }}</span>
-          </RouterLink>
+          </Link>
 
           <!-- Nếu có children thì hiển thị toggle -->
           <button
@@ -60,12 +61,12 @@
               v-for="(child, childIndex) in lin.children"
               :key="childIndex"
             >
-              <RouterLink
-                :to="child.to"
+              <Link
+                :href="child.to"
                 class="block py-1 hover:bg-gray-100 text-black"
               >
                 {{ child.name }}
-              </RouterLink>
+              </Link>
             </li>
           </ul>
         </li>
@@ -76,6 +77,9 @@
 
 <script setup>
 import { ref } from "vue";
+import { usePage, Link } from '@inertiajs/vue3'
+const page = usePage()
+const currentUrl = page.url
 
 const links = ref([
   {
