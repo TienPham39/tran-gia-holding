@@ -1,12 +1,10 @@
 import "./bootstrap";
 import "../css/app.css";
-import { createApp } from "vue";
-import router from "../js/router/index.js";
+import { createApp, h } from "vue";
+import { createInertiaApp } from "@inertiajs/vue3";
+import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { Icon } from "@iconify/vue";
-import axios from "axios";
-import App from "./App.vue";
-window.axios = axios;
-
+import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import {
   Card,
   Table,
@@ -18,56 +16,44 @@ import {
   Menu,
   Drawer,
   Input,
-  Tag, 
+  Tag,
   Space,
   Checkbox,
   Modal,
-  message
+  message,
 } from "ant-design-vue";
 
-import {
-  EditOutlined,
-  EyeInvisibleOutlined,
-  LockOutlined,
-  KeyOutlined,
-  SafetyOutlined,
-  DeleteOutlined,
-  PlusOutlined,
-  UploadOutlined,
-  UserOutlined,
-  LoadingOutlined
-} from "@ant-design/icons-vue";
+createInertiaApp({
+  resolve: (name) =>
+        resolvePageComponent(
+            `./pages/${name}.vue`,
+            import.meta.glob('./pages/**/*.vue'),
+        ),
+  setup({ el, App, props, plugin }) {
+    const vueApp = createApp({ render: () => h(App, props) });
 
-const app = createApp(App);
+    vueApp.use(plugin);
 
-app.component("Icon", Icon);
-app.component("EditOutlined", EditOutlined);
-app.component("DeleteOutlined", DeleteOutlined);
-app.component("PlusOutlined", PlusOutlined);
-app.component("UploadOutlined", UploadOutlined);
-app.component("UserOutlined", UserOutlined);
-app.component("LoadingOutlined", LoadingOutlined);
-app.component("EyeInvisibleOutlined", EyeInvisibleOutlined);
-app.component("LockOutlined", LockOutlined);
-app.component("KeyOutlined", KeyOutlined);
-app.component("SafetyOutlined", SafetyOutlined);
+    // Đăng ký các component / plugin bạn đang dùng
+    vueApp.component("Icon", Icon);
+    vueApp.use(ZiggyVue);
+    vueApp.use(Card);
+    vueApp.use(Table);
+    vueApp.use(Avatar);
+    vueApp.use(Select);
+    vueApp.use(Layout);
+    vueApp.use(Button);
+    vueApp.use(List);
+    vueApp.use(Menu);
+    vueApp.use(Drawer);
+    vueApp.use(Input);
+    vueApp.use(Tag);
+    vueApp.use(Space);
+    vueApp.use(Checkbox);
+    vueApp.use(Modal);
 
-app.use(router);
-app.use(Card);
-app.use(Table);
-app.use(Avatar);
-app.use(Select);
-app.use(Layout);
-app.use(Button);
-app.use(List);
-app.use(Menu);
-app.use(Drawer);
-app.use(Input);
-app.use(Tag);
-app.use(Space);
-app.use(Checkbox);
-app.use(Modal);
+    vueApp.config.globalProperties.$message = message;
 
-app.config.globalProperties.$message = message;
-
-app.mount("#app");
+    vueApp.mount(el);
+  },
+});
