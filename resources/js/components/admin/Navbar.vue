@@ -98,8 +98,12 @@ onMounted(async () => {
 });
 
 function getAvatarUrl(avatar) {
-  if (!avatar) return "/images/Tommy-Shelby.jpg";
-  return avatar.startsWith("http") ? avatar : `${avatar}`;
+  if (!avatar) return "/images/avatar_default.png";
+
+  if (avatar.startsWith("http")) return avatar;
+  if (avatar.startsWith("/storage/")) return avatar;
+
+  return `/storage/${avatar}`;
 }
 
 async function handleLogout() {

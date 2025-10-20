@@ -15,11 +15,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        $middleware->api(append: [
+        $middleware->web(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
+        ]);
+
+        $middleware->api(prepend: [
+            \Illuminate\Http\Middleware\HandleCors::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
-        // Đăng ký middleware custom
+        // Đăng ký alias
         $middleware->alias([
             'auth' => Authenticate::class,
             'checkRole' => CheckRole::class,
@@ -28,4 +33,5 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
-    })->create();
+    })
+    ->create();

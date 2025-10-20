@@ -5,11 +5,22 @@ import { message } from "ant-design-vue";
 const api = axios.create({
   baseURL: "http://localhost:8000/",
   timeout: 10000,
+  withCredentials: true,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
   },
 });
+
+async function ensureCsrfCookie() {
+  try {
+    await api.get("/sanctum/csrf-cookie");
+  } catch (err) {
+    console.warn("Không thể lấy CSRF cookie:", err);
+  }
+}
+
+api.ensureCsrfCookie = ensureCsrfCookie;
 
 api.interceptors.request.use(
   (config) => {
@@ -19,10 +30,7 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    // Nếu lỗi khi gửi request
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -34,9 +42,7 @@ api.interceptors.response.use(
       if (router.currentRoute.value.name !== "Auth") {
         localStorage.removeItem("auth_token");
         delete api.defaults.headers.common["Authorization"];
-
         message.warning("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-
         await router.push({ name: "Auth" });
       }
     }
