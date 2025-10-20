@@ -1,18 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import admin from "./admin.js";
-import Register from "../pages/auth/Register.vue";
 import { message } from "ant-design-vue";
-
-const routes = [
-  ...admin,
-  {
-    path: "/auth",
-    name: "Auth",
-    component: Register,
-    meta: { guestOnly: true },
-  },
-];
-
+const routes = [];
 const router = createRouter({
   history: createWebHistory(),
   routes,

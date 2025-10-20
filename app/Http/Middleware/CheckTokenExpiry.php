@@ -13,33 +13,28 @@ class CheckTokenExpiry
     /**
      * Handle an incoming request.
      */
-    public function handle(Request $request, Closure $next)
+    public function handle($request, Closure $next)
     {
-        // Lấy token hiện tại của user (nếu có)
-        $token = $request->user()?->currentAccessToken();
+        $user = $request->user();
+        $token = $user ? $user->currentAccessToken() : null;
 
-        // Nếu có token và token có expires_at
-        if ($token && $token->expires_at) {
-            $expiresAt = Carbon::parse($token->expires_at);
-
-            // Nếu token đã hết hạn
-            if ($expiresAt->isPast()) {
-
-                // Xóa token khỏi DB nếu vẫn tồn tại
-                $realToken = PersonalAccessToken::find($token->id);
-                if ($realToken) {
-                    $realToken->delete();
-                }
-
-                return response()->json([
-                    'status' => 'expired',
-                    'message' => 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.'
-                ], 401);
-            }
+        // 🔹 Nếu không có token (chưa đăng nhập) → 401
+        if (!$token) {
+            return response()->json(['message' => 'Bạn chưa đăng nhập'], 401);
         }
 
-        // Nếu không có token hoặc token hợp lệ → tiếp tục request
+        // 🔹 Nếu token là TransientToken (dạng cookie / SPA) → cho qua
+        if ($token instanceof \Laravel\Sanctum\TransientToken) {
+            return $next($request);
+        }
+
+        // 🔹 Nếu token có expires_at và đã hết hạn
+        if ($token->expires_at && $token->expires_at->isPast()) {
+            $token->delete(); // xoá token hết hạn
+            return response()->json(['message' => 'Phiên đăng nhập đã hết hạn'], 401);
+        }
+
+        // 🔹 Nếu token hợp lệ
         return $next($request);
     }
 }
-
