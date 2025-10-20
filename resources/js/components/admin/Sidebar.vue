@@ -13,7 +13,7 @@
       <!-- Logo -->
       <header class="mb-2 flex justify-center p-2">
         <img
-          src="/images/logo-green.png"
+          src="/images/homepage/logo.png"
           alt="Logo"
           class="hidden md:block h-12 max-h-14 w-auto object-contain"
         />
