@@ -304,6 +304,7 @@ async function handleLoginSubmit() {
   isSubmitting.value = true;
 
   try {
+    await api.ensureCsrfCookie();
     const { data } = await api.post("/login", formLoginData);
 
     localStorage.setItem("auth_token", data.token);
@@ -336,10 +337,13 @@ onMounted(() => {
 
   if (token) {
     localStorage.setItem("auth_token", token);
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    // Xóa token khỏi URL để tránh chạy lại vòng lặp
+    window.history.replaceState({}, document.title, "/auth");
 
     message.success("Đăng nhập Google thành công");
-    router.push({ name: "admin-analytics" });
+    router.visit("/admin/dashboard");
   }
 });
 

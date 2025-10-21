@@ -2,7 +2,7 @@ import "./bootstrap";
 import "../css/app.css";
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
+import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import { Icon } from "@iconify/vue";
 import { ZiggyVue } from "../../vendor/tightenco/ziggy";
 import {
@@ -23,12 +23,18 @@ import {
   message,
 } from "ant-design-vue";
 
+import {
+  KeyOutlined,
+  SafetyOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons-vue";
+
 createInertiaApp({
   resolve: (name) =>
-        resolvePageComponent(
-            `./pages/${name}.vue`,
-            import.meta.glob('./pages/**/*.vue'),
-        ),
+    resolvePageComponent(
+      `./pages/${name}.vue`,
+      import.meta.glob("./pages/**/*.vue")
+    ),
   setup({ el, App, props, plugin }) {
     const vueApp = createApp({ render: () => h(App, props) });
 
@@ -51,6 +57,10 @@ createInertiaApp({
     vueApp.use(Space);
     vueApp.use(Checkbox);
     vueApp.use(Modal);
+
+    vueApp.component("KeyOutlined", KeyOutlined);
+    vueApp.component("SafetyOutlined", SafetyOutlined);
+    vueApp.component("LoadingOutlined", LoadingOutlined);
 
     vueApp.config.globalProperties.$message = message;
 
