@@ -1,6 +1,6 @@
 <template>
-  <section class="py-0">
-    <div class="container mx-auto">
+  <section class="overflow-hidden cursor-pointer">
+    <div class="container mx-auto overflow-x-hidden">
 
       <!-- Full-bleed video -->
       <div class="relative left-1/2 -ml-[50vw] w-screen z-0">
@@ -19,7 +19,7 @@
           <button
             v-if="!isPlaying"
             @click="togglePlay"
-            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-transparent border-0 p-0"
+            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 bg-transparent border-0 p-0 cursor-pointer"
             aria-label="Play video"
           >
             <img :src="playBtn" alt="Play" class="w-20 h-20 object-contain" />
@@ -55,7 +55,7 @@
 
               <!-- Center column (logo + images) -->
               <div class="center-column flex flex-col gap-4">
-                <div class="flex flex-col items-center relative z-[150]">
+                <div class="flex flex-col items-center relative z-150">
                   <img src="/images/homepage/footer_logo.png" alt="Trần Gia Holding" class="h-32 md:h-28 w-auto" />
                 </div>
 

@@ -36,7 +36,7 @@
           <div
             v-for="(p, idx) in products"
             :key="`mobile-${idx}`"
-            class="group shrink-0"
+            class="group shrink-0 cursor-pointer"
             :style="{ width: mobileCardWidth + 'px', scrollSnapAlign: 'start' }"
           >
             <div
@@ -102,7 +102,7 @@
 
       <!-- Desktop/tablet: 3-column grid -->
       <div class="hidden sm:grid gap-10 grid-cols-3">
-        <div v-for="(p, idx) in products" :key="idx" class="group">
+        <div v-for="(p, idx) in products" :key="idx" class="group cursor-pointer">
           <div class="relative rounded-lg overflow-hidden shadow-lg bg-white/5">
             <img
               :src="p.image"
@@ -110,7 +110,7 @@
               class="w-full h-[300px] object-cover block rounded-b-lg"
             />
             <div
-              class="absolute inset-1 bg-gradient-to-b from-black/80 via-black/40 to-transparent rounded-t-lg transition-all duration-300 group-hover:from-black/60 group-hover:via-black/20"
+              class="absolute inset-1 bg-linear-to-b from-black/80 via-black/40 to-transparent rounded-t-lg transition-all duration-300 group-hover:from-black/60 group-hover:via-black/20"
             ></div>
             <div class="absolute inset-0 z-2">
               <div
