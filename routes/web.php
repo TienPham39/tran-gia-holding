@@ -26,7 +26,6 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register')
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/auth', fn() => Inertia::render('auth/Register'))->name('auth');
-Route::get('/admin/dashboard', fn() => Inertia::render('admin/analytics/index'))->name('admin.dashboard');
 
 Route::post('/contact', [ContactController::class, 'store'])
   ->name('contact.store')
@@ -43,7 +42,8 @@ Route::withoutMiddleware([VerifyCsrfToken::class])
   });
 
 // Admin
-Route::middleware(['auth:sanctum', 'checkRole:1,2'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function () {
+  Route::get('/dashboard', fn() => Inertia::render('admin/analytics/index'))->name('admin.dashboard');
   Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
   Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
   Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
