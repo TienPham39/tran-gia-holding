@@ -7,9 +7,8 @@
 <!-- Homepage Videos component -->
   <HomepageVideos />
 
-
-
-
+  <!-- Product highlight component -->
+  <ProductHighlight />
 
   <!-- Contact component -->
   <Contact />
@@ -25,6 +24,7 @@ import Slider from "../../../components/client/Slider.vue";
 import Contact from "../../../components/client/Contact.vue";
 import Footer from "../../../components/client/Footer.vue";
 import HomepageVideos from "../../../components/client/homepage-videos.vue";
+import ProductHighlight from "../../../components/client/Product-highlight.vue";
 </script>
 
 <style></style>
