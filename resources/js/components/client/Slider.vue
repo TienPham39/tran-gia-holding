@@ -2,38 +2,29 @@
   <div class="w-full bg-white">
     <!-- Hero Section -->
     <section
-      class="relative flex justify-center items-center bg-cover bg-center w-full
-             h-[300px] md:h-[500px] lg:h-[694px]"
-      :style="{ backgroundImage: `url('/images/Banner.png')` }"
+      class="relative flex justify-center items-center bg-[url('/images/Banner.png')] bg-cover bg-center w-full h-[300px] md:h-[500px] lg:h-[694px]"
     >
-      <!-- Lớp phủ màu đỏ -->
+      <!-- Lớp phủ đỏ -->
       <div class="absolute inset-0 bg-[#660000]/75"></div>
 
-      <!-- Nội dung chính -->
-      <div class="relative z-10 text-center flex flex-col items-center max-w-[597px] px-4">
-        <!-- Tiêu đề -->
+      <!-- Nội dung -->
+      <div
+        class="relative z-10 text-center flex flex-col items-center max-w-[597px] px-4"
+      >
         <h1
-          class="font-banque font-bold uppercase text-white tracking-[0.28px] leading-tight
-                 text-[20px] md:text-[40px] lg:text-[40px]"
+          class="font-banque font-bold uppercase text-white tracking-[0.28px] leading-tight text-[20px] md:text-[40px] lg:text-[40px]"
         >
           KHỞI TÂM VƯƠN TẦM
         </h1>
 
-        <!-- Nút đăng ký -->
         <a
           href="/contact"
-          class="group inline-flex items-center justify-center gap-2 uppercase text-white
-                 font-gotham font-bold transition-all duration-300
-                 border-2 border-white/80 rounded-md bg-white/10
-                 hover:bg-[#660000]/50 hover:border-[#D9D9D947]
-                 shadow-[0_0_10px_rgba(255,255,255,0.1),inset_0_0_1px_rgba(255,255,255,0.5)]
-                 w-[150px] h-[30px] md:w-[240px] md:h-[42px] lg:w-[299px] lg:h-[47px]
-                 mt-2 md:mt-4 lg:mt-6 text-[11px] md:text-[24px] lg:text-[24px]"
+          class="group inline-flex items-center justify-center gap-2 uppercase text-white transition-all duration-300 border-2 border-white/80 rounded-md bg-white/10 hover:bg-[#660000]/50 hover:border-[#D9D9D947] shadow-[0_0_10px_rgba(255,255,255,0.1),inset_0_0_1px_rgba(255,255,255,0.5)] w-[150px] h-[30px] md:w-[240px] md:h-[42px] lg:w-[299px] lg:h-[47px] mt-2 md:mt-4 lg:mt-6 text-[11px] md:text-[24px] lg:text-[24px]"
         >
-          <span class="font-gotham font-bold sm:font-medium">
-            Đăng ký tư vấn
-          </span>
-          <span class="transition-transform duration-300 group-hover:translate-x-1">
+          <span>Đăng ký tư vấn</span>
+          <span
+            class="transition-transform duration-300 group-hover:translate-x-1"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -62,7 +53,7 @@
           <button
             @click="prevSlide"
             aria-label="Slide trước"
-            class="hidden md:flex items-center justify-center h-[708px] w-12 transition-transform duration-200 hover:scale-110"
+            class="hidden md:flex items-center justify-center h-[708px] w-12 transition-transform duration-200 hover:scale-110 cursor-pointer"
           >
             <img
               src="/images/leftarrow.png"
@@ -72,17 +63,19 @@
           </button>
 
           <!-- Main Content -->
-          <div class="flex-1 flex flex-col md:flex-row gap-8 items-center md:items-start">
+          <div
+            class="flex-1 flex flex-col md:flex-row gap-8 items-center md:items-start"
+          >
             <!-- Image -->
-            <div class="flex-shrink-0 relative flex justify-center">
+            <div class="shrink-0 relative flex justify-center">
               <img
                 :src="currentSlide.image"
                 :alt="currentSlide.title"
-                class="object-cover shadow-lg transition-opacity duration-500 rounded-[7px]"
+                class="cursor-pointer object-cover shadow-lg transition-opacity duration-500 rounded-[7px]"
                 :class="{
                   'w-[384px] h-[536px]': screenSize === 'mobile',
                   'w-[280px] h-[471px]': screenSize === 'tablet',
-                  'w-[422px] h-[708px]': screenSize === 'desktop'
+                  'w-[422px] h-[708px]': screenSize === 'desktop',
                 }"
               />
             </div>
@@ -116,11 +109,13 @@
               </div>
 
               <!-- Buttons -->
-              <div class="grid grid-cols-2 gap-4 justify-center md:justify-start">
+              <div
+                class="grid grid-cols-2 gap-4 justify-center md:justify-start"
+              >
                 <button
                   v-for="(btn, idx) in currentSlide.buttons"
                   :key="idx"
-                  class="py-3 px-6 font-semibold rounded-[7px] border-2 border-[#720000] transition-all duration-300"
+                  class="py-3 px-6 font-semibold rounded-[7px] border-2 border-[#720000] transition-all duration-300 cursor-pointer"
                   :style="{
                     backgroundColor: hover === idx ? '#720000' : 'transparent',
                     color: hover === idx ? '#fff' : '#720000',
@@ -139,7 +134,7 @@
           <button
             @click="nextSlide"
             aria-label="Slide tiếp"
-            class="hidden md:flex items-center justify-center h-[708px] w-12 transition-transform duration-200 hover:scale-110"
+            class="hidden md:flex items-center justify-center h-[708px] w-12 transition-transform duration-200 hover:scale-110 cursor-pointer"
           >
             <img
               src="/images/rightarrow.png"
@@ -154,83 +149,83 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 
 /* 🔹 Dữ liệu slide */
 const slides = ref([
   {
     id: 1,
-    title: 'GIỚI THIỆU',
-    image: '/images/slide1.png',
+    title: "GIỚI THIỆU",
+    image: "/images/slide1.png",
     description:
-      'Công ty bất động sản hàng đầu với hơn 20 năm kinh nghiệm trong lĩnh vực phát triển bất động sản. Chúng tôi cam kết cung cấp các dự án chất lượng cao, từ nhà ở đến các tòa nhà thương mại, với tiêu chuẩn quốc tế.',
-    buttons: ['Dự Án', 'Dịch Vụ', 'Về Chúng Tôi', 'Liên Hệ'],
+      "Công ty bất động sản hàng đầu với hơn 20 năm kinh nghiệm trong lĩnh vực phát triển bất động sản. Chúng tôi cam kết cung cấp các dự án chất lượng cao, từ nhà ở đến các tòa nhà thương mại, với tiêu chuẩn quốc tế.",
+    buttons: ["Dự Án", "Dịch Vụ", "Về Chúng Tôi", "Liên Hệ"],
   },
   {
     id: 2,
-    title: 'TẦM NHÌN',
-    image: '/images/slide2.png',
+    title: "TẦM NHÌN",
+    image: "/images/slide2.png",
     description:
-      'Tầm nhìn của chúng tôi là trở thành công ty bất động sản hàng đầu khu vực, tạo ra những không gian sống và làm việc bền vững, nâng cao chất lượng cuộc sống của cộng đồng và góp phần phát triển kinh tế xã hội.',
+      "Tầm nhìn của chúng tôi là trở thành công ty bất động sản hàng đầu khu vực, tạo ra những không gian sống và làm việc bền vững, nâng cao chất lượng cuộc sống của cộng đồng và góp phần phát triển kinh tế xã hội.",
   },
   {
     id: 3,
-    title: 'SỨ MỆNH',
-    image: '/images/slide3.png',
+    title: "SỨ MỆNH",
+    image: "/images/slide3.png",
     description:
-      'Sứ mệnh của chúng tôi là xây dựng những dự án bất động sản có giá trị, mang lại lợi ích cho khách hàng, nhà đầu tư và cộng đồng. Chúng tôi cam kết tuân thủ các tiêu chuẩn đạo đức cao nhất và phát triển bền vững.',
+      "Sứ mệnh của chúng tôi là xây dựng những dự án bất động sản có giá trị, mang lại lợi ích cho khách hàng, nhà đầu tư và cộng đồng. Chúng tôi cam kết tuân thủ các tiêu chuẩn đạo đức cao nhất và phát triển bền vững.",
   },
-])
+]);
 
 /* 🔹 Trạng thái carousel */
-const currentIndex = ref(0)
-const currentSlide = computed(() => slides.value[currentIndex.value])
-const hover = ref(null)
+const currentIndex = ref(0);
+const currentSlide = computed(() => slides.value[currentIndex.value]);
+const hover = ref(null);
 
 /* 🔹 Responsive logic */
-const screenSize = ref('desktop')
+const screenSize = ref("desktop");
 const updateScreen = () => {
-  if (window.innerWidth < 768) screenSize.value = 'mobile'
-  else if (window.innerWidth < 1024) screenSize.value = 'tablet'
-  else screenSize.value = 'desktop'
-}
+  if (window.innerWidth < 768) screenSize.value = "mobile";
+  else if (window.innerWidth < 1024) screenSize.value = "tablet";
+  else screenSize.value = "desktop";
+};
 
 /* 🔹 Tự động chuyển slide */
-let autoSlideInterval = null
+let autoSlideInterval = null;
 const startAutoSlide = () => {
   autoSlideInterval = setInterval(() => {
-    nextSlide()
-  }, 5000) // 👉 Thay đổi thời gian tại đây (5000 = 5 giây)
-}
+    nextSlide();
+  }, 5000); // 👉 Thay đổi thời gian tại đây (5000 = 5 giây)
+};
 const stopAutoSlide = () => {
-  if (autoSlideInterval) clearInterval(autoSlideInterval)
-}
+  if (autoSlideInterval) clearInterval(autoSlideInterval);
+};
 
 /* 🔹 Chuyển slide thủ công */
 const nextSlide = () => {
-  currentIndex.value = (currentIndex.value + 1) % slides.value.length
-}
+  currentIndex.value = (currentIndex.value + 1) % slides.value.length;
+};
 const prevSlide = () => {
   currentIndex.value =
-    (currentIndex.value - 1 + slides.value.length) % slides.value.length
-}
+    (currentIndex.value - 1 + slides.value.length) % slides.value.length;
+};
 
 /* 🔹 Điều khiển bằng bàn phím */
 const handleKey = (e) => {
-  if (e.key === 'ArrowRight') nextSlide()
-  if (e.key === 'ArrowLeft') prevSlide()
-}
+  if (e.key === "ArrowRight") nextSlide();
+  if (e.key === "ArrowLeft") prevSlide();
+};
 
 /* 🔹 Lifecycle */
 onMounted(() => {
-  updateScreen()
-  window.addEventListener('resize', updateScreen)
-  window.addEventListener('keydown', handleKey)
-  startAutoSlide()
-})
+  updateScreen();
+  window.addEventListener("resize", updateScreen);
+  window.addEventListener("keydown", handleKey);
+  startAutoSlide();
+});
 onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateScreen)
-  window.removeEventListener('keydown', handleKey)
-  stopAutoSlide()
-})
+  window.removeEventListener("resize", updateScreen);
+  window.removeEventListener("keydown", handleKey);
+  stopAutoSlide();
+});
 </script>

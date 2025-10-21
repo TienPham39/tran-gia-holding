@@ -17,6 +17,12 @@
   --color-primary: #4635b1;
   --color-background: #141122;
 }
+@font-face {
+  font-family: 'UTM Banque';
+  src: url('/fonts/UTMBanque.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 
 html,
 body,
