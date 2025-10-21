@@ -1,19 +1,22 @@
 <template>
   <!-- Navbar Desktop -->
   <section
-    class="relative h-[80px] items-center justify-end xl:justify-center hidden xl:flex"
+    class="relative z-[100] h-[80px] items-center justify-end xl:justify-center hidden xl:flex bg-transparent"
   >
+    <!-- Logo -->
     <img
-      class="absolute top-1/3 left-[10%]"
+      class="absolute top-1/3 left-[10%] z-[100]"
       src="/images/homepage/logo.png"
       alt="logo"
     />
-    <ul class="flex items-center">
+
+    <!-- Menu Desktop -->
+    <ul class="flex items-center z-[100] relative">
       <li
         v-for="(item, index) in navbarItem"
         :key="index"
-        class="uppercase font-bold text-base"
-        :class="item.active ? 'text-[#880000B8]' : ''"
+        class="uppercase font-bold text-base transition-colors duration-200"
+        :class="item.active ? 'text-[#880000B8]' : 'text-black hover:text-[#880000B8]'"
       >
         <a class="px-3.5 py-4" :href="item.href">{{ item.name }}</a>
       </li>
@@ -22,21 +25,32 @@
 
   <!-- Navbar Mobile -->
   <section
-    class="relative h-[80px] flex items-center justify-between md:justify-end px-6 xl:hidden"
+    class="relative z-[100] h-[80px] flex items-center justify-between md:justify-end px-6 xl:hidden bg-transparent"
   >
+    <!-- Logo cho Tablet -->
     <img
-      class="absolute max-md:hidden top-1/3 left-[10%]"
+      class="absolute max-md:hidden top-1/3 left-[10%] z-[100]"
       src="/images/homepage/logo.png"
       alt="logo"
     />
-    <img class="md:hidden" src="/images/homepage/mobile_logo.png" alt="mobile_logo">
-    <button @click="isOpen = true">
+
+    <!-- Logo Mobile -->
+    <img
+      class="md:hidden z-[100]"
+      src="/images/homepage/mobile_logo.png"
+      alt="mobile_logo"
+    />
+
+    <!-- Nút mở menu -->
+    <button @click="isOpen = true" class="z-[100]">
       <img src="/images/homepage/menu-icon.png" alt="menu" class="w-8 h-8" />
     </button>
+
+    <!-- Overlay (mờ nền khi menu mở) -->
     <transition name="fade">
       <div
         v-if="isOpen"
-        class="fixed inset-0 bg-black/40 z-40"
+        class="fixed inset-0 bg-black/40 z-[90]"
         @click="isOpen = false"
       ></div>
     </transition>
@@ -45,7 +59,7 @@
     <transition name="slide">
       <div
         v-if="isOpen"
-        class="fixed top-0 right-0 h-full bg-white shadow-lg z-50 p-6 w-[80%] max-w-[400px] min-[360px]:w-full transition-transform"
+        class="fixed top-0 right-0 h-full bg-white shadow-lg z-[100] p-6 w-[80%] max-w-[400px] min-[360px]:w-full transition-transform"
       >
         <div class="flex justify-end mb-6">
           <button
@@ -56,7 +70,7 @@
           </button>
         </div>
 
-        <!-- Danh sách menu -->
+        <!-- Danh sách menu Mobile -->
         <ul class="flex flex-col gap-3">
           <li
             v-for="(item, index) in navbarItem"
@@ -92,18 +106,18 @@ const navbarItem = [
 ];
 </script>
 
-<style>
+<style scoped>
 /* Hiệu ứng fade overlay */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.2s;
+  transition: opacity 0.2s ease;
 }
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
 }
 
-/* Hiệu ứng slide cho menu */
+/* Hiệu ứng slide menu mobile */
 .slide-enter-active,
 .slide-leave-active {
   transition: transform 0.2s ease;
