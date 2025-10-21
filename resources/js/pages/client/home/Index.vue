@@ -4,11 +4,12 @@
 
   <!-- Slider component -->
   <Slider />
-<!-- Homepage Videos component -->
-  <HomepageVideos />
 
   <!-- Product highlight component -->
   <ProductHighlight />
+
+  <!-- Homepage Videos component -->
+  <HomepageVideos />
 
   <!-- Contact component -->
   <Contact />
