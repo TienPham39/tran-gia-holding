@@ -1,9 +1,10 @@
 import axios from "axios";
-import router from "./router";
 import { message } from "ant-design-vue";
+import router from "./router";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/",
+  baseURL: "http://localhost:8000",
+  withCredentials: true,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -11,6 +12,16 @@ const api = axios.create({
   },
 });
 
+// ✅ Đảm bảo có CSRF cookie (nếu cần với Sanctum)
+api.ensureCsrfCookie = async function () {
+  try {
+    await api.get("/sanctum/csrf-cookie");
+  } catch (err) {
+    console.warn("⚠️ Không thể lấy CSRF cookie:", err.message);
+  }
+};
+
+// ✅ Tự động gắn Authorization header
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("auth_token");
@@ -19,25 +30,23 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    // Nếu lỗi khi gửi request
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
+// ✅ Bắt lỗi 401 toàn cục
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const { response } = error;
 
     if (response?.status === 401) {
+      // Xóa token + redirect
+      localStorage.removeItem("auth_token");
+      delete api.defaults.headers.common["Authorization"];
+
       if (router.currentRoute.value.name !== "Auth") {
-        localStorage.removeItem("auth_token");
-        delete api.defaults.headers.common["Authorization"];
-
         message.warning("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-
-        await router.push({ name: "Auth" });
+        await router.replace({ name: "Auth" });
       }
     }
 
