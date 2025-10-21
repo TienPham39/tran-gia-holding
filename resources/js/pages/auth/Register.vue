@@ -105,26 +105,24 @@
           </button>
 
           <!-- Divider -->
-          <div class="relative flex items-center py-2">
-            <div class="flex-grow border-t border-gray-300"></div>
-            <span class="flex-shrink mx-4 text-sm text-gray-500 font-medium"
+          <!-- <div class="relative flex items-center py-2">
+            <div class="grow border-t border-gray-300"></div>
+            <span class="shrink mx-4 text-sm text-gray-500 font-medium"
               >hoặc</span
             >
-            <div class="flex-grow border-t border-gray-300"></div>
-          </div>
+            <div class="grow border-t border-gray-300"></div>
+          </div> -->
 
           <!-- Custom Google Login Button -->
-          <button
+          <!-- <button
             type="button"
             @click="loginWithGoogle"
             class="group relative w-full h-12 flex items-center justify-center gap-3 px-4 border-2 border-gray-300 rounded-lg bg-white hover:bg-gray-50 hover:border-gray-400 hover:shadow-lg transition-all duration-300 ease-out overflow-hidden"
           >
-            <!-- Hover effect background -->
             <div
-              class="absolute inset-0 bg-gradient-to-r from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              class="absolute inset-0 bg-linear-to-r from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             ></div>
 
-            <!-- Google Icon -->
             <div
               class="relative z-10 flex items-center justify-center w-6 h-6 group-hover:scale-110 transition-transform duration-300"
             >
@@ -148,18 +146,16 @@
               </svg>
             </div>
 
-            <!-- Button Text -->
             <span
               class="relative z-10 text-gray-700 font-semibold text-base group-hover:text-gray-900 transition-colors duration-300"
             >
               Đăng nhập bằng Google
             </span>
 
-            <!-- Shine effect on hover -->
             <div
-              class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+              class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-linear-to-r from-transparent via-white/30 to-transparent"
             ></div>
-          </button>
+          </button> -->
         </form>
 
         <!-- Register Form -->
@@ -304,13 +300,14 @@ async function handleLoginSubmit() {
   isSubmitting.value = true;
 
   try {
+    await api.ensureCsrfCookie();
     const { data } = await api.post("/login", formLoginData);
 
     localStorage.setItem("auth_token", data.token);
     api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
-    message.success("Đăng nhập thành công");
-    router.visit('/admin/dashboard');
+    message.success("Đăng nhập thành công!");
+    router.visit("/admin/dashboard");
   } catch (error) {
     const res = error.response;
     if (res?.status === 422) {
@@ -326,17 +323,13 @@ async function handleLoginSubmit() {
   }
 }
 
-function loginWithGoogle() {
-  window.location.href = "http://localhost:8000/auth/google";
-}
-
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
 
   if (token) {
     localStorage.setItem("auth_token", token);
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
     // Xóa token khỏi URL để tránh chạy lại vòng lặp
     window.history.replaceState({}, document.title, "/auth");

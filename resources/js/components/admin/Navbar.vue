@@ -44,7 +44,7 @@
         <!-- Dropdown menu -->
         <ul
           tabindex="0"
-          class="mt-5 z-[1] p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-58 space-y-3 font-semibold text-base"
+          class="mt-5 z-1 p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-58 space-y-3 font-semibold text-base"
         >
           <li>
             <Link
@@ -98,8 +98,12 @@ onMounted(async () => {
 });
 
 function getAvatarUrl(avatar) {
-  if (!avatar) return "/images/Tommy-Shelby.jpg";
-  return avatar.startsWith("http") ? avatar : `${avatar}`;
+  if (!avatar) return "/images/avatar_default.png";
+
+  if (avatar.startsWith("http")) return avatar;
+  if (avatar.startsWith("/storage/")) return avatar;
+
+  return `/storage/${avatar}`;
 }
 
 async function handleLogout() {
@@ -107,18 +111,32 @@ async function handleLogout() {
   isLoggingOut.value = true;
 
   try {
-    await api.post("/logout");
+    const token = localStorage.getItem("auth_token");
+
+    await axios.post(
+      "/logout",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    message.success("Đăng xuất thành công!");
   } catch (error) {
     console.warn("Logout error:", error);
   } finally {
-    // Luôn xóa token và reset trạng thái
     localStorage.removeItem("auth_token");
-    delete api.defaults.headers.common["Authorization"];
+    sessionStorage.clear();
 
-    message.success("Đăng xuất thành công!");
     isLoggingOut.value = false;
 
-    router.visit("/auth");
+    // ✅ Điều hướng về trang đăng nhập
+    router.visit("/auth", {
+      replace: true,
+      preserveState: false,
+    });
   }
 }
 </script>
