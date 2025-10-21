@@ -2,8 +2,15 @@
   <!-- Navbar component -->
   <Navbar />
   
+<!-- Homepage Videos component -->
+  <HomepageVideos />
+
+
   <!-- Contact component -->
   <Contact />
+
+  
+  
   
   <!-- Footer component -->
   <Footer />
@@ -14,6 +21,7 @@ import { ref } from "vue";
 import Navbar from "../../../components/client/Navbar.vue";
 import Contact from "../../../components/client/Contact.vue";
 import Footer from "../../../components/client/Footer.vue";
+import HomepageVideos from "../../../components/client/homepage-videos.vue";
 </script>
 
 <style></style>
