@@ -1,4 +1,4 @@
-<template>
+<template class="font-banque">
   <!-- Navbar component -->
   <Navbar />
 
