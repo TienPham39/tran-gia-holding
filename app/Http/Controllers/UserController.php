@@ -73,7 +73,14 @@ class UserController extends Controller
         ];
 
         if ($request->hasFile('avatar')) {
-            $path = $request->file('avatar')->store('avatars', 'public');
+            $file = $request->file('avatar');
+
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+
+            $safeName = \Str::slug($originalName) . '_' . time() . '.' . $extension;
+
+            $path = $file->storeAs('avatars', $safeName, 'public');
             $validated['avatar'] = '/storage/' . $path;
         }
 
@@ -261,8 +268,13 @@ class UserController extends Controller
 
         if ($request->hasFile('avatar')) {
             $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('avatars', $filename, 'public');
+
+            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $extension = $file->getClientOriginalExtension();
+
+            $safeName = \Str::slug($originalName) . '_' . time() . '.' . $extension;
+
+            $path = $file->storeAs('avatars', $safeName, 'public');
             $validated['avatar'] = '/storage/' . $path;
         }
 
