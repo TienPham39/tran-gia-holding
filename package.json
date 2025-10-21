@@ -23,7 +23,11 @@
         "chart.js": "^4.5.0",
         "dayjs": "^1.11.18",
         "pinia": "^3.0.3",
+<<<<<<< Updated upstream
         "tailwind-scrollbar": "^4.0.2",
+=======
+        "swiper": "^12.0.2",
+>>>>>>> Stashed changes
         "vue": "^3.5.21",
         "vue-chartjs": "^5.3.2",
         "vue-router": "^4.5.1",
