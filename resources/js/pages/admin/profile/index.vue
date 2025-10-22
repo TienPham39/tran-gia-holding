@@ -562,62 +562,57 @@ const handlePasswordChange = async () => {
 };
 
 const handleEdit = () => {
-  editForm.name = user.value.name;
-  editForm.user_name = user.value.user_name;
-  editForm.email = user.value.email;
-  previewUrl.value = user.value.avatar;
+  editForm.name = user.value.name || "";
+  editForm.user_name = user.value.user_name || "";
+  editForm.email = user.value.email || "";
+  previewUrl.value = user.value.avatar || null;
   isEditModalOpen.value = true;
 };
 
 const handleAvatarChange = (e) => {
   const file = e.target.files[0];
   if (file) {
-    editForm.avatar = file;
-    previewUrl.value = URL.createObjectURL(file);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      editForm.avatar = event.target.result;
+      previewUrl.value = event.target.result;
+    };
+    reader.readAsDataURL(file);
   }
 };
 
 const resetEditForm = () => {
   isEditModalOpen.value = false;
-  editForm.name = "";
-  editForm.user_name = "";
-  editForm.email = "";
-  editForm.avatar = null;
-  previewUrl.value = null;
+  errors.value = {};
 };
 
 const handleSaveProfile = async () => {
   isSaving.value = true;
+  errors.value = {};
+
   try {
-    const formData = new FormData();
-    formData.append("name", editForm.name?.trim() || "");
-    formData.append("user_name", editForm.user_name?.trim() || "");
-    formData.append("email", editForm.email?.trim() || "");
+    const payload = {
+      name: editForm.name?.trim(),
+      user_name: editForm.user_name?.trim(),
+      email: editForm.email?.trim(),
+    };
+
     if (editForm.avatar) {
-      formData.append("avatar", editForm.avatar);
+      payload.avatar = editForm.avatar;
     }
 
-    formData.append("_method", "PUT");
-
-    const { data } = await api.post("/user/profile", formData, {
-      headers: { "Content-Type": "multipart/form-data" },
-    });
-
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+    const { data } = await api.put("/user/profile", payload);
 
     message.success("Cập nhật hồ sơ thành công!");
     user.value = data.user;
-    resetEditForm();
+
+    isEditModalOpen.value = false;
+    previewUrl.value = null;
+    console.log("Payload gửi lên:", payload);
   } catch (error) {
     if (error.response?.status === 422) {
       const data = error.response.data;
-      if (data.errors) {
-        errors.value = data.errors;
-      } else if (data.message) {
-        errors.value = { current_password: [data.message] };
-      }
+      errors.value = data.errors || { general: [data.message] };
     } else {
       message.error("Không thể cập nhật hồ sơ. Vui lòng thử lại!");
     }
@@ -625,6 +620,7 @@ const handleSaveProfile = async () => {
     isSaving.value = false;
   }
 };
+
 
 const formatDate = (dateStr) => {
   if (!dateStr) return "Không xác định";
@@ -651,13 +647,11 @@ const fromNow = (time) => {
 
 function getAvatarUrl(avatar) {
   if (!avatar) return "/images/avatar_default.png";
-  if (avatar.startsWith("http")) return avatar;
-  if (avatar.startsWith("/storage/")) return avatar;
-  if (avatar.startsWith("avatars/")) return `/storage/${avatar}`;
-  if (avatar.startsWith("images/")) return `/${avatar}`;
-  return "/images/avatar_default.png";
+  if (avatar.startsWith("data:image/")) return avatar; 
+  return avatar.startsWith("/storage/")
+    ? `${import.meta.env.VITE_APP_URL}${avatar}`
+    : avatar;
 }
-
 
 onMounted(async () => {
   try {
@@ -676,6 +670,4 @@ onMounted(async () => {
     console.error("Không thể lấy thông tin user:", error);
   }
 });
-
-// onUnmounted(() => clearInterval(timer));
 </script>
