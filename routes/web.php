@@ -9,16 +9,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
 
-Route::get('/storage/{path}', function ($path) {
-  $file = storage_path('app/public/' . $path);
-
-  if (!file_exists($file)) {
-    abort(404, "File not found: {$file}");
-  }
-
-  return response()->file($file);
-})->where('path', '.*');
-
 // Public routes
 Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware([VerifyCsrfToken::class]);
 
@@ -35,7 +25,7 @@ Route::post('/contact', [ContactController::class, 'store'])
 Route::withoutMiddleware([VerifyCsrfToken::class])
   ->middleware(['auth:sanctum', 'check.token.expiry'])
   ->group(function () {
-    Route::get('/user', [AuthController::class, 'user']);
+    Route::get('/user', [UserController::class, 'user']);
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::put('/user/profile', [UserController::class, 'updateProfile']);
     Route::put('/user/change-password', [UserController::class, 'changePassword']);
