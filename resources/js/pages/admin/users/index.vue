@@ -6,7 +6,7 @@
       <template #extra>
         <Link
           :href="route('admin.users.create')"
-          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold !text-white !bg-blue-900 rounded-full shadow hover:!bg-blue-800 transition-all duration-200"
+          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-white! bg-blue-900! rounded-full shadow hover:bg-blue-800! transition-all duration-200"
         >
           <span>Tạo người dùng</span>
         </Link>
@@ -30,7 +30,8 @@
           <template v-else-if="column.key === 'avatar'">
             <a-avatar
               :size="50"
-              :src="record.avatar || '/images/avatar_default.png'"
+              :src="getAvatarUrl(record.avatar)"
+              @error="(e) => (e.target.src = '/images/avatar_default.png')"
             />
           </template>
 
@@ -52,11 +53,11 @@
           <template v-if="column.key === 'status'">
             <a-tag
               v-if="record.status && record.status.toLowerCase() === 'active'"
-              class="!text-white !bg-blue-600 font-semibold"
+              class="text-white! bg-blue-600! font-semibold"
             >
               Active
             </a-tag>
-            <a-tag v-else class="!text-white !bg-red-600 font-semibold"
+            <a-tag v-else class="text-white! bg-red-600! font-semibold"
               >Inactive</a-tag
             >
           </template>
@@ -73,7 +74,7 @@
               <a-button
                 @click="deleteUser(record.id)"
                 type="link"
-                class="!text-red-600 hover:!text-red-400"
+                class="text-red-600! hover:text-red-400!"
               >
                 <DeleteOutlined />
               </a-button>
@@ -100,6 +101,7 @@ import { usePage, router, Link } from "@inertiajs/vue3";
 defineOptions({
   layout: admin,
 });
+
 const { props } = usePage();
 const users = ref(props.users.data);
 const pagination = ref({
@@ -131,6 +133,15 @@ const columns = [
   { title: "Hành động", key: "action", fixed: "right", align: "center" },
 ];
 
+function getAvatarUrl(avatar) {
+  if (!avatar) return "/images/avatar_default.png";
+  if (avatar.startsWith("data:image/")) return avatar;
+  if (avatar.startsWith("/storage/")) {
+    return `${window.location.origin}${avatar}`;
+  }
+  return avatar;
+}
+
 function handleTableChange(paginationData) {
   router.visit(`/admin/users?page=${paginationData.current}`, {
     preserveScroll: true,
@@ -151,7 +162,7 @@ async function deleteUser(id) {
         preserveScroll: true,
         onSuccess: () => {
           message.success("Xóa người dùng thành công!");
-          router.reload({ only: ["users"] }); // 🔁 chỉ reload props 'users'
+          router.reload({ only: ["users"] });
         },
         onError: () => {
           message.error("Xóa người dùng thất bại!");
