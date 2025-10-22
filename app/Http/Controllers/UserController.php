@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Models\UserActivity;
 use Inertia\Inertia;
+use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -42,7 +43,6 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        // Validate and store the blog post...
         $validated = $request->validate([
             "user_name" => "required|unique:users,user_name,",
             "name" => "required",
@@ -63,33 +63,20 @@ class UserController extends Controller
             "roles_id.exists" => "Vai trò không hợp lệ",
         ]);
 
-        $data = [
-            "user_name" => $validated['user_name'],
-            "name" => $validated["name"],
-            "email" => $validated["email"],
-            "password" => Hash::make($validated["password"]),
-            "status" => $request["status"] ?? 'active',
-            "roles_id" => $validated["roles_id"],
-        ];
-
         if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-
-            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $extension = $file->getClientOriginalExtension();
-
-            $safeName = \Str::slug($originalName) . '_' . time() . '.' . $extension;
-
-            $path = $file->storeAs('avatars', $safeName, 'public');
-            $validated['avatar'] = '/storage/' . $path;
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $validated['avatar'] = "/storage/{$path}";
         }
 
-        $validated['password'] = bcrypt($validated['password']);
-        User::create($validated);
+        $validated['password'] = Hash::make($validated['password']);
+        $validated['status'] = $request->input('status', 'active');
 
-        return redirect()
-            ->route('admin.users.index')
-            ->with('success', 'Tạo người dùng thành công!');
+        $user = User::create($validated);
+
+        return response()->json([
+            'message' => 'Tạo người dùng thành công!',
+            'user' => $user,
+        ], 200);
     }
 
     public function edit($id)
@@ -98,10 +85,6 @@ class UserController extends Controller
         $roles = DB::table('roles')
             ->select('id as value', 'name as label')
             ->get();
-        // return response()->json([
-        //     'users' => $users,
-        //     'roles' => $roles,
-        // ]);
         return Inertia::render('admin/users/edit', [
             'user' => $user,
             'roles' => $roles,
@@ -139,12 +122,14 @@ class UserController extends Controller
             'status' => $request->status ?? $user->status,
         ];
 
-        // Nếu có file avatar mới
         if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $path = $file->storeAs('avatars', $filename, 'public');
-            $data['avatar'] = '/storage/' . $path;
+            if ($user->avatar && str_starts_with($user->avatar, '/storage/')) {
+                $oldPath = str_replace('/storage/', '', $user->avatar);
+                \Storage::disk('public')->delete($oldPath);
+            }
+
+            $path = $request->file('avatar')->store('avatars', 'public');
+            $data['avatar'] = "/storage/{$path}";
         }
 
         // Nếu admin tick “Đổi mật khẩu”
@@ -182,15 +167,11 @@ class UserController extends Controller
         $user = User::find($id);
 
         if (Auth::id() == $id) {
-            return response()->json([
-                'message' => 'Không thể xóa tài khoản của chính bạn'
-            ], 403);
+            return back()->withErrors(['message' => 'Không thể xóa tài khoản của chính bạn']);
         }
 
         if (!$user) {
-            return response()->json([
-                'message' => 'Người dùng không tồn tại'
-            ], 404);
+            return back()->withErrors(['message' => 'Người dùng không tồn tại']);
         }
 
         $user->delete();
@@ -229,15 +210,6 @@ class UserController extends Controller
         ]);
 
         $user = Auth::user();
-
-        // Kiểm tra mật khẩu hiện tại
-        // if (!\Hash::check($request->current_password, $user->password)) {
-        //     return response()->json([
-        //         'message' => 'Mật khẩu hiện tại không đúng!',
-        //     ], 422);
-        // }
-
-        // Cập nhật mật khẩu mới
         $user->update([
             'password' => \Hash::make($request->new_password),
             'change_password_at' => now(),
@@ -248,42 +220,39 @@ class UserController extends Controller
         ], 200);
     }
 
-    public function updateProfile(request $request)
+    public function user(Request $request)
     {
-        $user = $request->user();
+        $user = Auth::user()->load('role');
+        return response()->json($user);
+    }
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'user_name' => 'required|string|max:255',
-            'email' => 'nullable|email|unique:users,email,' . $user->id,
-            'avatar' => 'nullable|image|max:2048',
-        ], [
-            'name.required' => 'Vui lòng nhập họ và tên',
-            'user_name.required' => 'Vui lòng nhập tên tài khoản',
-            'email.email' => 'Email không đúng định dạng',
-            'email.unique' => 'Email đã tồn tại',
-            'avatar.image' => 'Tệp tải lên phải là hình ảnh',
-            'avatar.max' => 'Ảnh không được vượt quá 2MB',
-        ]);
+    public function updateProfile(Request $request)
+    {
+        try {
+            $user = $request->user();
 
-        if ($request->hasFile('avatar')) {
-            $file = $request->file('avatar');
+            $validated = $request->validate([
+                'name' => 'required|string|max:255',
+                'user_name' => 'required|string|max:255',
+                'email' => 'nullable|email|unique:users,email,' . $user->id,
+                'avatar' => 'nullable',
+            ]);
 
-            $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
-            $extension = $file->getClientOriginalExtension();
+            if ($request->hasFile('avatar')) {
+                $path = $request->file('avatar')->store('avatars', 'public');
+                $validated['avatar'] = "/storage/{$path}";
+            }
 
-            $safeName = \Str::slug($originalName) . '_' . time() . '.' . $extension;
+            $user->update($validated);
 
-            $path = $file->storeAs('avatars', $safeName, 'public');
-            $validated['avatar'] = '/storage/' . $path;
+            return response()->json([
+                'message' => 'Cập nhật hồ sơ thành công!',
+                'user' => $user->fresh(),
+            ], 200);
+
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
         }
-
-        $user->update($validated);
-
-        return response()->json([
-            'message' => 'Cập nhật hồ sơ thành công!',
-            'user' => $user->fresh(),
-        ], 200);
     }
 
     public function resetPassword(Request $request)
