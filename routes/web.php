@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\HomeController;
+use App\Http\Controllers\Client\NewsController;
+use App\Http\Controllers\Client\ContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -13,10 +14,10 @@ use App\Http\Middleware\VerifyCsrfToken;
 Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::post('/register', [RegisterController::class, 'store'])->name('register')->withoutMiddleware([VerifyCsrfToken::class]);
-
-Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/auth', fn() => Inertia::render('auth/Register'))->name('auth');
 
+Route::get('/', [HomeController::class, 'index'])->name('index');
+Route::get('/tin-tuc', [NewsController::class, 'index'])->name('news.index');
 Route::post('/contact', [ContactController::class, 'store'])
   ->name('contact.store')
   ->withoutMiddleware([VerifyCsrfToken::class]);
