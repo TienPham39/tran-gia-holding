@@ -9,6 +9,7 @@ const routes = [
     component: () => import("../pages/auth/Register.vue"),
     meta: { guestOnly: true },
   },
+  // -------------------------------------- ADMIN ROUTES ------------------------------
   {
     path: "/admin/analytics",
     name: "admin-analytics",

@@ -1,7 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 @import url("https://fonts.cdnfonts.com/css/utm-banque");
 @import "tailwindcss";
-@import url("https://fonts.cdnfonts.com/css/utm-banque");
 @import url("https://fonts.cdnfonts.com/css/svn-gotham");
 @plugin "daisyui";
 
@@ -17,27 +16,21 @@
   --color-primary: #4635b1;
   --color-background: #141122;
 }
-@font-face {
-  font-family: 'UTM Banque';
-  src: url('/fonts/UTMBanque.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-}
 
 html,
 body,
 #app {
-  font-family: "Inter", ui-sans-serif, system-ui, sans-serif !important;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --ant-font-family: "Inter", ui-sans-serif, system-ui, sans-serif !important;
+  --ant-font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
 
-  .font-banque {
-    font-family: "UTM Banque", sans-serif !important;
-  }
+.font-banque {
+  font-family: "UTM Banque", sans-serif !important;
+}
 
-  .font-gotham {
-    font-family: "SVN-Gotham", sans-serif !important;
-  }
+.font-gotham {
+  font-family: "SVN-Gotham", sans-serif !important;
 }
