@@ -17,7 +17,9 @@
         :key="index"
         class="uppercase font-bold text-base transition-colors duration-200"
         :class="
-          item.active ? 'text-[#880000B8]' : 'text-black hover:text-[#880000B8]'
+          page.url === item.href
+            ? 'text-[#880000B8]'
+            : 'text-black hover:text-[#880000B8]'
         "
       >
         <Link :href="item.href" class="px-3.5 py-4 block">
@@ -98,16 +100,18 @@
 <script setup>
 import { ref } from "vue";
 import { Link } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 
+const page = usePage();
 const isOpen = ref(false);
 
 const navbarItem = [
-  { name: "Giới thiệu", href: "/", active: true },
-  { name: "Tin tức", href: "/tin-tuc", active: false },
-  { name: "Sản phẩm", href: "#", active: false },
-  { name: "Dịch vụ", href: "#", active: false },
-  { name: "Hoạt động cộng đồng", href: "#", active: false },
-  { name: "Cơ hội nghề nghiệp", href: "#", active: false },
+  { name: "Giới thiệu", href: "/" },
+  { name: "Tin tức", href: "/tin-tuc" },
+  { name: "Sản phẩm", href: "#" },
+  { name: "Dịch vụ", href: "#" },
+  { name: "Hoạt động cộng đồng", href: "#" },
+  { name: "Cơ hội nghề nghiệp", href: "#" },
 ];
 </script>
 
