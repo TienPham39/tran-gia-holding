@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\NewsController;
 use App\Http\Controllers\Client\ContactController;
+use App\Http\Controllers\Client\ProductBDSController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -21,6 +22,8 @@ Route::get('/tin-tuc', [NewsController::class, 'index'])->name('news.index');
 Route::post('/contact', [ContactController::class, 'store'])
   ->name('contact.store')
   ->withoutMiddleware([VerifyCsrfToken::class]);
+
+Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
 
 // Authenticated routes
 Route::withoutMiddleware([VerifyCsrfToken::class])
