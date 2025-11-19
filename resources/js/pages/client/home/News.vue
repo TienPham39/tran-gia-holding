@@ -100,7 +100,7 @@
     </div>
   </section>
 
-  <!-- SECTION DANH SÁCH TIN TỨC -->
+  <!-- DANH SÁCH TIN TỨC -->
   <section class="w-full md:px-0 py-20 text-black bg-gray-100">
     <!-- TITLE -->
     <div class="mx-26 flex items-center gap-0 mb-10">
@@ -171,7 +171,7 @@
 
         <!-- PAGINATION -->
         <div
-          class="flex items-center gap-4 text-[14px] font-medium text-[#990000]"
+          class="cursor-pointer font-gotham w-full flex items-center justify-center gap-6 text-[14px] font-extrabold text-[#990000] mt-4"
         >
           <button class="pentagon">1</button>
 
@@ -209,6 +209,112 @@
             </h4>
 
             <p class="text-[13px] text-gray-700">18/10/2025</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quy Hoạch Vùng -->
+  <section class="w-full md:px-0 py-20 text-black">
+    <!-- TITLE -->
+    <div class="mx-26 flex items-center gap-0 mb-10">
+      <img src="/images/homepage/bg-thi-truong-1.png" class="h-[58px]" />
+
+      <!-- Background chứa chữ -->
+      <div
+        class="h-[58px] w-[800px] flex items-center bg-cover pl-6"
+        style="background-image: url('/images/homepage/bg-thi-truong-2.png')"
+      >
+        <h2
+          class="text-[28px] font-banque font-extrabold uppercase tracking-wider text-white"
+        >
+          Quy Hoạch Vùng
+        </h2>
+      </div>
+    </div>
+
+    <div class="mx-26 grid grid-cols-1 lg:grid-cols-3 gap-12">
+      <!-- LEFT CONTENT -->
+      <div class="lg:col-span-2 flex flex-col gap-10">
+        <div
+          v-for="i in 3"
+          :key="i"
+          class="flex gap-6 border-b border-gray-200 pb-8 cursor-pointer"
+        >
+          <!-- IMAGE -->
+          <div
+            class="w-[300px] h-[150px] bg-gray-200 rounded-md bg-cover bg-center border-t-2 border-t-[#FEFEFE] border-b-2 border-b-[#989898] transition-transform duration-300 ease-out hover:scale-105"
+            :style="{
+              backgroundImage: `url('/mnt/data/51728305-fc9c-4d72-91c7-081f3794fe41.png')`,
+            }"
+          >
+            <!-- Date Box -->
+            <div
+              class="text-[#a30000] hover:text-white bg-white hover:bg-[#a30000] w-12 h-12 mt-3 ml-3 flex flex-col items-center justify-center border-2 border-[#a30000]"
+            >
+              <p class="text-[14px] font-bold leading-3.5">18</p>
+              <p class="text-[12px] font-bold">TH10</p>
+            </div>
+          </div>
+
+          <!-- CONTENT -->
+          <div class="flex flex-col justify-between font-gotham w-92">
+            <div class="">
+              <h3
+                class="font-extrabold tracking-wide text-[18px] text-black uppercase mb-2"
+                style="text-shadow: 0 0 0.5px #000"
+              >
+                Lorem ipsum dolor sit amet, cons
+              </h3>
+              <p
+                class="font-bold text-gray-700 text-[14px] text-justify leading-relaxed tracking-wide mb-4"
+              >
+                Excepteur sint occaecat cupidatat non proident, sunt in culpa
+                qui officia deserunt mollit anim id est laboru`
+              </p>
+            </div>
+
+            <a
+              href="#"
+              class="text-[13px] text-black hover:text-[#a30000] font-semibold ml-auto"
+            >
+              Xem chi tiết
+            </a>
+          </div>
+        </div>
+
+        <!-- PAGINATION -->
+        <div
+          class="cursor-pointer font-gotham w-full flex items-center justify-center gap-6 text-[14px] font-extrabold text-[#990000] mt-4"
+        >
+          <button class="pentagon">1</button>
+
+          <button class="hover:text-[#a30000]">2</button>
+          <button class="hover:text-[#a30000]">3</button>
+          <button class="hover:text-[#a30000]">4</button>
+          <button class="hover:text-[#a30000]">5</button>
+
+          <span class="text-[#990000]">…</span>
+
+          <button class="hover:text-[#a30000]">7</button>
+          <button class="hover:text-[#a30000]">&gt;</button>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="flex flex-col gap-10 font-gotham">
+        <div v-for="i in 3" :key="i" class="gap-3">
+          <!-- BOX ẢNH VUÔNG -->
+          <div
+            class="items-center ml-4 mb-6 w-[100px] h-[120px] bg-cover bg-center border-b-[#989898] transition-transform duration-300 ease-out hover:scale-105 overflow-hidden"
+            :style="{
+              backgroundImage: `url('/images/homepage/map-quy-hoach.png')`,
+            }"
+          ></div>
+
+          <div class="text-[14px] text-center w-32 font-bold uppercase bg-gray-300 rounded-sm">
+            Xem bản đồ quy hoạch
           </div>
         </div>
       </div>
@@ -307,8 +413,9 @@ const slides = ref([
   position: relative;
   width: 28px;
   height: 28px;
+  margin-bottom: 4px;
   padding-top: 4px;
-  background-color: #a30000; 
+  background-color: #a30000;
   clip-path: polygon(50% 0%, 100% 35%, 100% 100%, 0% 100%, 0% 35%);
   display: flex;
   align-items: center;
