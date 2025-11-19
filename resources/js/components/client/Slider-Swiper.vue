@@ -132,7 +132,7 @@ const prev = () => swiperInstance.value?.slidePrev();
 <style scoped>
 .projectSwiper {
   padding-top: 40px;
-  padding-bottom: 60px;
+  padding-bottom: 150px;
 }
 
 .slide-box {
