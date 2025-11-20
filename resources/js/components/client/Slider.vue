@@ -190,16 +190,6 @@ const updateScreen = () => {
   else screenSize.value = "desktop";
 };
 
-/* 🔹 Tự động chuyển slide */
-let autoSlideInterval = null;
-const startAutoSlide = () => {
-  autoSlideInterval = setInterval(() => {
-    nextSlide();
-  }, 5000); // 👉 Thay đổi thời gian tại đây (5000 = 5 giây)
-};
-const stopAutoSlide = () => {
-  if (autoSlideInterval) clearInterval(autoSlideInterval);
-};
 
 /* 🔹 Chuyển slide thủ công */
 const nextSlide = () => {
@@ -221,11 +211,9 @@ onMounted(() => {
   updateScreen();
   window.addEventListener("resize", updateScreen);
   window.addEventListener("keydown", handleKey);
-  startAutoSlide();
 });
 onBeforeUnmount(() => {
   window.removeEventListener("resize", updateScreen);
   window.removeEventListener("keydown", handleKey);
-  stopAutoSlide();
 });
 </script>

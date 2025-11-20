@@ -3,7 +3,7 @@
     <!-- BG Map -->
     <SliderSwiper :slides="slides" />
 
-    <div class="flex justify-center gap-4 mt-10 font-gotham">
+    <div class="flex justify-center gap-4 font-gotham">
       <!-- Nút 1 -->
       <button
         class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
@@ -77,7 +77,7 @@
                 class="font-bold text-gray-700 text-[14px] text-justify leading-relaxed tracking-wide mb-4"
               >
                 Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laboru`
+                qui officia deserunt mollit anim id est laboru
               </p>
             </div>
 
@@ -90,21 +90,13 @@
           </div>
         </div>
 
-        <!-- PAGINATION -->
-        <div
-          class="cursor-pointer font-gotham w-full flex items-center justify-center gap-6 text-[14px] font-extrabold text-[#990000] mt-4"
-        >
-          <button class="pentagon">1</button>
-
-          <button class="hover:text-[#a30000]">2</button>
-          <button class="hover:text-[#a30000]">3</button>
-          <button class="hover:text-[#a30000]">4</button>
-          <button class="hover:text-[#a30000]">5</button>
-
-          <span class="text-[#990000]">…</span>
-
-          <button class="hover:text-[#a30000]">7</button>
-          <button class="hover:text-[#a30000]">&gt;</button>
+        <div class="relative z-30">
+          <Pagination
+            :currentPage="page"
+            :totalPages="7"
+            :theme="'dark'"
+            @update:page="page = $event"
+          />
         </div>
       </div>
 
@@ -192,7 +184,7 @@
                 class="font-bold text-gray-700 text-[14px] text-justify leading-relaxed tracking-wide mb-4"
               >
                 Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                qui officia deserunt mollit anim id est laboru`
+                qui officia deserunt mollit anim id est laboru
               </p>
             </div>
 
@@ -205,21 +197,13 @@
           </div>
         </div>
 
-        <!-- PAGINATION -->
-        <div
-          class="cursor-pointer font-gotham w-full flex items-center justify-center gap-6 text-[14px] font-extrabold text-[#990000] mt-4"
-        >
-          <button class="pentagon">1</button>
-
-          <button class="hover:text-[#a30000]">2</button>
-          <button class="hover:text-[#a30000]">3</button>
-          <button class="hover:text-[#a30000]">4</button>
-          <button class="hover:text-[#a30000]">5</button>
-
-          <span class="text-[#990000]">…</span>
-
-          <button class="hover:text-[#a30000]">7</button>
-          <button class="hover:text-[#a30000]">&gt;</button>
+        <div class="relative z-30">
+          <Pagination
+            :currentPage="page"
+            :totalPages="7"
+            :theme="'dark'"
+            @update:page="page = $event"
+          />
         </div>
       </div>
 
@@ -234,7 +218,9 @@
             }"
           ></div>
 
-          <div class="text-[14px] text-center w-32 font-bold uppercase bg-gray-300 rounded-sm">
+          <div
+            class="text-[14px] text-center w-32 font-bold uppercase bg-gray-300 rounded-sm"
+          >
             Xem bản đồ quy hoạch
           </div>
         </div>
@@ -248,10 +234,13 @@ import { ref } from "vue";
 import Layouts from "../../../layouts/client.vue";
 import { defineOptions } from "vue";
 import SliderSwiper from "../../../components/client/Slider-Swiper.vue";
+import Pagination from "@/Components/client/Paginate.vue";
 
 defineOptions({
   layout: Layouts,
 });
+
+const page = ref(1);
 
 const slides = ref([
   {
@@ -288,8 +277,6 @@ const slides = ref([
 </script>
 
 <style>
-
-
 .pentagon {
   position: relative;
   width: 28px;

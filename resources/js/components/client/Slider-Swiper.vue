@@ -11,7 +11,7 @@
       <!-- Arrow Left -->
       <button
         @click="prev"
-        class="hidden md:flex items-center justify-center h-[500px] cursor-pointer hover:scale-110 transition"
+        class="ml-6 hidden md:flex items-center justify-center h-[500px] cursor-pointer hover:scale-110 transition"
       >
         <img
           src="/images/homepage/news-left-arrow.png"
@@ -72,7 +72,7 @@
       <!-- Arrow Right -->
       <button
         @click="next"
-        class="hidden md:flex items-center justify-center h-[500px] cursor-pointer hover:scale-110 transition"
+        class="mr-6 hidden md:flex items-center justify-center h-[500px] cursor-pointer hover:scale-110 transition"
       >
         <img
           src="/images/homepage/news-right-arrow.png"
