@@ -155,14 +155,14 @@
         >
           <a-button
             html-type="submit"
-            class="!bg-blue-600 !text-white hover:!bg-blue-500 px-6"
+            class="bg-blue-600! text-white! hover:bg-blue-500! px-6"
             :loading="isSubmitting"
           >
             Lưu
           </a-button>
 
           <a-button
-            class="!bg-gray-300 hover:!bg-gray-200 !text-black shadow-sm px-6"
+            class="bg-gray-300! hover:bg-gray-200! text-black! shadow-sm px-6"
           >
             <Link href="/admin/users">Hủy</Link>
           </a-button>
@@ -180,7 +180,7 @@
           <a-button
             v-else
             type="default"
-            class="!bg-green-500 !text-white hover:!bg-green-400 px-6"
+            class="bg-green-500! text-white! hover:bg-green-400! px-6"
             @click="toggleStatus('active')"
           >
             Unblock
