@@ -3,7 +3,7 @@
     <!-- BG Map -->
     <SliderSwiper :slides="slides" />
 
-    <div class="flex justify-center gap-4 mt-10 font-gotham">
+    <div class="flex justify-center gap-4 font-gotham">
       <!-- Nút 1 -->
       <button
         class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
