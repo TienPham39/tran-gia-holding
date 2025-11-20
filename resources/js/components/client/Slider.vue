@@ -19,7 +19,7 @@
 
         <a
           href="/contact"
-          class="group inline-flex items-center justify-center gap-2 uppercase text-white transition-all duration-300 border-2 border-white/80 rounded-md bg-white/10 hover:bg-[#660000]/50 hover:border-[#D9D9D947] shadow-[0_0_10px_rgba(255,255,255,0.1),inset_0_0_1px_rgba(255,255,255,0.5)] w-[150px] h-[30px] md:w-[240px] md:h-[42px] lg:w-[299px] lg:h-[47px] mt-2 md:mt-4 lg:mt-6 text-[11px] md:text-[24px] lg:text-[24px]"
+          class="group inline-flex items-center justify-center gap-2 uppercase text-white transition-all duration-300 border-2 border-white/80 rounded-md bg-white/10 hover:bg-[#660000]/50 hover:border-[#D9D9D947] shadow-[0_0_10px_rgba(255,255,255,0.1),inset_0_0_1px_rgba(255,255,255,0.5)] w-[150px] h-[30px] md:w-60 md:h-[42px] lg:w-[299px] lg:h-[47px] mt-2 md:mt-4 lg:mt-6 text-[11px] md:text-[24px] lg:text-[24px]"
         >
           <span>Đăng ký tư vấn</span>
           <span
@@ -31,7 +31,7 @@
               viewBox="0 0 24 24"
               stroke-width="2.5"
               stroke="currentColor"
-              class="w-[14px] h-[14px] md:w-[22px] md:h-[22px]"
+              class="w-3.5 h-3.5 md:w-[22px] md:h-[22px]"
             >
               <path
                 stroke-linecap="round"
