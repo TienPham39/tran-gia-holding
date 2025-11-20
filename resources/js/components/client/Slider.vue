@@ -12,35 +12,16 @@
         class="relative z-10 text-center flex flex-col items-center max-w-[597px] px-4"
       >
         <h1
-          class="font-banque font-bold uppercase text-white tracking-[0.28px] leading-tight text-[20px] md:text-[40px] lg:text-[40px]"
+          class="mb-6 font-banque font-bold uppercase text-white tracking-[0.28px] leading-tight text-[20px] md:text-[40px] lg:text-[40px]"
         >
           KHỞI TÂM VƯƠN TẦM
         </h1>
 
-        <a
-          href="/contact"
-          class="group inline-flex items-center justify-center gap-2 uppercase text-white transition-all duration-300 border-2 border-white/80 rounded-md bg-white/10 hover:bg-[#660000]/50 hover:border-[#D9D9D947] shadow-[0_0_10px_rgba(255,255,255,0.1),inset_0_0_1px_rgba(255,255,255,0.5)] w-[150px] h-[30px] md:w-60 md:h-[42px] lg:w-[299px] lg:h-[47px] mt-2 md:mt-4 lg:mt-6 text-[11px] md:text-[24px] lg:text-[24px]"
+        <button
+          class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
         >
-          <span>Đăng ký tư vấn</span>
-          <span
-            class="transition-transform duration-300 group-hover:translate-x-1"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-              stroke="currentColor"
-              class="w-3.5 h-3.5 md:w-[22px] md:h-[22px]"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </span>
-        </a>
+          đăng ký tư vấn →
+        </button>
       </div>
     </section>
 
@@ -189,7 +170,6 @@ const updateScreen = () => {
   else if (window.innerWidth < 1024) screenSize.value = "tablet";
   else screenSize.value = "desktop";
 };
-
 
 /* 🔹 Chuyển slide thủ công */
 const nextSlide = () => {
