@@ -25,7 +25,7 @@
             :loop="true"
             :watchSlidesProgress="true"
             :autoplay="{ delay: 3000 }"
-            speed="1000"
+            speed="2500"
             class="h-[750px]"
             :modules="[Autoplay]"
           >
@@ -56,7 +56,7 @@
               disableOnInteraction: false,
               reverseDirection: true,
             }"
-            speed="1000"
+            speed="2500"
             class="h-[750px]"
             :modules="[Autoplay]"
           >
@@ -75,7 +75,7 @@
             :loop="true"
             :watchSlidesProgress="true"
             :autoplay="{ delay: 3000 }"
-            speed="1000"
+            speed="2200"
             class="h-[750px]"
             :modules="[Autoplay]"
           >

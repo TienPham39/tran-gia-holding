@@ -15,7 +15,7 @@
 <script setup>
 import ProductHighlight from "../../../components/client/Product-highlight.vue";
 import Slider from "../../../components/client/Slider.vue";
-import HomepageVideos from "../../../components/client/homepage-videos.vue";
+import HomepageVideos from "../../../components/client/Homepage-Videos.vue";
 import Contact from "../../../components/client/Contact.vue";
 import Layouts from "../../../layouts/client.vue"
 import { defineOptions } from 'vue';
