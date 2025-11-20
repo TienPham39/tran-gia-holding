@@ -68,10 +68,4 @@ class AuthController extends Controller
     $request->user()->tokens()->delete();
     return response()->json(["message" => "Đăng xuất thành công"]);
   }
-
-  public function user(Request $request)
-  {
-    $user = Auth::user()->load('role');
-    return response()->json($user);
-  }
 }

@@ -84,6 +84,7 @@ import { router, Link } from "@inertiajs/vue3";
 import { message } from "ant-design-vue";
 import { LoadingOutlined } from "@ant-design/icons-vue";
 import api from "../../api";
+import axios from "axios";
 
 const isLoggingOut = ref(false);
 const user = ref(null);

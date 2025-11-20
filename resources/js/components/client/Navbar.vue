@@ -16,9 +16,15 @@
         v-for="(item, index) in navbarItem"
         :key="index"
         class="uppercase font-bold text-base transition-colors duration-200"
-        :class="item.active ? 'text-[#880000B8]' : 'text-black hover:text-[#880000B8]'"
+        :class="
+          page.url === item.href
+            ? 'text-[#880000B8]'
+            : 'text-black hover:text-[#880000B8]'
+        "
       >
-        <a class="px-3.5 py-4" :href="item.href">{{ item.name }}</a>
+        <Link :href="item.href" class="px-3.5 py-4 block">
+          {{ item.name }}
+        </Link>
       </li>
     </ul>
   </section>
@@ -77,13 +83,13 @@
             :key="index"
             class="border-b border-gray-100 pb-2"
           >
-            <a
+            <Link
               :href="item.href"
               class="block text-lg font-semibold text-gray-700 hover:text-[#880000B8]"
               @click="isOpen = false"
             >
               {{ item.name }}
-            </a>
+            </Link>
           </li>
         </ul>
       </div>
@@ -93,16 +99,19 @@
 
 <script setup>
 import { ref } from "vue";
+import { Link } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
 
+const page = usePage();
 const isOpen = ref(false);
 
 const navbarItem = [
-  { name: "Giới thiệu", href: "#", active: true },
-  { name: "Tin tức", href: "#", active: false },
-  { name: "Sản phẩm", href: "#", active: false },
-  { name: "Dịch vụ", href: "#", active: false },
-  { name: "Hoạt động cộng đồng", href: "#", active: false },
-  { name: "Cơ hội nghề nghiệp", href: "#", active: false },
+  { name: "Giới thiệu", href: "/" },
+  { name: "Tin tức", href: "/tin-tuc" },
+  { name: "Sản phẩm", href: "/product" },
+  { name: "Dịch vụ", href: "#" },
+  { name: "Hoạt động cộng đồng", href: "#" },
+  { name: "Cơ hội nghề nghiệp", href: "#" },
 ];
 </script>
 
