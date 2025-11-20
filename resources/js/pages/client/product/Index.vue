@@ -1,9 +1,9 @@
 <template>
   <section class="relative bg-[#660000] py-20 overflow-hidden">
-    <h2 class="uppercase font-bold text-5xl text-center mb-20">sản phẩm bđs</h2>
+    <h2 class="uppercase font-bold text-5xl text-center mb-20 font-banque text-white">sản phẩm bđs</h2>
     <!-- Product Card -->
     <div
-      class="md:max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6"
+      class="mb-10 md:max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6"
     >
       <Card
         v-for="(item, index) in products"
@@ -25,7 +25,7 @@
 
     <!-- Highlight Projects -->
     <div class="relative">
-      <h2 class="uppercase font-bold text-5xl text-center mt-20">
+      <h2 class="uppercase font-bold text-5xl text-center mt-20 font-banque text-white mb-8">
         dự án nổi bật
       </h2>
 
@@ -44,7 +44,7 @@
     </h2>
 
     <div
-      class="md:max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6"
+      class="mb-10 md:max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6"
     >
       <Card
         v-for="(item, index) in products"
