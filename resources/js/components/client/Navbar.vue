@@ -107,9 +107,9 @@ const isOpen = ref(false);
 
 const navbarItem = [
   { name: "Giới thiệu", href: "/" },
-  { name: "Tin tức", href: "/tin-tuc" },
+  { name: "Tin tức", href: "/news" },
   { name: "Sản phẩm", href: "/product" },
-  { name: "Dịch vụ", href: "#" },
+  { name: "Dịch vụ", href: "/service" },
   { name: "Hoạt động cộng đồng", href: "#" },
   { name: "Cơ hội nghề nghiệp", href: "#" },
 ];
