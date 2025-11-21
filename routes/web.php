@@ -7,6 +7,7 @@ use App\Http\Controllers\Client\HomeController;
 use App\Http\Controllers\Client\NewsController;
 use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\ProductBDSController;
+use App\Http\Controllers\Client\ServiceController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -18,12 +19,13 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register')
 Route::get('/auth', fn() => Inertia::render('auth/Register'))->name('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/tin-tuc', [NewsController::class, 'index'])->name('news.index');
+Route::get('/news', [NewsController::class, 'index'])->name('news.index');
 Route::post('/contact', [ContactController::class, 'store'])
   ->name('contact.store')
   ->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
+Route::get('/service', [ServiceController::class, 'index'])->name('client.service');
 
 // Authenticated routes
 Route::withoutMiddleware([VerifyCsrfToken::class])
