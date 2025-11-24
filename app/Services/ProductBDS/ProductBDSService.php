@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\ProductBDS;
 
-use App\Repositories\ProductBDSRepository;
+use App\Repositories\ProductBDS\ProductBDSRepository;
 use Illuminate\Support\Facades\Request;
 
 class ProductBDSService
@@ -13,6 +13,23 @@ class ProductBDSService
     {
         $this->productBDSRepository = $productBDSRepository;
     }
+
+    /**
+     * Lấy toàn bộ sản phẩm BĐS
+     */
+    public function getAll()
+    {
+        return $this->productBDSRepository->all();
+    }
+
+    /**
+     * Lấy chi tiết BĐS theo ID
+     */
+    public function getById($id)
+    {
+        return $this->productBDSRepository->find($id);
+    }
+
 
     /**
      * Xử lý lưu liên hệ

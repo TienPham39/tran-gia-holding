@@ -25,6 +25,8 @@ Route::post('/contact', [ContactController::class, 'store'])
   ->withoutMiddleware([VerifyCsrfToken::class]);
 
 Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
+Route::get('/product/detail/{id}', [ProductBDSController::class, 'show'])
+  ->name('client.product.show');
 Route::get('/service', [ServiceController::class, 'index'])->name('client.service');
 
 // Authenticated routes
