@@ -1,5 +1,5 @@
 <template>
-  <section id="contact" class="py-16">
+  <section id="contact" class="py-20">
     <div
       class="container mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-10"
     >
@@ -36,10 +36,10 @@
       </div>
 
       <!-- RIGHT SIDE: CONTACT FORM -->
-      <div class="bg-[#D5D5D5] rounded-[4px] p-8 w-full lg:w-1/2 shadow-md">
-        <h3 class="text-[#9B1C1C] text-2xl font-bold uppercase mb-6">
+      <div class="font-banque bg-[#D5D5D5] rounded-[4px] p-8 w-full lg:w-1/2 shadow-md">
+        <h2 class="text-[#9B1C1C] text-4xl font-bold uppercase mb-6">
           Liên hệ
-        </h3>
+        </h2>
 
         <form @submit.prevent="submitForm" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
