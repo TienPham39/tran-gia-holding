@@ -18,6 +18,13 @@
   --color-background: #141122;
 }
 
+@font-face {
+  font-family: "Gotham";
+  src: url("/fonts/gotham/Gotham-Black.woff2") format("woff2");
+  font-weight: 800;
+  font-style: normal;
+}
+
 html,
 body,
 #app {

@@ -1,52 +1,62 @@
 <template>
-  <footer class="bg-[#2A2A2A] text-gray-400 py-10">
+  <footer class="bg-[#2A2A2A] text-white py-20 font-banque">
     <div
-      class="container mx-auto px-6 flex items-center flex-col md:flex-row justify-between gap-10"
+      class="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-18 items-start"
     >
-      <!-- Box 1: Logo + mạng xã hội -->
-      <div
-        class="flex flex-col items-center justify-center w-full md:w-1/3"
-      >
+      <!-- LEFT: LOGO + SOCIAL -->
+      <div class="flex flex-col items-center">
+        <!-- LOGO + TEXT -->
         <img
           src="/images/homepage/footer_logo.png"
           alt="footer logo"
+          class="w-[260px] h-auto"
         />
-        <!-- Icon mạng xã hội -->
-        <div class="flex items-center gap-4">
+
+        <!-- SOCIAL ICONS -->
+        <div class="flex items-center justify-center gap-6">
           <img
             src="/images/homepage/ytb.png"
             alt="youtube"
-            class="cursor-pointer hover:opacity-80 transition"
+            class="w-8 h-8 cursor-pointer hover:opacity-80 transition"
           />
           <img
             src="/images/homepage/fb.png"
             alt="facebook"
-            class="cursor-pointer hover:opacity-80 transition"
+            class="w-8 h-8 cursor-pointer hover:opacity-80 transition"
           />
           <img
             src="/images/homepage/zalo.png"
             alt="zalo"
-            class="cursor-pointer hover:opacity-80 transition"
+            class="w-8 h-8 cursor-pointer hover:opacity-80 transition"
           />
         </div>
       </div>
 
-      <!-- Box 2: Placeholder text -->
-      <div class="w-full md:w-1/3 flex flex-col gap-2">
-        <div class="h-3 bg-gray-500/40 w-3/4 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-5/6 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-4/5 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-2/3 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-3/5 rounded"></div>
+      <!-- CENTER COLUMN -->
+      <div class="flex flex-col text-left gap-3">
+        <h3 class="text-lg font-bold tracking-wide">LOREM IPRUM DOLOR</h3>
+        <p class="text-[#FFFFFF] leading-relaxed font-gotham">
+          excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+          officia deserunt
+        </p>
+
+        <h3 class="text-lg font-bold tracking-wide mt-4">LOREM IPRUM DOLOR</h3>
+        <p class="text-[#FFFFFF] leading-relaxed font-gotham">
+          excepteur sint occaecat cupidatat non proident, sunt
+        </p>
       </div>
 
-      <!-- Box 3: Placeholder text -->
-      <div class="w-full md:w-1/3 flex flex-col gap-2">
-        <div class="h-3 bg-gray-500/40 w-5/6 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-4/5 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-2/3 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-3/5 rounded"></div>
-        <div class="h-3 bg-gray-500/40 w-4/6 rounded"></div>
+      <!-- RIGHT COLUMN -->
+      <div class="flex flex-col text-left gap-3">
+        <h3 class="text-lg font-bold tracking-wide">LOREM IPRUM</h3>
+        <p class="text-[#FFFFFF] leading-relaxed font-gotham">
+          excepteur sintence occaecat cupidatat non proident, sunt in culpa qui
+          officia deserunt
+        </p>
+
+        <p class="text-[#FFFFFF] leading-relaxed font-gotham mt-4">
+          excepteur sintence occaecat cupidatat
+        </p>
       </div>
     </div>
   </footer>
