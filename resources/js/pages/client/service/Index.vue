@@ -54,7 +54,12 @@
           aliquip
         </p>
 
-        <div class="w-full h-[300px] bg-gray-300"></div>
+        <div class="w-full h-[300px] overflow-hidden">
+          <img
+            src="/images/homepage/survey-engineer.png"
+            class="w-full h-full object-cover"
+          />
+        </div>
       </div>
 
       <!-- RIGHT IMAGE + BUTTON -->
@@ -65,7 +70,12 @@
           ĐO ĐẠC
         </h1>
 
-        <div class="w-full h-[360px] bg-gray-300 mb-6"></div>
+        <div class="w-full h-[360px] overflow-hidden mb-6">
+          <img
+            src="/images/homepage/survey-tool.png"
+            class="w-full h-full object-cover"
+          />
+        </div>
 
         <!-- BUTTON -->
         <button
@@ -117,30 +127,58 @@
 
       <!-- PROCESS TITLE -->
       <h3
-        class="text-white font-extrabold font-gotham text-2xl md:text-3xl text-center mt-16 tracking-wide"
+        class="text-white font-extrabold font-gotham text-2xl md:text-4xl text-center mt-16 tracking-wide"
       >
         QUY TRÌNH THIẾT KẾ
       </h3>
 
       <!-- PROCESS STEPS -->
-      <div class="flex justify-center items-center mt-14 flex-wrap">
+      <div class="flex justify-center items-center my-18 flex-wrap">
         <div class="relative flex items-center">
-          <div class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full"></div>
+          <div
+            class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full flex items-center justify-center"
+          >
+            <img
+              src="/images/homepage/icon-design-1.png"
+              class="w-10 h-10 object-contain"
+            />
+          </div>
           <div class="hidden md:block w-20 h-[1px] bg-[#8CC6A6]"></div>
         </div>
 
         <div class="relative flex items-center">
-          <div class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full"></div>
+          <div
+            class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full flex items-center justify-center"
+          >
+            <img
+              src="/images/homepage/icon-design-2.png"
+              class="w-10 h-10 object-contain"
+            />
+          </div>
           <div class="hidden md:block w-20 h-[1px] bg-[#8CC6A6]"></div>
         </div>
 
         <div class="relative flex items-center">
-          <div class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full"></div>
+          <div
+            class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full flex items-center justify-center"
+          >
+            <img
+              src="/images/homepage/icon-design-3.png"
+              class="w-10 h-10 object-contain"
+            />
+          </div>
           <div class="hidden md:block w-20 h-[1px] bg-[#8CC6A6]"></div>
         </div>
 
         <div class="relative flex items-center">
-          <div class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full"></div>
+          <div
+            class="w-20 h-20 border-2 border-[#8CC6A6] rounded-full flex items-center justify-center"
+          >
+            <img
+              src="/images/homepage/icon-design-4.png"
+              class="w-10 h-10 object-contain"
+            />
+          </div>
         </div>
       </div>
 
@@ -148,17 +186,26 @@
       <div
         class="flex flex-wrap justify-center items-start gap-3 md:gap-4 mt-16"
       >
-        <div
-          class="h-[200px] md:h-[220px] w-full md:w-[300px] bg-gray-300"
-        ></div>
+        <div class="h-[200px] md:h-[320px] w-full md:w-[250px] overflow-hidden">
+          <img
+            src="/images/homepage/design-image-1.png"
+            class="w-full h-full object-cover"
+          />
+        </div>
 
-        <div
-          class="h-[200px] md:h-[220px] w-full md:w-[400px] bg-gray-300"
-        ></div>
+        <div class="h-[200px] md:h-[320px] w-full md:w-[460px] overflow-hidden">
+          <img
+            src="/images/homepage/design-image-2.png"
+            class="w-full h-full object-cover"
+          />
+        </div>
 
-        <div
-          class="h-[200px] md:h-[220px] w-full md:w-[300px] bg-gray-300"
-        ></div>
+        <div class="h-[200px] md:h-[320px] w-full md:w-[250px] overflow-hidden">
+          <img
+            src="/images/homepage/design-image-3.png"
+            class="w-full h-full object-cover"
+          />
+        </div>
       </div>
 
       <!-- CTA BUTTON -->
@@ -182,7 +229,9 @@
     >
       <!-- LEFT CONTENT -->
       <div class="text-left font-gotham">
-        <h2 class="uppercase text-3xl md:text-4xl font-extrabold mb-4">Lorem iprum dolor</h2>
+        <h2 class="uppercase text-3xl md:text-4xl font-extrabold mb-4">
+          Lorem iprum dolor
+        </h2>
 
         <p class="font-bold leading-relaxed mb-8 max-w-[600px] tracking-widest">
           lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
