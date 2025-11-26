@@ -110,7 +110,7 @@ const navbarItem = [
   { name: "Tin tức", href: "/news" },
   { name: "Sản phẩm", href: "/product" },
   { name: "Dịch vụ", href: "/service" },
-  { name: "Hoạt động cộng đồng", href: "#" },
+  { name: "Hoạt động cộng đồng", href: "/community" },
   { name: "Cơ hội nghề nghiệp", href: "#" },
 ];
 </script>
