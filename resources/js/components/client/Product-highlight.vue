@@ -1,17 +1,16 @@
 <template>
-  <section class="w-full bg-[#003505] flex justify-center items-start py-12">
+  <section class="w-full bg-[#003505] flex justify-center items-start py-24">
     <div class="max-w-[1500px] w-full px-6 sm:px-6 lg:px-20 mx-auto">
       <header class="text-center mb-8">
         <h1
-          class="font-utm font-bold uppercase text-white tracking-[0.28px] pb-6 text-[36px] leading-[42px] md:text-[28px] md:leading-[34px] sm:text-[210px] sm:leading-[28px]"
+          class="font-utm font-bold uppercase text-white tracking-[0.28px] pb-6 text-[26px] leading-[42px] md:text-[28px] md:leading-[34px] sm:text-[210px] sm:leading-[28px]"
         >
           SẢN PHẨM NỔI BẬT
         </h1>
 
         <nav class="mt-2">
-          <!-- Mobile: 2x2 centered grid; Desktop: inline links -->
           <ul
-            class="grid grid-cols-4 gap-x-6 gap-y-3 justify-center items-center text-center text-white/90 font-svn font-bold uppercase text-[14px] sm:flex sm:gap-x-4 sm:text-sm pb-7"
+            class="grid grid-cols-4 gap-x-6 gap-y-3 justify-center items-center text-center text-white/90 font-svn font-bold uppercase text-[10px] sm:flex sm:gap-x-4 sm:text-sm pb-7"
           >
             <li
               v-for="(link, idx) in links"

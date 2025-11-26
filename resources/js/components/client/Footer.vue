@@ -1,74 +1,83 @@
 <template>
-  <footer class="bg-[#2A2A2A] text-white py-20 font-banque">
+  <footer class="bg-[#2A2A2A] text-white pt-12 pb-16 font-gotham">
     <div
-      class="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-3 gap-18 items-start"
+      class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-center items-start gap-30"
     >
-      <!-- LEFT: LOGO + SOCIAL -->
-      <div class="flex flex-col items-center">
-        <!-- LOGO + TEXT -->
+      <!-- LEFT COLUMN -->
+      <div class="flex flex-col items-center text-center min-w-[420px]">
+        <!-- LOGO -->
         <img
-          src="/images/homepage/footer_logo.png"
-          alt="footer logo"
-          class="w-[260px] h-auto"
+          src="/images/homepage/footer_logo_new.png"
+          alt="Trần Gia Logo"
+          class="w-[320px] h-auto mb-8"
         />
 
+        <!-- SLOGAN -->
+        <p class="text-gray-300 leading-relaxed mb-8 text-xl">
+          “Khởi Tâm Vươn Tầm<br />
+          Đối tác tin cậy của mọi nhà đầu tư.”
+        </p>
+
         <!-- SOCIAL ICONS -->
-        <div class="flex items-center justify-center gap-6">
+        <div class="flex items-center gap-8">
           <img
             src="/images/homepage/ytb.png"
-            alt="youtube"
             class="w-8 h-8 cursor-pointer hover:opacity-80 transition"
           />
           <img
             src="/images/homepage/fb.png"
-            alt="facebook"
             class="w-8 h-8 cursor-pointer hover:opacity-80 transition"
           />
           <img
             src="/images/homepage/zalo.png"
-            alt="zalo"
             class="w-8 h-8 cursor-pointer hover:opacity-80 transition"
           />
         </div>
       </div>
 
-      <!-- CENTER COLUMN -->
-      <div class="flex flex-col text-left gap-3">
-        <h3 class="text-lg font-bold tracking-wide">LOREM IPRUM DOLOR</h3>
-        <p class="text-[#FFFFFF] leading-relaxed font-gotham">
-          excepteur sint occaecat cupidatat non proident, sunt in culpa qui
-          officia deserunt
-        </p>
+      <!-- RIGHT AREA (TITLE + 2 COLUMN GRID) -->
+      <div class="flex flex-col w-full max-w-[800px]">
+        <!-- TITLE -->
+        <h3 class="text-2xl font-banque tracking-wide mt-20 mb-10">
+          CÔNG TY CỔ PHẦN TẬP ĐOÀN TRẦN GIA
+        </h3>
 
-        <h3 class="text-lg font-bold tracking-wide mt-4">LOREM IPRUM DOLOR</h3>
-        <p class="text-[#FFFFFF] leading-relaxed font-gotham">
-          excepteur sint occaecat cupidatat non proident, sunt
-        </p>
-      </div>
+        <!-- GRID 2 COLUMNS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-14">
 
-      <!-- RIGHT COLUMN -->
-      <div class="flex flex-col text-left gap-3">
-        <h3 class="text-lg font-bold tracking-wide">LOREM IPRUM</h3>
-        <p class="text-[#FFFFFF] leading-relaxed font-gotham">
-          excepteur sintence occaecat cupidatat non proident, sunt in culpa qui
-          officia deserunt
-        </p>
+          <!-- LEFT INFO -->
+          <div class="flex flex-col gap-4 text-lg">
+            <p class="text-gray-300">
+              <span class="font-bold text-white">Trụ sở:</span>
+              [Địa chỉ văn phòng tại Lâm Đồng]
+            </p>
+            <p class="text-gray-300">
+              <span class="font-bold text-white">Hotline:</span>
+              098 8386 886
+            </p>
+            <p class="text-gray-300">
+              <span class="font-bold text-white">Email:</span>
+              [Email công ty]
+            </p>
+            <p class="text-gray-300">
+              <span class="font-bold text-white">Website:</span>
+              trangiagolding.vn
+            </p>
+          </div>
 
-        <p class="text-[#FFFFFF] leading-relaxed font-gotham mt-4">
-          excepteur sintence occaecat cupidatat
-        </p>
+          <!-- RIGHT SERVICES -->
+          <div class="flex flex-col gap-4 text-lg">
+            <h3 class="text-xl font-gotham font-extrabold tracking-wide mb-2">
+              DỊCH VỤ NỔI BẬT
+            </h3>
+
+            <p class="text-gray-300">Dịch vụ đo đạc</p>
+            <p class="text-gray-300">Dịch vụ thiết kế</p>
+            <p class="text-gray-300">Tư vấn pháp lý BĐS</p>
+          </div>
+
+        </div>
       </div>
     </div>
   </footer>
 </template>
-
-<script setup>
-import { ref } from "vue";
-</script>
-
-<style scoped>
-/* Container mặc định nếu bạn chưa dùng Tailwind container plugin */
-.container {
-  max-width: 1200px;
-}
-</style>
