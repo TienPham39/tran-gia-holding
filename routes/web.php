@@ -9,6 +9,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\ProductBDSController;
 use App\Http\Controllers\Client\ServiceController;
 use App\Http\Controllers\Client\CommunityController;
+use App\Http\Controllers\Client\CareerController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -29,6 +30,8 @@ Route::get('/product/detail/{id}', [ProductBDSController::class, 'show'])
 Route::get('/service', [ServiceController::class, 'index'])->name('client.service');
 Route::get('/community', [CommunityController::class, 'index'])
     ->name('client.community');
+Route::get('/career', [CareerController::class, 'index'])
+    ->name('client.career');
 
 // Authenticated routes
 Route::withoutMiddleware([VerifyCsrfToken::class])
