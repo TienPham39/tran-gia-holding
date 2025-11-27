@@ -208,7 +208,7 @@
       </div>
 
       <!-- RIGHT SIDEBAR -->
-      <div class="flex flex-col gap-10 font-gotham ml-10">
+      <div class="flex flex-col gap-10 font-gotham items-center">
         <div v-for="i in 3" :key="i" class="gap-3">
           <!-- BOX ẢNH VUÔNG -->
           <div
