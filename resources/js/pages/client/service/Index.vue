@@ -229,18 +229,25 @@
     >
       <!-- LEFT CONTENT -->
       <div class="text-left font-gotham">
-        <h2 class="uppercase text-3xl md:text-4xl font-extrabold mb-4">
-          Lorem iprum dolor
+        <h2 class="uppercase text-3xl md:text-4xl font-extrabold mb-10">
+          giải quyết mọi vấn đề
         </h2>
 
-        <p class="font-bold leading-relaxed mb-8 max-w-[600px] tracking-widest">
-          lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip
+        <p
+          class="font-bold leading-relaxed mb-26 max-w-[600px] tracking-widest"
+        >
+          Giải quyết mọi vướng mắc về thủ tục hành chính: Sang tên, tách thửa,
+          chuyển đổi mục đích sử dụng đất, kiểm tra quy hoạch. Đảm bảo "Minh
+          bạch - Đúng luật - Nhanh gọn".
         </p>
 
-        <div class="w-full h-[380px] bg-gray-300"></div>
+        <div class="w-full h-[300px] overflow-hidden">
+          <img
+            src="/images/homepage/service-bg-1.png"
+            alt="Service Background"
+            class="w-full h-full object-cover object-center"
+          />
+        </div>
       </div>
 
       <!-- RIGHT IMAGE + BUTTON -->
@@ -256,11 +263,17 @@
           pháp lý bĐS
         </h1>
 
-        <div class="w-full h-[360px] bg-gray-300 mb-6"></div>
+        <div class="w-full h-[360px] overflow-hidden mb-6">
+          <img
+            src="/images/homepage/service-bg-2.png"
+            alt="Service Image"
+            class="w-full h-full object-cover object-center"
+          />
+        </div>
 
         <!-- BUTTON -->
         <button
-          class="self-start group cursor-pointer flex items-center gap-2 border border-[#AE0000] text-[#AE0000] px-4 py-2 rounded-md font-semibold tracking-wider hover:bg-[#770000] hover:text-white transition"
+          class="self-start group cursor-pointer flex items-center gap-2 border-2 border-[#AE0000] text-[#AE0000] px-4 py-1 rounded-sm font-semibold tracking-wider hover:bg-[#770000] hover:text-white transition"
         >
           <img
             src="/images/homepage/phone-icon-red.png"

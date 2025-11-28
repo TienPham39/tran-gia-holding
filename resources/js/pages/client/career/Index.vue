@@ -7,14 +7,14 @@
       <div class="text-white text-center md:text-left">
         <!-- Title -->
         <h2
-          class="font-banque text-4xl md:text-6xl font-extrabold leading-tight mb-4 md:mb-7 tracking-wide"
+          class="font-banque text-3xl md:text-6xl font-extrabold leading-tight mb-4 md:mb-7 tracking-wide"
         >
-          TUYỂN<br class="hidden md:block" />DỤNG
+          TUYỂN<br class="hidden md:block" /> DỤNG
         </h2>
 
         <!-- Description -->
         <p
-          class="text-justify text-base md:text-lg leading-relaxed mb-4 md:mb-6 opacity-90"
+          class="text-justify text-base p-4 md:p-0 md:text-lg leading-relaxed mb-4 md:mb-6 opacity-90"
         >
           "Khám phá các cơ hội nghề nghiệp cùng Trần Gia Holding, nơi bạn có thể
           phát triển bản thân và góp phần xây dựng cộng đồng công ty thịnh
@@ -22,7 +22,7 @@
         </p>
 
         <p
-          class="text-justify text-sm md:text-base leading-relaxed mb-10 md:mb-16 opacity-90"
+          class="text-justify text-sm md:text-base leading-relaxed p-4 md:p-0 mb-10 md:mb-16 opacity-90"
         >
           Trần Gia Holding hiện đang tìm kiếm các ứng viên tiềm năng cho nhiều
           vị trí hấp dẫn trong lĩnh vực bất động sản, quản lý dự án và chăm sóc
@@ -32,7 +32,7 @@
 
         <!-- Button -->
         <button
-          class="cursor-pointer font-semibold text-sm md:text-base px-6 py-2 text-white uppercase tracking-wider rounded-sm flex md:inline-flex justify-center items-center gap-2 mx-auto md:mx-0 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] w-full md:w-auto"
+          class="cursor-pointer font-semibold text-sm md:text-base px-6 py-2 text-white uppercase tracking-wider rounded-sm flex md:inline-flex justify-center items-center gap-2 mx-auto md:mx-0 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] w-[200px] md:w-auto"
         >
           xem tất cả >>
         </button>
@@ -73,7 +73,7 @@
     <div class="max-w-6xl mx-auto px-4 md:px-2">
       <!-- TITLE -->
       <h2
-        class="font-banque text-center text-3xl md:text-5xl font-extrabold text-[#7A0000] tracking-wide mb-6 md:mb-8"
+        class="font-banque text-center text-xl md:text-5xl font-extrabold text-[#7A0000] tracking-wide mb-6 md:mb-8"
       >
         TRẦN GIA HOLDING TUYỂN DỤNG <br class="hidden md:block" />
         CÁC VỊ TRÍ
@@ -81,69 +81,59 @@
 
       <!-- SUBTITLE -->
       <p
-        class="font-gotham font-bold text-center text-gray-600 text-base md:text-lg max-w-4xl mx-auto mb-10 md:mb-16 px-4"
+        class="font-gotham font-bold text-center text-gray-600 text-sm md:text-lg max-w-4xl mx-auto mb-10 md:mb-16 px-3"
       >
         "Tham gia đội ngũ chuyên nghiệp, môi trường làm việc thân thiện, chế độ
         đãi ngộ cạnh tranh."
       </p>
 
       <!-- JOB LIST -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-14">
         <div
           v-for="(job, index) in jobs"
           :key="index"
-          class="flex flex-col md:flex-row items-start md:items-start gap-4 md:gap-6 p-3 md:p-0 border-b md:border-none pb-6 md:pb-0"
+          class="flex flex-row md:flex-row items-start gap-4 md:p-0 rounded-md md:border-none md:shadow-none"
         >
           <!-- IMAGE -->
           <div
-            class="w-[100px] h-[100px] md:w-[130px] md:h-[130px] bg-gray-200 rounded-md bg-cover bg-center border-t-2 border-t-[#FEFEFE] border-b-2 border-b-[#989898] transition-transform duration-300 ease-out hover:scale-105 shrink-0"
-            :style="{
-              backgroundImage: `url('/images/job-thumb.png')`,
-            }"
+            class="relative w-[80px] h-[80px] md:w-[130px] md:h-[130px] bg-gray-200 rounded-md bg-cover bg-center border-t-2 border-t-[#FEFEFE] border-b-2 border-b-[#989898]"
+            :style="{ backgroundImage: `url('/images/job-thumb.png')` }"
           >
-            <!-- Date box -->
+            <!-- DATE BOX -->
             <div
-              class="text-[#a30000] hover:text-white bg-white hover:bg-[#a30000] w-10 h-10 md:w-12 md:h-12 mt-2 ml-2 md:mt-3 md:ml-3 flex flex-col items-center justify-center border-2 border-[#a30000]"
+              class="absolute top-1 left-1 text-[#a30000] hover:text-white bg-white hover:bg-[#a30000] w-8 h-8 md:w-12 md:h-12 flex flex-col items-center justify-center border-2 border-[#a30000]"
             >
-              <p
-                class="text-[12px] md:text-[14px] font-bold leading-[12px] md:leading-[14px]"
-              >
+              <p class="text-[10px] md:text-[14px] font-bold leading-[10px]">
                 {{ job.date }}
               </p>
-              <p class="text-[10px] md:text-[12px] font-bold">
+              <p class="text-[8px] md:text-[12px] font-bold">
                 {{ job.month }}
               </p>
             </div>
           </div>
 
           <!-- CONTENT -->
-          <div class="flex flex-col justify-between flex-1 w-full">
-            <div class="min-h-[110px] md:min-h-[100px] mt-2 md:mt-0">
-              <h3
-                class="font-bold text-base md:text-lg text-black leading-snug"
-              >
+          <div class="flex flex-col justify-between flex-1">
+            <div class="min-h-[90px] md:min-h-[100px]">
+              <h3 class="font-bold text-sm md:text-lg text-black leading-snug">
                 {{ job.title }}
               </h3>
 
-              <p
-                class="text-gray-700 text-sm mt-1 line-clamp-2 md:line-clamp-3"
-              >
+              <p class="text-gray-700 text-xs mt-1 line-clamp-2 md:text-sm">
                 {{ job.desc }}
               </p>
 
-              <p class="text-[#B40000] font-semibold mt-1 text-sm">
+              <p class="text-[#B40000] font-semibold mt-1 text-xs md:text-sm">
                 Lương: {{ job.salary }}
               </p>
             </div>
 
             <!-- LOCATION + BUTTON -->
-            <div
-              class="flex flex-col md:flex-row md:items-center md:justify-between gap-2 mt-3"
-            >
-              <p class="text-gray-500 text-sm">{{ job.location }}</p>
+            <div class="flex items-center justify-between">
+              <p class="text-gray-500 text-xs md:text-sm">{{ job.location }}</p>
 
               <button
-                class="cursor-pointer text-sm uppercase bg-[#9B1C1C] text-white px-3 py-2 rounded-sm border border-transparent transition-all duration-200 hover:bg-transparent hover:border-[#9B1C1C] hover:text-[#9B1C1C] md:px-3 md:py-1.5 w-full md:w-auto text-center"
+                class="cursor-pointer text-xs md:text-sm uppercase bg-[#9B1C1C] text-white px-3 py-1.5 rounded-sm border border-transparent transition-all duration-200 hover:bg-transparent hover:border-[#9B1C1C] hover:text-[#9B1C1C]"
               >
                 Gửi hồ sơ >>
               </button>
@@ -154,7 +144,7 @@
     </div>
   </section>
 
-  <section class="relative w-full overflow-hidden bg-white">
+  <section class="relative w-full overflow-hidden bg-white pb-10">
     <!-- MOUNTAIN + LOGO -->
     <div class="relative w-full flex justify-center">
       <!-- Mountain -->
@@ -167,36 +157,36 @@
       <!-- Logo overlay -->
       <img
         src="/images/homepage/career-logo.png"
-        class="absolute top-[10px] md:top-[100px] w-[140px] md:w-[300px] object-contain"
+        class="absolute top-[10px] md:top-[100px] w-[140px] md:w-[400px] object-contain"
         alt="Trần Gia Holding Logo"
       />
     </div>
 
     <!-- GRADIENT OVERLAY -->
     <div
-      class="absolute bottom-0 left-0 w-full h-[380px] md:h-[450px] bg-gradient-to-t from-[#660000] via-[#660000ee] to-[#66000000] z-20"
+      class="absolute bottom-0 left-0 w-full h-[380px] md:h-[540px] bg-gradient-to-t from-[#660000] via-[#660000] to-[#66000000] z-20"
     ></div>
 
     <!-- TEXT CONTENT -->
     <div
-      class="relative z-20 max-w-5xl mx-auto px-5 md:px-6 mt-[-90px] md:mt-[-180px]"
+      class="relative z-20 max-w-7xl mx-auto px-4 md:px-2 mt-[-90px] md:mt-[-180px]"
     >
       <h2
-        class="font-banque text-white text-3xl md:text-5xl font-extrabold mb-4 md:mb-6 tracking-wide text-center md:text-left"
+        class="font-banque text-white text-3xl md:text-6xl font-extrabold mb-4 md:mb-16 tracking-wide text-center md:text-left"
       >
         VỀ TRẦN GIA
       </h2>
 
       <p
-        class="text-white text-base md:text-xl leading-relaxed tracking-wide text-justify mb-4 md:mb-5"
+        class="font-gotham text-white text-base md:text-3xl leading-relaxed tracking-wide text-justify mb-4 md:mb-5"
       >
-        <span class="font-bold">Trần Gia Holding</span> là đơn vị hàng đầu trong
-        lĩnh vực bất động sản và quản lý dự án tại Đà Lạt, luôn hướng tới giá
-        trị bền vững và sự phát triển cộng đồng.
+        <span class="font-extrabold">Trần Gia Holding</span> là đơn vị hàng đầu
+        trong lĩnh vực bất động sản và quản lý dự án tại Đà Lạt, luôn hướng tới
+        giá trị bền vững và sự phát triển cộng đồng.
       </p>
 
       <p
-        class="text-white text-base md:text-lg leading-relaxed tracking-wide text-justify opacity-90"
+        class="font-gotham text-white text-base md:text-3xl leading-relaxed tracking-wide text-justify opacity-90"
       >
         Chúng tôi không ngừng đổi mới, xây dựng môi trường làm việc chuyên
         nghiệp, chia sẻ thành công cùng nhân viên.
@@ -204,29 +194,58 @@
     </div>
   </section>
 
-  <section class="w-full bg-[#660000] pt-50 pb-40 px-4 text-white text-center">
-    <!-- TITLE -->
-    <h2
-      class="font-banque text-3xl md:text-5xl font-extrabold tracking-wide mb-16"
-    >
-      THAM GIA VÀO ĐỘI NGŨ
-    </h2>
+  <section
+    class="relative w-full min-h-[550px] md:min-h-[960px] bg-[#660000] bg-cover bg-center bg-no-repeat"
+    style="background-image: url('/images/homepage/career-nhaga.png')"
+  >
+    <!-- LỚP PHỦ PNG -->
+    <div class="absolute inset-0 pointer-events-none z-20">
+      <img
+        src="/images/homepage/career-overlay.png"
+        class="w-full h-full object-cover"
+        alt="overlay"
+      />
+    </div>
 
-    <!-- DESCRIPTION -->
-    <p
-      class="max-w-3xl mx-auto text-base md:text-xl leading-relaxed opacity-90 mb-16"
+    <!-- CONTENT WRAPPER -->
+    <div
+      class="relative z-[999] max-w-[1300px] mx-auto px-4 md:px-8 py-16 md:py-30 flex justify-center md:justify-end"
     >
-      Nếu bạn yêu thích lĩnh vực bất động sản, mong muốn phát triển bản thân và
-      đóng góp cho cộng đồng, hãy gửi hồ sơ về Trần Gia Holding ngay hôm nay.
-      <br />Chúng tôi trân trọng mọi cơ hội được hợp tác với bạn.
-    </p>
+      <div
+        class="bg-white text-[#660000] w-full max-w-[360px] md:max-w-[580px] rounded-xl shadow-xl p-6 md:p-12"
+      >
+        <!-- TITLE -->
+        <h2
+          class="text-center font-banque text-2xl md:text-5xl font-extrabold leading-tight mb-4 md:mb-6"
+        >
+          THAM GIA VÀO<br />ĐỘI NGŨ
+        </h2>
 
-    <!-- BUTTON -->
-    <button
-      class="cursor-pointer font-semibold text-sm md:text-base px-6 py-2 text-white uppercase tracking-wider rounded-sm flex md:inline-flex justify-center items-center gap-2 mx-auto md:mx-0 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] w-full md:w-auto"
-    >
-      LOREM ISM DOLOR →
-    </button>
+        <!-- DESCRIPTION -->
+        <p
+          class="text-gray-700 text-sm md:text-xl leading-relaxed mb-6 md:mb-8 text-justify"
+        >
+          Nếu bạn yêu thích lĩnh vực bất động sản, mong muốn phát triển bản thân
+          và đóng góp cho cộng đồng, hãy gửi hồ sơ về Trần Gia Holding ngay hôm
+          nay.
+          <br />Chúng tôi trân trọng mọi cơ hội được hợp tác với bạn.
+        </p>
+
+        <!-- INPUT -->
+        <input
+          type="email"
+          placeholder="EMAIL"
+          class="w-full border-2 border-[#660000] px-3 md:px-4 py-2 md:py-3 mb-6 text-gray-700 focus:outline-none focus:border-[#660000] placeholder:font-bold text-sm md:text-base"
+        />
+
+        <!-- BUTTON -->
+        <button
+          class="cursor-pointer w-[200px] md:w-[240px] mx-auto block bg-[#9B1C1C] hover:bg-[#7b0000] text-white font-semibold py-2 md:py-3 transition uppercase tracking-wide text-sm md:text-base"
+        >
+          THAM GIA NGAY >>
+        </button>
+      </div>
+    </div>
   </section>
 </template>
 
