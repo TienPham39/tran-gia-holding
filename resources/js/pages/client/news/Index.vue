@@ -231,10 +231,10 @@
 
 <script setup>
 import { ref } from "vue";
-import Layouts from "../../../layouts/client.vue";
 import { defineOptions } from "vue";
 import SliderSwiper from "../../../components/client/Slider-Swiper.vue";
 import Pagination from "@/Components/client/Paginate.vue";
+import Layouts from "../../../layouts/client.vue";
 
 defineOptions({
   layout: Layouts,
