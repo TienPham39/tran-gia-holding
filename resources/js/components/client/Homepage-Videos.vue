@@ -1,288 +1,194 @@
 <template>
-  <section class="overflow-hidden cursor-pointer">
-    <div class="container mx-auto overflow-x-hidden">
-      <!-- Full-bleed video -->
-      <div class="relative left-1/2 -ml-[50vw] w-screen h-[600px]">
-        <!-- Layer background -->
-        <div
-          class="absolute inset-0 bg-[url('/images/homepage/bg-video.png')] bg-cover bg-center bg-no-repeat z-0"
-        ></div>
+  <section class="relative w-full">
+    <div class="plyr relative w-full h-[600px] overflow-hidden">
+      <!-- VIDEO + POSTER -->
+      <video
+        ref="player"
+        class="w-full h-full object-cover"
+        :src="videoUrl"
+        playsinline
+      ></video>
+    </div>
 
-        <!-- Layer video -->
-        <div class="relative z-10 w-full h-full">
-          <!-- <video
-            ref="mainVideo"
-            :src="activeVideo.url"
-            playsinline
-            class="w-full h-full object-cover cursor-pointer"
-            @play="onPlay"
-            @pause="onPause"
-            @click="isPlaying ? mainVideo.pause() : togglePlay()"
-          ></video> -->
+    <!-- CUSTOM PLAY BUTTON -->
+    <button
+      v-if="showPlayButton"
+      @click="playVideo"
+      class="absolute inset-0 flex items-center justify-center z-30"
+    >
+      <img
+        src="/images/video/Playvideo.png"
+        alt="Play"
+        class="cursor-pointer w-22 h-22 opacity-90 hover:opacity-100 transition"
+      />
+    </button>
+  </section>
 
-          <button
-            v-if="!isPlaying"
-            @click="togglePlay"
-            class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
+  <section class="relative w-full bg-[#670000] overflow-hidden">
+    <!-- TOP GRADIENT -->
+    <div
+      class="absolute inset-x-0 top-0 h-[180px] pointer-events-none z-30 bg-[linear-gradient(180deg,rgba(103,0,0,1)_0%,rgba(103,0,0,0.85)_20%,rgba(103,0,0,0.45)_70%,rgba(103,0,0,0)_100%)]"
+    ></div>
+
+    <div class="flex justify-center w-full h-[800px]">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- LEFT COLUMN -->
+        <div class="ml-2 overflow-hidden cursor-pointer">
+          <swiper
+            direction="vertical"
+            :slides-per-view="2"
+            :space-between="200"
+            :loop="true"
+            :watchSlidesProgress="true"
+            :autoplay="{ delay: 3000 }"
+            :speed="2500"
+            class="h-[750px]"
+            :modules="[Autoplay]"
           >
-            <img :src="playBtn" alt="Play" class="w-20 h-20" />
-          </button>
+            <swiper-slide v-for="img in estateColumns[0]" :key="img">
+              <img :src="img" class="w-[350px] h-[450px] object-cover" />
+            </swiper-slide>
+          </swiper>
         </div>
-      </div>
 
-      <!-- Full-bleed thumbnails -->
-      <div class="relative left-1/2 -ml-[50vw] w-screen z-0">
-        <div class="bg-[#670000] relative z-0">
-          <!-- Top gradient fade -->
-          <div
-            class="absolute left-0 right-0 h-[120px] pointer-events-none z-20 top-0 bg-[linear-gradient(180deg,rgba(103,0,0,1)_0%,rgba(103,0,0,0.95)_10%,rgba(103,0,0,0.8)_30%,rgba(103,0,0,0.5)_60%,rgba(103,0,0,0)_100%)]"
-          ></div>
+        <!-- CENTER COLUMN -->
+        <div class="overflow-hidden flex flex-col">
+          <!-- LOGO -->
+          <img
+            src="/images/homepage/footer_logo.png"
+            alt="Trần Gia Holding"
+            class="h-32 md:h-70 w-auto z-30"
+          />
 
-          <div
-            ref="scrollContainer"
-            class="w-full px-4 lg:px-8 overflow-y-auto scroll-smooth max-h-[600px] scrollbar scrollbar-thumb-white/30 scrollbar-track-black/20 scrollbar-thin z-10"
-            @mousemove="handleMouseMove"
-            @mouseleave="stopAutoScroll"
+          <!-- GRADIENT IMAGE BELOW LOGO -->
+          <img
+            src="/images/holding/gradient-top.png"
+            alt="gradient"
+            class="absolute top-[320px] left-140 -translate-y-1/2 w-[400px] h-auto z-10 pointer-events-none"
+          />
+
+          <!-- SWIPER BELOW -->
+          <swiper
+            direction="vertical"
+            :slides-per-view="2"
+            :space-between="520"
+            :loop="true"
+            :watchSlidesProgress="true"
+            :autoplay="{
+              delay: 3000,
+              disableOnInteraction: false,
+              reverseDirection: true,
+            }"
+            :speed="2500"
+            class="h-[750px]"
+            :modules="[Autoplay]"
           >
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <!-- Left column -->
-              <div class="left-column flex flex-col gap-4">
-                <div
-                  v-for="item in columns[0]"
-                  :key="item.video.id"
-                  class="relative z-10 bg-black/20 cursor-pointer rounded-md overflow-hidden transition-transform duration-200 hover:scale-105 hover:shadow-lg"
-                  :class="{
-                    'ring-4 ring-white ring-opacity-40':
-                      activeIndex === item.idx,
-                  }"
-                  @click="playVideo(item.idx)"
-                >
-                  <img
-                    :src="item.video.thumb"
-                    :alt="item.video.title"
-                    :class="[
-                      'w-full',
-                      item.full ? 'h-[600px]' : 'h-48',
-                      'object-cover',
-                    ]"
-                  />
-                </div>
-              </div>
+            <swiper-slide v-for="img in estateColumns[1]" :key="img">
+              <img :src="img" class="w-[350px] h-[550px] object-cover" />
+            </swiper-slide>
+          </swiper>
+        </div>
 
-              <!-- Center column (logo + images) -->
-              <div class="center-column flex flex-col gap-4">
-                <div class="flex flex-col items-center relative z-150">
-                  <img
-                    src="/images/homepage/footer_logo.png"
-                    alt="Trần Gia Holding"
-                    class="h-32 md:h-28 w-auto"
-                  />
-                </div>
-
-                <div
-                  v-for="(item, i) in columns[1]"
-                  :key="item.video.id"
-                  class="relative z-10 bg-black/20 cursor-pointer rounded-md overflow-hidden transition-transform duration-200 hover:scale-105"
-                  :class="{
-                    'ring-4 ring-white ring-opacity-40':
-                      activeIndex === item.idx,
-                    'h-80': i === 1,
-                  }"
-                  @click="playVideo(item.idx)"
-                >
-                  <img
-                    :src="item.video.thumb"
-                    :alt="item.video.title"
-                    :class="[
-                      'w-full',
-                      item.full ? 'h-[600px]' : i === 1 ? 'h-80' : 'h-48',
-                      'object-cover',
-                    ]"
-                  />
-                </div>
-              </div>
-
-              <!-- Right column -->
-              <div class="right-column flex flex-col gap-4">
-                <div
-                  v-for="item in columns[2]"
-                  :key="item.video.id"
-                  class="relative z-10 bg-black/20 cursor-pointer rounded-md overflow-hidden transition-transform duration-200 hover:scale-105 hover:shadow-lg"
-                  :class="{
-                    'ring-4 ring-white ring-opacity-40':
-                      activeIndex === item.idx,
-                  }"
-                  @click="playVideo(item.idx)"
-                >
-                  <img
-                    :src="item.video.thumb"
-                    :alt="item.video.title"
-                    :class="[
-                      'w-full',
-                      item.full ? 'h-[600px]' : 'h-48',
-                      'object-cover',
-                    ]"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Bottom gradient fade -->
-          <div
-            class="absolute left-0 right-0 h-[120px] pointer-events-none z-20 bottom-0 bg-[linear-gradient(0deg,rgba(103,0,0,1)_0%,rgba(103,0,0,0.95)_10%,rgba(103,0,0,0.8)_30%,rgba(103,0,0,0.5)_60%,rgba(103,0,0,0)_100%)]"
-          ></div>
+        <!-- RIGHT COLUMN -->
+        <div class="overflow-hidden">
+          <swiper
+            direction="vertical"
+            :slides-per-view="2"
+            :space-between="200"
+            :loop="true"
+            :watchSlidesProgress="true"
+            :autoplay="{ delay: 3000 }"
+            :speed="2200"
+            class="h-[750px]"
+            :modules="[Autoplay]"
+          >
+            <swiper-slide v-for="img in estateColumns[2]" :key="img">
+              <img :src="img" class="w-[350px] h-[450px] object-cover" />
+            </swiper-slide>
+          </swiper>
         </div>
       </div>
     </div>
+
+    <!-- BOTTOM GRADIENT -->
+    <div
+      class="absolute inset-x-0 bottom-0 h-[180px] pointer-events-none z-30 bg-[linear-gradient(0deg,rgba(103,0,0,1)_10%,rgba(103,0,0,0.85)_35%,rgba(103,0,0,0.45)_65%,rgba(103,0,0,0)_80%)]"
+    ></div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from "vue";
+import { ref, onMounted } from "vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
 
-// Vite-friendly imports of assets
-const imageFiles = [
-  "Holding.png",
-  "Holding2.png",
-  "Holding3.png",
-  "Holding4.png",
-  "Holding6.png",
-  "Holding7.png",
-  "Holding8.png",
-  "Holding9.png",
+// Import Swiper styles
+import "swiper/css";
+
+import { Autoplay } from "swiper/modules";
+import { Pagination } from "swiper/modules";
+import "swiper/css/pagination";
+
+import Plyr from "plyr";
+import "plyr/dist/plyr.css";
+
+const estateColumns = [
+  [
+    "/images/holding/Holding1.png",
+    "/images/holding/Holding1.png",
+    "/images/holding/Holding1.png",
+  ],
+  [
+    "/images/holding/Holding2.png",
+    "/images/holding/Holding2.png",
+    "/images/holding/Holding2.png",
+  ],
+  [
+    "/images/holding/Holding1.png",
+    "/images/holding/Holding1.png",
+    "/images/holding/Holding1.png",
+  ],
 ];
 
-const videoFile = new URL(
-  "../../../assets/images/homepage-videos/Video.mp4",
-  import.meta.url
-).href;
-const playBtn = new URL(
-  "../../../assets/images/homepage-videos/Playvideo.png",
-  import.meta.url
-).href;
+const player = ref(null);
+const plyr = ref(null);
+const videoUrl = "/images/video/fixed.mp4";
 
-const videos = imageFiles.map((name, i) => ({
-  id: i + 1,
-  title: "Trần Gia Holding",
-  url: videoFile,
-  thumb: new URL(
-    `../../../assets/images/homepage-videos/${name}`,
-    import.meta.url
-  ).href,
-}));
+// Hiển thị nút play custom
+const showPlayButton = ref(true);
 
-// New distribution: left 2 full, middle 4, right 2 full (8 images)
-// Left: indexes 0,1 (Holding1, Holding2) — full
-// Middle: indexes 2,3,4,5 (Holding3, Holding4, Holding6, Holding7)
-// Right: indexes 6,7 (Holding8, Holding9) — full
-const columns = [[], [], []];
-const leftSet = new Set([0, 1]);
-const middleSet = new Set([2, 3, 4, 5]);
-const rightSet = new Set([6, 7]);
-const fullHeightSet = new Set([0, 1, 6, 7]);
-
-videos.forEach((v, i) => {
-  const item = { video: v, idx: i, full: fullHeightSet.has(i) };
-  if (leftSet.has(i)) columns[0].push(item);
-  else if (middleSet.has(i)) columns[1].push(item);
-  else if (rightSet.has(i)) columns[2].push(item);
-  else columns[2].push(item);
-});
-
-const activeIndex = ref(0);
-const activeVideo = computed(() => videos[activeIndex.value]);
-const mainVideo = ref(null);
-const scrollContainer = ref(null);
-const isPlaying = ref(false);
-
-let scrollRaf = null;
-
-const handleMouseMove = (e) => {
-  if (!scrollContainer.value) return;
-
-  const container = scrollContainer.value;
-  const rect = container.getBoundingClientRect();
-  const mouseY = e.clientY - rect.top;
-  const containerHeight = rect.height;
-
-  // Vùng trigger (45% top và bottom)
-  const triggerZone = containerHeight * 0.45;
-
-  if (mouseY < triggerZone) {
-    // Hover phía trên -> scroll lên
-    startAutoScroll("up", (triggerZone - mouseY) / triggerZone);
-  } else if (mouseY > containerHeight - triggerZone) {
-    // Hover phía dưới -> scroll xuống
-    startAutoScroll(
-      "down",
-      (mouseY - (containerHeight - triggerZone)) / triggerZone
-    );
-  } else {
-    // Ở giữa -> dừng scroll
-    stopAutoScroll();
-  }
+const playVideo = () => {
+  plyr.value.play();
+  showPlayButton.value = false;
 };
 
-const startAutoScroll = (direction, intensity) => {
-  if (scrollRaf) return; // Đã đang scroll
-
-  const scroll = () => {
-    if (!scrollContainer.value) {
-      stopAutoScroll();
-      return;
-    }
-
-    const speed = intensity * 60; // Tốc độ tối đa 60px/frame
-
-    if (direction === "up") {
-      scrollContainer.value.scrollTop -= speed;
-    } else {
-      scrollContainer.value.scrollTop += speed;
-    }
-
-    scrollRaf = requestAnimationFrame(scroll);
-  };
-
-  scrollRaf = requestAnimationFrame(scroll);
-};
-
-const stopAutoScroll = () => {
-  if (scrollRaf) {
-    cancelAnimationFrame(scrollRaf);
-    scrollRaf = null;
-  }
-};
-
-const playVideo = (idx) => {
-  activeIndex.value = idx;
-  // Không tự động play, chỉ đổi video source
-  // pause current video and reset playing state so user can click play overlay
-  nextTick(() => {
-    if (mainVideo.value) {
-      mainVideo.value.pause();
-      mainVideo.value.currentTime = 0;
-      isPlaying.value = false;
-    }
+onMounted(() => {
+  plyr.value = new Plyr(player.value, {
+    autoplay: false,
+    controls: ["progress", "mute", "volume", "fullscreen"],
   });
-};
 
-const togglePlay = async () => {
-  if (!mainVideo.value) return;
-  try {
-    await mainVideo.value.play();
-    // if play succeeds, isPlaying will be set by onPlay
-  } catch (e) {
-    // autoplay blocked or error — set isPlaying if video is already playing
-    isPlaying.value = !mainVideo.value.paused;
-  }
-};
+  plyr.value.on("pause", () => {
+    showPlayButton.value = true;
+  });
 
-const onPlay = () => {
-  isPlaying.value = true;
-};
-
-const onPause = () => {
-  isPlaying.value = false;
-};
+  plyr.value.on("play", () => {
+    showPlayButton.value = false;
+  });
+});
 </script>
+
+<style>
+.plyr video,
+.plyr__poster {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.plyr {
+  width: 100% !important;
+  height: 600px !important;
+  overflow: hidden !important;
+  background: #003505;
+}
+</style>

@@ -8,13 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class ProductBDS extends Model
 {
     use HasFactory;
+    protected $table = 'productbds';
 
     protected $fillable = [
-        'name',
-        'phone',
-        'email',
-        'message',
-        'ip_address',
+        'title',
+        'image',
+        'description',
+        'price',
+        'location',
         'status',
     ];
 }
