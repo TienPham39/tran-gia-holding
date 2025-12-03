@@ -13,9 +13,9 @@
       <!-- Logo -->
       <header class="mb-2 flex justify-center p-2">
         <img
-          src="/images/homepage/logo.png"
+          src="/images/homepage/career-logo.png"
           alt="Logo"
-          class="hidden md:block h-12 max-h-14 w-auto object-contain"
+          class="hidden md:block max-h-20 w-auto object-contain"
         />
       </header>
 

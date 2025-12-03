@@ -1,11 +1,27 @@
 <template>
-  <section class="w-full relative">
-    <video
-      ref="player"
-      class="plyr__video-embed w-full h-[600px] object-cover"
-      :src="videoUrl"
-      playsinline
-    ></video>
+  <section class="relative w-full">
+    <div class="plyr relative w-full h-[600px] overflow-hidden">
+      <!-- VIDEO + POSTER -->
+      <video
+        ref="player"
+        class="w-full h-full object-cover"
+        :src="videoUrl"
+        playsinline
+      ></video>
+    </div>
+
+    <!-- CUSTOM PLAY BUTTON -->
+    <button
+      v-if="showPlayButton"
+      @click="playVideo"
+      class="absolute inset-0 flex items-center justify-center z-30"
+    >
+      <img
+        src="/images/video/Playvideo.png"
+        alt="Play"
+        class="cursor-pointer w-22 h-22 opacity-90 hover:opacity-100 transition"
+      />
+    </button>
   </section>
 
   <section class="relative w-full bg-[#670000] overflow-hidden">
@@ -25,7 +41,7 @@
             :loop="true"
             :watchSlidesProgress="true"
             :autoplay="{ delay: 3000 }"
-            speed="2500"
+            :speed="2500"
             class="h-[750px]"
             :modules="[Autoplay]"
           >
@@ -44,6 +60,13 @@
             class="h-32 md:h-70 w-auto z-30"
           />
 
+          <!-- GRADIENT IMAGE BELOW LOGO -->
+          <img
+            src="/images/holding/gradient-top.png"
+            alt="gradient"
+            class="absolute top-[320px] left-140 -translate-y-1/2 w-[400px] h-auto z-10 pointer-events-none"
+          />
+
           <!-- SWIPER BELOW -->
           <swiper
             direction="vertical"
@@ -56,7 +79,7 @@
               disableOnInteraction: false,
               reverseDirection: true,
             }"
-            speed="2500"
+            :speed="2500"
             class="h-[750px]"
             :modules="[Autoplay]"
           >
@@ -75,7 +98,7 @@
             :loop="true"
             :watchSlidesProgress="true"
             :autoplay="{ delay: 3000 }"
-            speed="2200"
+            :speed="2200"
             class="h-[750px]"
             :modules="[Autoplay]"
           >
@@ -96,7 +119,6 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-
 import { Swiper, SwiperSlide } from "swiper/vue";
 
 // Import Swiper styles
@@ -106,8 +128,8 @@ import { Autoplay } from "swiper/modules";
 import { Pagination } from "swiper/modules";
 import "swiper/css/pagination";
 
-import Plyr from 'plyr'
-import 'plyr/dist/plyr.css'
+import Plyr from "plyr";
+import "plyr/dist/plyr.css";
 
 const estateColumns = [
   [
@@ -127,13 +149,46 @@ const estateColumns = [
   ],
 ];
 
-const videoUrl = "/images/video/Video.mp4";
-const player = ref()
+const player = ref(null);
+const plyr = ref(null);
+const videoUrl = "/images/video/fixed.mp4";
+
+// Hiển thị nút play custom
+const showPlayButton = ref(true);
+
+const playVideo = () => {
+  plyr.value.play();
+  showPlayButton.value = false;
+};
 
 onMounted(() => {
-  new Plyr(player.value, {
+  plyr.value = new Plyr(player.value, {
     autoplay: false,
-    controls: ['play', 'progress', 'fullscreen', 'mute', 'volume']
-  })
-})
+    controls: ["progress", "mute", "volume", "fullscreen"],
+  });
+
+  plyr.value.on("pause", () => {
+    showPlayButton.value = true;
+  });
+
+  plyr.value.on("play", () => {
+    showPlayButton.value = false;
+  });
+});
 </script>
+
+<style>
+.plyr video,
+.plyr__poster {
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.plyr {
+  width: 100% !important;
+  height: 600px !important;
+  overflow: hidden !important;
+  background: #003505;
+}
+</style>

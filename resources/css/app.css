@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
 @import url("https://fonts.cdnfonts.com/css/utm-banque");
 @import url("https://fonts.cdnfonts.com/css/svn-gotham");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap");
 
 @import "tailwindcss";
 @plugin "daisyui";
@@ -38,7 +39,9 @@ body,
 .font-banque {
   font-family: "UTM Banque", sans-serif !important;
 }
-
 .font-gotham {
   font-family: "SVN-Gotham", sans-serif !important;
+}
+.font-mont {
+  font-family: "Montserrat", sans-serif !important;
 }

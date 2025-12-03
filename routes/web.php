@@ -9,6 +9,7 @@ use App\Http\Controllers\Client\ContactController;
 use App\Http\Controllers\Client\ProductBDSController;
 use App\Http\Controllers\Client\ServiceController;
 use App\Http\Controllers\Client\CommunityController;
+use App\Http\Controllers\Client\CareerController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -20,15 +21,25 @@ Route::post('/register', [RegisterController::class, 'store'])->name('register')
 Route::get('/auth', fn() => Inertia::render('auth/Register'))->name('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
-Route::get('/news', [NewsController::class, 'index'])->name('news.index');
+
+Route::get('/news', [NewsController::class, 'index'])
+    ->name('client.news.index');
+
+Route::get('/news/{slug}', [NewsController::class, 'show'])
+    ->name('client.news.show');
+
 Route::post('/contact', [ContactController::class, 'store'])
   ->name('contact.store');
+
 Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
 Route::get('/product/detail/{id}', [ProductBDSController::class, 'show'])
   ->name('client.product.show');
+  
 Route::get('/service', [ServiceController::class, 'index'])->name('client.service');
 Route::get('/community', [CommunityController::class, 'index'])
     ->name('client.community');
+Route::get('/career', [CareerController::class, 'index'])
+    ->name('client.career');
 
 // Authenticated routes
 Route::withoutMiddleware([VerifyCsrfToken::class])
