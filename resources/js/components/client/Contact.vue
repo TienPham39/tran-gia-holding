@@ -29,7 +29,6 @@
           <p>Để lại thông tin để nhận bảng giá và quy hoạch mới nhất.</p>
         </div>
 
-        <!-- Hotline Button -->
         <div
           class="relative pl-24 flex items-center gap-3 bg-[#A22222] text-white rounded-full px-6 py-4 cursor-pointer shadow-lg hover:bg-[#7d1a1a] transition mt-4"
         >
