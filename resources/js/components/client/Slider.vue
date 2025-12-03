@@ -12,35 +12,16 @@
         class="relative z-10 text-center flex flex-col items-center max-w-[597px] px-4"
       >
         <h1
-          class="font-banque font-bold uppercase text-white tracking-[0.28px] leading-tight text-[20px] md:text-[40px] lg:text-[40px]"
+          class="mb-6 font-banque font-bold uppercase text-white tracking-[0.28px] leading-tight text-[20px] md:text-[40px] lg:text-[40px]"
         >
           KHỞI TÂM VƯƠN TẦM
         </h1>
 
-        <a
-          href="/contact"
-          class="group inline-flex items-center justify-center gap-2 uppercase text-white transition-all duration-300 border-2 border-white/80 rounded-md bg-white/10 hover:bg-[#660000]/50 hover:border-[#D9D9D947] shadow-[0_0_10px_rgba(255,255,255,0.1),inset_0_0_1px_rgba(255,255,255,0.5)] w-[150px] h-[30px] md:w-[240px] md:h-[42px] lg:w-[299px] lg:h-[47px] mt-2 md:mt-4 lg:mt-6 text-[11px] md:text-[24px] lg:text-[24px]"
+        <button
+          class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
         >
-          <span>Đăng ký tư vấn</span>
-          <span
-            class="transition-transform duration-300 group-hover:translate-x-1"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="2.5"
-              stroke="currentColor"
-              class="w-[14px] h-[14px] md:w-[22px] md:h-[22px]"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </span>
-        </a>
+          đăng ký tư vấn →
+        </button>
       </div>
     </section>
 
@@ -83,7 +64,7 @@
             <!-- Content -->
             <div class="flex flex-col flex-1 text-center md:text-left">
               <!-- Title -->
-              <div class="mt-6 md:mt-10 mb-2">
+              <div class="mt-6 md:mt-10 mb-12">
                 <h2
                   class="font-banque font-bold tracking-wider whitespace-nowrap text-[#770400]"
                   :style="{
@@ -100,9 +81,9 @@
               </div>
 
               <!-- Description -->
-              <div class="space-y-3 mb-6">
+              <div class="space-y-3 mb-6 font-gotham font-extrabold">
                 <p
-                  class="text-gray-600 leading-relaxed text-base sm:text-xl text-justify"
+                  class="text-gray-600 leading-relaxed text-base sm:text-xl text-justify whitespace-pre-line"
                 >
                   {{ currentSlide.description }}
                 </p>
@@ -157,9 +138,12 @@ const slides = ref([
     id: 1,
     title: "GIỚI THIỆU",
     image: "/images/slide1.png",
-    description:
-      "Công ty bất động sản hàng đầu với hơn 20 năm kinh nghiệm trong lĩnh vực phát triển bất động sản. Chúng tôi cam kết cung cấp các dự án chất lượng cao, từ nhà ở đến các tòa nhà thương mại, với tiêu chuẩn quốc tế.",
-    buttons: ["Dự Án", "Dịch Vụ", "Về Chúng Tôi", "Liên Hệ"],
+    description: `
+Trần Gia Holding định vị là tập đoàn bất động sản đa ngành uy tín hàng đầu tại Lâm Đồng. Chúng tôi không chỉ cung cấp đất nền, nhà vườn mà còn mang đến giải pháp trọn gói: từ tư vấn pháp lý, đo đạc đến thiết kế thi công.
+
+Với sứ mệnh "Kết nối giá trị đất và người", chúng tôi cam kết sự minh bạch tuyệt đối, bảo chứng an toàn cho dòng tiền và kiến tạo không gian sống xanh bền vững.
+`,
+    buttons: ["Pháp lý minh bạch 100%", "Hệ sinh thái trọn gói", "Vị trí đắc địa ven Đà Lạt", "Tiềm năng sinh lời bền vững"],
   },
   {
     id: 2,
@@ -190,17 +174,6 @@ const updateScreen = () => {
   else screenSize.value = "desktop";
 };
 
-/* 🔹 Tự động chuyển slide */
-let autoSlideInterval = null;
-const startAutoSlide = () => {
-  autoSlideInterval = setInterval(() => {
-    nextSlide();
-  }, 5000); // 👉 Thay đổi thời gian tại đây (5000 = 5 giây)
-};
-const stopAutoSlide = () => {
-  if (autoSlideInterval) clearInterval(autoSlideInterval);
-};
-
 /* 🔹 Chuyển slide thủ công */
 const nextSlide = () => {
   currentIndex.value = (currentIndex.value + 1) % slides.value.length;
@@ -221,11 +194,9 @@ onMounted(() => {
   updateScreen();
   window.addEventListener("resize", updateScreen);
   window.addEventListener("keydown", handleKey);
-  startAutoSlide();
 });
 onBeforeUnmount(() => {
   window.removeEventListener("resize", updateScreen);
   window.removeEventListener("keydown", handleKey);
-  stopAutoSlide();
 });
 </script>

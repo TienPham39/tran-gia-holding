@@ -1,17 +1,16 @@
 <template>
-  <section class="w-full bg-[#003505] flex justify-center items-start py-12">
+  <section class="w-full bg-[#003505] flex justify-center items-start py-24">
     <div class="max-w-[1500px] w-full px-6 sm:px-6 lg:px-20 mx-auto">
       <header class="text-center mb-8">
         <h1
-          class="font-utm font-bold uppercase text-white tracking-[0.28px] pb-6 text-[36px] leading-[42px] md:text-[28px] md:leading-[34px] sm:text-[210px] sm:leading-[28px]"
+          class="font-utm font-bold uppercase text-white tracking-[0.28px] pb-6 text-[26px] leading-[42px] md:text-[28px] md:leading-[34px] sm:text-[210px] sm:leading-[28px]"
         >
           SẢN PHẨM NỔI BẬT
         </h1>
 
         <nav class="mt-2">
-          <!-- Mobile: 2x2 centered grid; Desktop: inline links -->
           <ul
-            class="grid grid-cols-4 gap-x-6 gap-y-3 justify-center items-center text-center text-white/90 font-svn font-bold uppercase text-[14px] sm:flex sm:gap-x-4 sm:text-sm pb-7"
+            class="grid grid-cols-4 gap-x-6 gap-y-3 justify-center items-center text-center text-white/90 font-svn font-bold uppercase text-[10px] sm:flex sm:gap-x-4 sm:text-sm pb-7"
           >
             <li
               v-for="(link, idx) in links"
@@ -102,50 +101,75 @@
 
       <!-- Desktop/tablet: 3-column grid -->
       <div class="hidden sm:grid gap-10 grid-cols-3">
-        <div v-for="(p, idx) in products" :key="idx" class="group cursor-pointer">
+        <div
+          v-for="(p, idx) in products"
+          :key="idx"
+          class="group cursor-pointer"
+        >
+          <!-- IMAGE CARD -->
           <div class="relative rounded-lg overflow-hidden shadow-lg bg-white/5">
             <img
               :src="p.image"
               alt="project image"
               class="w-full h-[300px] object-cover block rounded-b-lg"
             />
+
+            <!-- Overlay -->
             <div
-              class="absolute inset-1 bg-linear-to-b from-black/80 via-black/40 to-transparent rounded-t-lg transition-all duration-300 group-hover:from-black/60 group-hover:via-black/20"
+              class="absolute inset-1 bg-linear-to-b from-black/80 via-black/40 to-transparent rounded-t-lg"
             ></div>
+
+            <!-- Content inside image -->
             <div class="absolute inset-0 z-2">
+              <!-- Name tag -->
               <div
-                class="absolute left-4 top-4 bg-black/40 backdrop-blur-sm py-1.5 px-4 rounded-sm text-sm font-utm font-bold text-white text-center tracking-[0.5px] border border-transparent [border-image:linear-gradient(to_right,rgba(255,255,255,0.95),rgba(255,255,255,0.4),transparent)_1] [border-image-slice:1] transition-all duration-500 ease-out hover:[border-image:linear-gradient(to_right,rgba(255,255,255,1),rgba(255,255,255,0.7),transparent)_1] hover:bg-black/60 hover:scale-[1.02] md:scale-[0.9] lg:scale-100 sm:scale-100 origin-top-left"
+                class="absolute left-4 top-4 bg-black/40 backdrop-blur-sm py-1.5 px-4 rounded-sm text-sm font-utm font-bold text-white tracking-[0.5px]"
               >
-                {{ p.name }}
+                {{ p.label }}
               </div>
-              <div class="absolute right-4 top-1 flex items-center gap-2">
+
+              <!-- Logo -->
+              <div class="absolute right-4 top-1">
                 <img
                   :src="p.logo"
                   alt="logo"
                   class="w-20 h-20 object-contain brightness-125 contrast-125 drop-shadow-md"
                 />
               </div>
+
+              <!-- Area -->
               <div
-                class="absolute right-4 bottom-15 font-utm font-bold uppercase text-white/90 tracking-[0.28px] flex items-end gap-1"
+                class="absolute right-4 bottom-4 font-utm font-bold uppercase text-white/90 tracking-[0.28px] flex items-end gap-1"
               >
-                <span class="text-[50px] leading-none">{{
+                <span class="text-[45px] leading-none">{{
                   p.area.split(".")[0]
-                }}</span
-                ><span class="text-[25px] leading-none"
+                }}</span>
+                <span class="text-[22px] leading-none"
                   >.{{ p.area.split(".")[1] }}</span
                 >
               </div>
             </div>
-            <div
-              class="h-10 bg-[#C3C3C3] border-t border-white/10 w-full"
-            ></div>
           </div>
 
-          <div class="mt-4 bg-transparent">
-            <div class="h-4 mb-3 bg-[#C3C3C3] w-3/4 rounded"></div>
-            <div class="h-4 mb-3 bg-[#C3C3C3] w-5/6 rounded"></div>
-            <div class="h-3 mb-2 bg-[#C3C3C3] w-4/5 rounded"></div>
-            <div class="h-3 mb-2 bg-[#C3C3C3] w-2/3 rounded"></div>
+          <!-- TEXT CONTENT BELOW IMAGE -->
+          <div class="font-mont mt-4 text-white px-1">
+            <!-- Title -->
+            <h3 class="font-mont font-bold text-xl uppercase mb-4">
+              {{ p.name }}
+            </h3>
+
+            <!-- Short description -->
+            <p class="text-lg text-justify text-white/90 mt-2 leading-relaxed">
+              {{ p.description }}
+            </p>
+
+            <div class="mt-3 mb-2 flex justify-end">
+              <p
+                class="text-[12px] tracking-wide uppercase text-white/80 hover:text-white cursor-pointer"
+              >
+                Xem chi tiết
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -166,40 +190,58 @@ const links = ref([
 
 const products = ref([
   {
-    name: "TRẦN GIA VILLAGE 1",
+    label: "TRẦN GIA VILLAGE 1",
+    name: "TRẦN GIA VILLAGE 01",
+    description:
+      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
     image: "/images/homepage/producthighlight.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000 M²",
+    area: "20.000",
   },
   {
-    name: "TRẦN GIA VILLAGE 2",
+    label: "TRẦN GIA VILLAGE 1",
+    name: "ĐẤT NỀN NAM BAN - VIEW ĐỒI",
+    description:
+      "Diện tích: 120m² - 500m². Thế đất dương, view trọn thung lũng, hạ tầng…",
     image: "/images/homepage/producthighlight.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "18.500 M²",
+    area: "20.000",
   },
   {
-    name: "TRẦN GIA VILLAGE 3",
+    label: "TRẦN GIA VILLAGE 1",
+    name: "TRẦN GIA VILLAGE 01",
+    description:
+      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
     image: "/images/homepage/producthighlight.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "22.000 M²",
+    area: "20.000",
   },
   {
-    name: "TRẦN GIA VILLAGE 4",
+    label: "TRẦN GIA VILLAGE 1",
+    name: "TRẦN GIA VILLAGE 01",
+    description:
+      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
     image: "/images/homepage/producthighlight.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000 M²",
+    area: "20.000",
   },
   {
-    name: "TRẦN GIA VILLAGE 5",
+    label: "TRẦN GIA VILLAGE 1",
+    name: "ĐẤT NỀN NAM BAN - VIEW ĐỒI",
+    description:
+      "Diện tích: 120m² - 500m². Thế đất dương, view trọn thung lũng, hạ tầng…",
     image: "/images/homepage/producthighlight.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "19.000 M²",
+    area: "20.000",
   },
   {
-    name: "TRẦN GIA VILLAGE 6",
+    label: "TRẦN GIA VILLAGE 1",
+    name: "TRẦN GIA VILLAGE 01",
+    description:
+      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
     image: "/images/homepage/producthighlight.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "21.000 M²",
+    area: "20.000",
   },
 ]);
 
