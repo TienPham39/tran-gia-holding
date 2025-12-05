@@ -18,11 +18,26 @@ class NewsController extends Controller
     }
 
     public function index(Request $request)
-    {
+    {   
+        $latestNews = News::latest()->paginate(5);
+
+        $thiTruong = News::where('category_id', 2)
+            ->latest()
+            ->take(6)
+            ->get();
+
+        $quyHoachVung = News::where('category_id', 3)
+            ->latest()
+            ->take(6)
+            ->get();
+
         return Inertia::render('client/news/Index', [
-            'layout' => 'client',
+            'latestNews' => $latestNews,
+            'thiTruong' => $thiTruong,
+            'quyHoachVung' => $quyHoachVung,
         ]);
     }
+
 
     public function show($slug)
     {
