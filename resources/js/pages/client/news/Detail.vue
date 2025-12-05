@@ -1,15 +1,36 @@
 <template>
-  <section class="w-full py-20">
+  <section class="w-full pt-20 pb-16 bg-[#660000] text-white">
+    <!-- BREADCRUMB -->
+    <div class="max-w-7xl mx-auto px-4 flex items-center gap-2 text-white mb-6">
+      <a href="/" class="flex items-center">
+        <img src="/images/home-btn.png" alt="Home" class="w-6 h-6" />
+      </a>
+
+      <span class="text-xl">›</span>
+
+      <a
+        href="/news"
+        class="uppercase text-sm tracking-wide hover:text-gray-200"
+      >
+        TIN TỨC
+      </a>
+
+      <span class="text-xl">›</span>
+
+      <span class="uppercase text-sm tracking-wide text-gray-300">
+        {{ news.category?.name || "TIN TỨC" }}
+      </span>
+    </div>
+
     <!-- Border top -->
-    <div class="w-full h-[2px] bg-[#E5E5E5] mb-12"></div>
+    <div class="mx-auto w-[1300px] h-[1px] bg-[#DEDEDE80] mb-12"></div>
 
     <!-- Title -->
-    <div class="text-center mb-10 px-4">
+    <div class="text-center mb-10 px-40">
       <h1
-        class="font-banque font-bold uppercase text-[#3A3A3A] leading-tight text-[24px] md:text-[36px] tracking-wide"
+        class="font-banque font-bold uppercase leading-tight text-[24px] md:text-[36px] tracking-wide"
       >
-        XU HƯỚNG “BỎ PHỐ VỀ RỪNG”: SECOND <br />
-        HOME LÊN NGÔI MẠNH MẼ CUỐI 2025
+        {{ news.title }}
       </h1>
 
       <!-- Small center line -->
@@ -21,32 +42,16 @@
       class="max-w-7xl ml-50 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-start"
     >
       <!-- Left text -->
-      <div
-        class="font-mont text-[#4A4A4A] text-lg text-justify leading-relaxed space-y-6"
-      >
-        <p>
-          Trong 2 năm trở lại đây, đặc biệt giai đoạn 2024–2025, thị trường bất
-          động sản Việt Nam chứng kiến sự trỗi dậy mạnh mẽ của xu hướng
-          <strong>“bỏ phố về rừng”</strong> – một lối sống ưu tiên thiên nhiên,
-          sự bình yên và trải nghiệm tinh thần. Cùng với đó, mô hình second home
-          (ngôi nhà thứ hai) tại các khu vực ven rừng, ven hồ, ven đồi đang trở
-          thành dòng sản phẩm được người trẻ, gia đình thành thị và nhà đầu tư
-          săn đón nhất hiện nay.
-        </p>
-
-        <p>
-          Second home (ngôi nhà thứ hai) tại các khu vực ven rừng, ven hồ, ven
-          đồi đang trở thành dòng sản phẩm được người trẻ, gia đình thành thị và
-          nhà đầu tư săn đón nhất hiện nay.
-        </p>
+      <div class="font-mont text-lg text-justify leading-relaxed space-y-6">
+        <div v-html="news.excerpt"></div>
       </div>
 
       <!-- Right image -->
       <div class="w-full">
         <img
-          src="/images/news/tintucthitruong-1.png"
-          alt="Second Home"
-          class="w-[500px] h-auto object-cover rounded"
+          :src="news.thumbnail"
+          alt="Thumbnail"
+          class="w-[500px] h-auto object-cover rounded"u
         />
       </div>
     </div>
@@ -55,15 +60,13 @@
   </section>
 
   <section class="w-full">
-    <div class="max-w-6xl mx-auto px-4 pb-20 font-mont">
-      <!-- Title -->
+    <div class="max-w-6xl mx-auto px-4 pt-16 pb-20 font-mont">
       <h2
         class="font-mont font-bold text-[22px] md:text-[24px] text-[#2e2e2e] mb-6"
       >
         1. VÌ SAO “BỎ PHỐ VỀ RỪNG” TRỞ THÀNH XU HƯỚNG CHỦ ĐẠO?
       </h2>
 
-      <!-- Intro paragraph -->
       <p class="text-[#404040] text-[18px] leading-relaxed mb-8">
         Nếu như trước đây, second home thường gắn với biển hoặc các khu nghỉ
         dưỡng lớn, thì hiện nay điểm đến lại dịch chuyển về
@@ -71,9 +74,7 @@
         chính:
       </p>
 
-      <!-- Bullet list -->
       <ul class="space-y-8 pl-6">
-        <!-- Item 1 -->
         <li>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-1">
             • Áp lực đô thị ngày càng lớn
@@ -85,7 +86,6 @@
           </p>
         </li>
 
-        <!-- Item 2 -->
         <li>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-1">
             • Làm việc linh hoạt (Hybrid) phát triển mạnh
@@ -97,7 +97,6 @@
           </p>
         </li>
 
-        <!-- Item 3 -->
         <li>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-1">
             • Xu hướng sống xanh – chữa lành (healing) lên ngôi
@@ -108,7 +107,6 @@
           </p>
         </li>
 
-        <!-- Item 4 -->
         <li>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-1">
             • Bất động sản nghỉ dưỡng truyền thống chững lại, second home rừng
@@ -131,25 +129,18 @@
     </div>
   </section>
 
-  <!-- SECTION 2 -->
   <section class="w-full py-20 font-mont">
-    <!-- <div class="w-full h-[2px] bg-[#E5E5E5] mx-auto mb-8"></div> -->
-
     <div class="max-w-6xl mx-auto px-4">
-      <!-- Title -->
       <h2 class="font-bold text-[22px] md:text-[24px] text-[#2e2e2e] mb-8">
         2. NHỮNG MÔ HÌNH SECOND HOME ĐANG “LÊN NGÔI”
       </h2>
 
-      <!-- Intro -->
       <p class="text-[#404040] text-[18px] leading-relaxed mb-10">
         Ngày càng nhiều chủ đầu tư cá nhân và nhà đầu tư nhỏ lẻ chọn các mô
         hình:
       </p>
 
-      <!-- Bullet list 2 columns -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
-        <!-- LEFT COLUMN -->
         <ul class="space-y-8 pl-6">
           <li>
             <p class="text-[18px] font-semibold text-[#2e2e2e] mb-1">
@@ -182,7 +173,6 @@
           </li>
         </ul>
 
-        <!-- RIGHT COLUMN -->
         <ul class="space-y-8 pl-6">
           <li>
             <p class="text-[18px] font-semibold text-[#2e2e2e] mb-1">
@@ -205,7 +195,6 @@
         </ul>
       </div>
 
-      <!-- Images -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 justify-center">
         <img
           src="/images/news/tintucthitruong-2.png"
@@ -222,15 +211,12 @@
     </div>
   </section>
 
-  <!-- SECTION 3 -->
   <section class="w-full font-mont">
     <div class="max-w-6xl mx-auto px-4">
-      <!-- Title -->
       <h2 class="font-bold text-[22px] md:text-[24px] text-[#2e2e2e] mb-6">
         3. TẠI SAO SECOND HOME RỪNG HẤP DẪN NHÀ ĐẦU TƯ?
       </h2>
 
-      <!-- Intro -->
       <p class="text-[#404040] text-[18px] leading-relaxed mb-10">
         Xu hướng second home rừng không chỉ tăng về mặt nhu cầu trải nghiệm, mà
         còn trở thành một phân khúc đầu tư có khả năng sinh lợi ổn định. Dưới
@@ -238,9 +224,7 @@
         trong giai đoạn 2024–2025:
       </p>
 
-      <!-- CONTENT BLOCK -->
       <div class="space-y-10">
-        <!-- ITEM 1 -->
         <div>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-3">
             1. Chi phí đầu tư ban đầu thấp hơn nhiều phân khúc khác
@@ -274,7 +258,6 @@
           </p>
         </div>
 
-        <!-- ITEM 2 -->
         <div>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-3">
             2. Tỷ suất khai thác phòng cao nhờ nhu cầu du lịch cuối tuần bùng nổ
@@ -301,10 +284,10 @@
           </p>
         </div>
 
-        <!-- ITEM 3 -->
         <div>
           <p class="text-[18px] font-semibold text-[#2e2e2e] mb-3">
-            3. Kiến trúc linhw-full py-20 hoạt – thi công nhanh – thu hồi vốn sớm
+            3. Kiến trúc linhw-full py-20 hoạt – thi công nhanh – thu hồi vốn
+            sớm
           </p>
 
           <p class="text-[#4a4a4a] text-[17px] leading-relaxed mb-4">
@@ -333,6 +316,9 @@
             home rừng, bất chấp thị trường bất động sản chung có thể biến động.
           </p>
         </div>
+      </div>
+      <div class="max-w-6xl mx-auto mt-16 pb-10 font-mont">
+        <NewsGallery :images="news.gallery" />
       </div>
     </div>
 
@@ -397,7 +383,9 @@
           </h3>
 
           <!-- Excerpt -->
-          <p class="w-[480px] text-[#4a4a4a] text-[16px] text-justify leading-relaxed">
+          <p
+            class="w-[480px] text-[#4a4a4a] text-[16px] text-justify leading-relaxed"
+          >
             {{ item.excerpt }}
           </p>
         </div>
@@ -408,23 +396,17 @@
 
 <script setup>
 import Layouts from "../../../layouts/client.vue";
+import NewsGallery  from "../../../components/client/NewsGallery.vue"
+import { usePage } from "@inertiajs/vue3";
 
 defineOptions({
   layout: Layouts,
 });
 
-const relatedNews = [
-  {
-    title: "Lorem ipsum dolor sit aremet, cons",
-    excerpt:
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est labour",
-    image: "/images/news/thiet-ke-nha-vuon-2000m2-32.png",
-  },
-  {
-    title: "Lorem ipsum dolor sit aremet, cons",
-    excerpt:
-      "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est labour",
-    image: "/images/news/thiet-ke-nha-vuon-2000m2-32.png",
-  },
-];
+const page = usePage();
+
+const news = page.props.news;
+const relatedNews = page.props.relatedNews;
+
+console.log(news);
 </script>

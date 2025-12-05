@@ -147,8 +147,8 @@ const links = ref([
     active: false,
     open: false,
     children: [
-      { name: "DS. Tin tức", to: "#" },
-      { name: "Tạo tin tức mới", to: "#" },
+      { name: "DS. Tin tức", to: "/admin/news" },
+      { name: "Tạo tin tức mới", to: "/admin/news/create" },
     ],
   },
   {

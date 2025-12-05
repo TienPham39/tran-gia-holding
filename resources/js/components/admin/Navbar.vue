@@ -101,8 +101,17 @@ onMounted(async () => {
 function getAvatarUrl(avatar) {
   if (!avatar) return "/images/avatar_default.png";
 
-  if (avatar.startsWith("http")) return avatar;
-  if (avatar.startsWith("/storage/")) return avatar;
+  if (avatar.startsWith("data:image")) {
+    return avatar;
+  }
+
+  if (avatar.startsWith("http")) {
+    return avatar;
+  }
+
+  if (avatar.startsWith("/storage/")) {
+    return avatar;
+  }
 
   return `/storage/${avatar}`;
 }

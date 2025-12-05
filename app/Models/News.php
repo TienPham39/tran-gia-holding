@@ -13,11 +13,16 @@ class News extends Model
         'thumbnail',
         'excerpt',
         'content',
-        'category',
-        'author'
+        'author',
+        'gallery',
+        'category_id',
     ];
 
-    // Auto-generate slug
+    protected $casts = [
+        'gallery' => 'array',
+    ];
+
+    // Tự generate slug
     protected static function boot()
     {
         parent::boot();
@@ -27,5 +32,21 @@ class News extends Model
                 $news->slug = Str::slug($news->title);
             }
         });
+    }
+
+    // Quan hệ category
+    public function category()
+    {
+        return $this->belongsTo(NewsCategory::class, 'category_id');
+    }
+
+    // Lấy danh sách tin tức liên quan
+    public function related($limit = 4)
+    {
+        return self::where('category_id', $this->category_id)
+            ->where('id', '!=', $this->id)
+            ->latest()
+            ->limit($limit)
+            ->get();
     }
 }
