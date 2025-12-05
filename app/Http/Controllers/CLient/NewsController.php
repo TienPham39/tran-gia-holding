@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Services\News\NewsService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
+use App\Models\News;
 
 class NewsController extends Controller
 {
@@ -25,9 +26,18 @@ class NewsController extends Controller
 
     public function show($slug)
     {
+        $news = News::with('category')->where('slug', $slug)->firstOrFail();
+
+        // Lấy 2-3 tin cùng category nhưng không trùng ID
+        $relatedNews = News::where('category_id', $news->category_id)
+            ->where('id', '!=', $news->id)
+            ->latest()
+            ->take(3)
+            ->get();
+
         return Inertia::render('client/news/Detail', [
-            'layout' => 'client',
-            'item' => $this->news->detail($slug)
+            'news' => $news,
+            'relatedNews' => $relatedNews
         ]);
     }
 }

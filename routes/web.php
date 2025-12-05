@@ -10,6 +10,7 @@ use App\Http\Controllers\Client\ProductBDSController;
 use App\Http\Controllers\Client\ServiceController;
 use App\Http\Controllers\Client\CommunityController;
 use App\Http\Controllers\Client\CareerController;
+use App\Http\Controllers\Admin\AdminNewsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -22,11 +23,8 @@ Route::get('/auth', fn() => Inertia::render('auth/Register'))->name('auth');
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
-Route::get('/news', [NewsController::class, 'index'])
-    ->name('client.news.index');
-
-Route::get('/news/{slug}', [NewsController::class, 'show'])
-    ->name('client.news.show');
+Route::get('/news', [NewsController::class, 'index']);
+Route::get('/news/{slug}', [NewsController::class, 'show']);
 
 Route::post('/contact', [ContactController::class, 'store'])
   ->name('contact.store');
@@ -34,12 +32,12 @@ Route::post('/contact', [ContactController::class, 'store'])
 Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
 Route::get('/product/detail/{id}', [ProductBDSController::class, 'show'])
   ->name('client.product.show');
-  
+
 Route::get('/service', [ServiceController::class, 'index'])->name('client.service');
 Route::get('/community', [CommunityController::class, 'index'])
-    ->name('client.community');
+  ->name('client.community');
 Route::get('/career', [CareerController::class, 'index'])
-    ->name('client.career');
+  ->name('client.career');
 
 // Authenticated routes
 Route::withoutMiddleware([VerifyCsrfToken::class])
@@ -64,4 +62,9 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
   Route::get('/profile', fn() => Inertia::render('admin/profile/index'))->name('admin.profile');
   Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
   Route::put('/contacts/{id}/mark-as-read', [ContactController::class, 'markAsRead'])->name('admin.contacts.markAsRead');
+
+  Route::get('/news', [AdminNewsController::class, 'index'])->name('admin.news.index');
+  Route::get('/news/create', [AdminNewsController::class, 'create'])->name('admin.news.create');
+  Route::post('/news', [AdminNewsController::class, 'store'])->name('admin.news.store');
+  Route::post('/news/upload-image', [AdminNewsController::class, 'uploadImage']);
 });

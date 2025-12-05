@@ -6,19 +6,26 @@ use App\Models\News;
 
 class NewsRepository
 {
-    public function list($category = null)
+    /**
+     * Lấy danh sách tin tức (client)
+     */
+    public function list($categoryId = null)
     {
-        $query = News::query()->orderBy('created_at', 'desc');
-
-        if ($category) {
-            $query->where('category', $category);
-        }
-
-        return $query->paginate(6);
+        return News::with('category')
+            ->when($categoryId, function ($q) use ($categoryId) {
+                $q->where('category_id', $categoryId);
+            })
+            ->orderByDesc('created_at')
+            ->paginate(6);
     }
 
+    /**
+     * Lấy chi tiết tin theo slug
+     */
     public function findBySlug($slug)
     {
-        return News::where('slug', $slug)->firstOrFail();
+        return News::with(['category'])
+            ->where('slug', $slug)
+            ->firstOrFail();
     }
 }
