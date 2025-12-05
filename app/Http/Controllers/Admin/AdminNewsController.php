@@ -22,7 +22,7 @@ class AdminNewsController extends Controller
      */
     public function index()
     {
-        $news = News::with('category')->latest()->paginate(10);
+        $news = News::with('category')->latest()->paginate(5);
 
         return Inertia::render('admin/news/Index', [
             'news' => $news,
@@ -50,7 +50,7 @@ class AdminNewsController extends Controller
 
             'thumbnail' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',
 
-            'gallery' => 'nullable|array',
+            'gallery' => 'nullable|array|size:6',
             'gallery.*' => 'file|mimes:jpg,jpeg,png,webp|max:4096',
         ], [
             'title.required' => 'Vui lòng nhập tiêu đề',
@@ -63,6 +63,9 @@ class AdminNewsController extends Controller
             'thumbnail.mimes' => 'Chỉ cho phép ảnh JPG, JPEG, PNG hoặc WebP',
             'thumbnail.max' => 'Ảnh thumbnail tối đa 4MB',
 
+            'gallery.required' => 'Vui lòng upload đầy đủ 6 ảnh',
+            'gallery.array' => 'Dữ liệu gallery không hợp lệ',
+            'gallery.size' => 'Gallery phải bao gồm đúng 6 ảnh',
             'gallery.*.mimes' => 'Ảnh trong gallery không đúng định dạng',
             'gallery.*.max' => 'Mỗi ảnh trong gallery tối đa 4MB',
         ]);
@@ -91,7 +94,7 @@ class AdminNewsController extends Controller
             'category_id' => $request->category_id,
 
             'thumbnail' => $thumbnailPath,
-            'gallery' => json_encode($galleryPaths),
+            'gallery' => $galleryPaths,
 
             'author' => $request->author ?? 'Admin',
         ]);
@@ -110,7 +113,7 @@ class AdminNewsController extends Controller
         $path = $request->file('file')->store('news', 'public');
 
         return response()->json([
-            'url' => asset('storage/' . $path)
+            'location' => asset('storage/' . $path)
         ]);
     }
 
