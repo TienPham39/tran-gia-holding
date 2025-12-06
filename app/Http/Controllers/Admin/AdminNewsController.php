@@ -7,6 +7,7 @@ use App\Services\News\AdminNewsService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\News;
+use Illuminate\Support\Facades\Storage;
 
 class AdminNewsController extends Controller
 {
@@ -116,5 +117,30 @@ class AdminNewsController extends Controller
             'location' => asset('storage/' . $path)
         ]);
     }
+
+    public function destroy($id)
+    {
+        $news = News::findOrFail($id);
+
+        // XÓA THUMBNAIL
+        if (!empty($news->thumbnail)) {
+            Storage::disk('public')->delete($news->thumbnail);
+        }
+
+        // XÓA GALLERY (MẢNG)
+        if (is_array($news->gallery)) {
+            foreach ($news->gallery as $img) {
+                Storage::disk('public')->delete($img);
+            }
+        }
+
+        // XÓA RECORD
+        $news->delete();
+
+        return redirect()
+            ->route('admin.news.index')
+            ->with('success', 'Đã xóa tin tức!');
+    }
+
 
 }

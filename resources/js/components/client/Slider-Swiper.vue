@@ -53,18 +53,18 @@
             class="flex flex-col items-start text-white px-12 font-banque cursor-pointer"
           >
             <h1
-              class="text-[40px] font-bold tracking-wide relative after:content-[''] after:block after:w-14 after:h-0.5 after:bg-white after:mr-auto after:mt-2 after:mb-6 ml-4 mt-16"
+              class="text-[30px] font-bold tracking-wide relative after:content-[''] after:block after:w-14 after:h-0.5 after:bg-white after:mr-auto after:mt-2 after:mb-6 ml-4 mt-16"
             >
               {{ item.title }}
             </h1>
 
             <p
-              class="text-[13px] leading-[1.4] opacity-90 uppercase font-semibold ml-4"
+              class="text-[13px] leading-[1.4] opacity-90 uppercase font-mont font-semibold ml-4"
             >
               {{ item.description }}
             </p>
 
-            <div class="w-[260px] h-[60px] bg-white/30 rounded-md mt-30"></div>
+            <div class="w-[260px] h-[56px] bg-white/60 rounded-md mt-30"></div>
           </div>
         </swiper-slide>
       </swiper>
@@ -132,7 +132,7 @@ const prev = () => swiperInstance.value?.slidePrev();
 <style scoped>
 .projectSwiper {
   padding-top: 40px;
-  padding-bottom: 150px;
+  padding-bottom: 100px;
 }
 
 .slide-box {

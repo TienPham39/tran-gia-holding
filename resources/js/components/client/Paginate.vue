@@ -5,8 +5,8 @@
   >
     <!-- Previous -->
     <button
-      v-if="currentPage !== 1"
-      @click="prevPage"
+      v-if="currentPage > 1"
+      @click="go(currentPage - 1)"
       class="hover:opacity-70 cursor-pointer"
     >
       <span>&lt;</span>
@@ -14,34 +14,33 @@
 
     <!-- Số trang -->
     <template v-for="page in pagesToShow" :key="page">
-      <!-- Dấu ... -->
+
       <span v-if="page === '...'">...</span>
 
-      <!-- Trang đang active -->
+      <!-- Active page -->
       <div
         v-else-if="page === currentPage"
         class="font-bold flex text-white items-center justify-center w-[50px] h-[60px] bg-no-repeat bg-center"
-        :style="{
-          backgroundImage: `url(${themeClasses.img})`,
-        }"
+        :style="{ backgroundImage: `url(${themeClasses.img})` }"
       >
         {{ page }}
       </div>
 
-      <!-- Trang bình thường -->
+      <!-- Normal pages -->
       <button
         v-else
-        @click="changePage(page)"
+        @click="go(page)"
         class="font-bold hover:opacity-70 cursor-pointer"
       >
         {{ page }}
       </button>
+
     </template>
 
     <!-- Next -->
     <button
-      v-if="currentPage !== totalPages"
-      @click="nextPage"
+      v-if="currentPage < totalPages"
+      @click="go(currentPage + 1)"
       class="hover:opacity-70 cursor-pointer"
     >
       <span>&gt;</span>
@@ -53,47 +52,37 @@
 import { computed } from "vue";
 
 const props = defineProps({
-  currentPage: { type: Number, default: 1 },
-  totalPages: { type: Number, default: 7 },
-  theme: { type: String, default: "light" },
+  currentPage: Number,
+  totalPages: Number,
+  theme: String,
+  param: String,   // 👈 key phân trang (thiTruongPage, quyHoachVungPage,…)
 });
 
-const themeClasses = computed(() => {
-  return props.theme === "light"
-    ? {
-        text: "text-white",
-        img: "/images/page-active.png",
-      }
-    : {
-        text: "text-[#660000]",
-        img: "/images/page-active-dark.png",
-      };
-});
-const emit = defineEmits(["update:page"]);
+const emit = defineEmits(["change"]);  // 👈 chỉ dùng 1 event chuẩn
 
-const changePage = (page) => {
-  emit("update:page", page);
-};
+// Emit event chung
+function go(page) {
+  emit("change", {
+    param: props.param,
+    page,
+  });
+}
 
-const prevPage = () => {
-  if (props.currentPage > 1) emit("update:page", props.currentPage - 1);
-};
+// Theme UI
+const themeClasses = computed(() =>
+  props.theme === "light"
+    ? { text: "text-white", img: "/images/page-active.png" }
+    : { text: "text-[#660000]", img: "/images/page-active-dark.png" }
+);
 
-const nextPage = () => {
-  if (props.currentPage < props.totalPages)
-    emit("update:page", props.currentPage + 1);
-};
-
-// Hiển thị dạng 1 2 3 4 5 ... 7
+// Logic list trang
 const pagesToShow = computed(() => {
   const pages = [];
-
   if (props.totalPages <= 7) {
     for (let i = 1; i <= props.totalPages; i++) pages.push(i);
   } else {
     pages.push(1, 2, 3, 4, 5, "...", props.totalPages);
   }
-
   return pages;
 });
 </script>

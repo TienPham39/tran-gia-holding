@@ -21,18 +21,22 @@
           <!-- Thumbnail -->
           <template v-else-if="column.key === 'thumbnail'">
             <img :src="record.thumbnail
-                ? `/storage/${record.thumbnail}`
-                : '/images/no-image.png'
+              ? `/storage/${record.thumbnail}`
+              : '/images/no-image.png'
               " class="w-20 h-14 object-cover rounded border"
               @error="(e) => (e.target.src = '/images/no-image.png')" />
           </template>
 
           <!-- Category -->
           <template v-if="column.key === 'category'">
-            <a-tag v-if="record.category">
+            <div v-if="record.category" class="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white"
+              :class="categoryClass(record.category.id)">
               {{ record.category.name }}
-            </a-tag>
-            <a-tag v-else> Không có </a-tag>
+            </div>
+
+            <div v-else class="inline-block px-3 py-1 rounded-full text-xs bg-gray-300 text-gray-700">
+              Không có
+            </div>
           </template>
 
           <!-- Created At -->
@@ -61,7 +65,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, h } from "vue";
 import { usePage, router, Link } from "@inertiajs/vue3";
 import { Modal, message } from "ant-design-vue";
 import {
@@ -95,7 +99,7 @@ const columns = [
     align: "center",
   },
   { title: "Tiêu đề", key: "title", dataIndex: "title", ellipsis: { showTitle: false }, className: "title-col" },
-  { title: "Danh mục", key: "category", align: "center" },
+  { title: "Danh mục", key: "category", align: "left" },
   { title: "Tác giả", key: "author", dataIndex: "author" },
   { title: "Ngày tạo", key: "created_at", align: "center" },
   { title: "Hành động", key: "action", align: "center", fixed: "right" },
@@ -108,28 +112,38 @@ function handleTableChange(p) {
   });
 }
 
-// Xóa tin tức
-// function deleteNews(id) {
-//   Modal.confirm({
-//     title: "Bạn có chắc muốn xóa tin tức này?",
-//     icon: h(ExclamationCircleOutlined),
-//     okText: "Xóa",
-//     okType: "danger",
-//     cancelText: "Hủy",
-//     async onOk() {
-//       await router.post(`/admin/news/${id}/destroy`, {
-//         preserveScroll: true,
-//         onSuccess: () => {
-//           message.success("Đã xóa tin tức!");
-//           router.reload({ only: ["news"] });
-//         },
-//       });
-//     },
-//   });
-// }
+function categoryClass(id) {
+  return {
+    1: "bg-gray-500",   // Tin tức
+    2: "bg-[#003505]",   // Tin tức thị trường
+    3: "bg-[#0077B6]",    // Quy hoạch vùng
+    4: "bg-[#830000]",  // Trần Gia Holding
+  }[id] || "bg-gray-400";
+}
+
+function deleteNews(id) {
+  Modal.confirm({
+    title: "Bạn có chắc muốn xóa tin tức này?",
+    icon: h(ExclamationCircleOutlined),
+    okText: "Xóa",
+    okType: "danger",
+    cancelText: "Hủy",
+
+    async onOk() {
+      await router.post(`/admin/news/${id}/destroy`, {}, {
+        preserveScroll: true,
+        onSuccess: () => {
+          message.success("Đã xóa tin tức!");
+          router.reload({ only: ["news"] });
+        },
+      });
+    },
+  });
+}
+
 </script>
 
-<style>         
+<style>
 .title-col {
   max-width: 350px !important;
   white-space: nowrap !important;
@@ -137,5 +151,4 @@ function handleTableChange(p) {
   text-overflow: ellipsis !important;
   display: inline-block !important;
 }
-
 </style>

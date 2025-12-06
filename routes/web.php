@@ -63,8 +63,15 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
   Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
   Route::put('/contacts/{id}/mark-as-read', [ContactController::class, 'markAsRead'])->name('admin.contacts.markAsRead');
 
+  // Module Tin tức
   Route::get('/news', [AdminNewsController::class, 'index'])->name('admin.news.index');
+
   Route::get('/news/create', [AdminNewsController::class, 'create'])->name('admin.news.create');
+
   Route::post('/news', [AdminNewsController::class, 'store'])->name('admin.news.store');
+
   Route::post('/news/upload-image', [AdminNewsController::class, 'uploadImage']);
+
+  Route::post('/news/{id}/destroy', [AdminNewsController::class, 'destroy'])
+    ->name('admin.news.destroy');
 });

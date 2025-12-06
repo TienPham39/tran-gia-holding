@@ -16,6 +16,7 @@
         <option disabled value="">-- Chọn danh mục --</option>
         <option value="2">Tin thị trường</option>
         <option value="3">Quy hoạch vùng</option>
+        <option value="4">Trần Gia Holding</option>
       </select>
       <p v-if="errors.category_id" class="text-red-600 text-sm mt-1">
         {{ errors.category_id[0] }}
