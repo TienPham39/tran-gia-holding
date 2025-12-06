@@ -84,7 +84,7 @@ router.beforeEach(async (to, from, next) => {
     if (!valid) {
       localStorage.removeItem("auth_token");
       message.warning("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-      return next({ name: "Auth" });
+      window.location.href = "/auth";
     }
 
     return next(); // Token hợp lệ

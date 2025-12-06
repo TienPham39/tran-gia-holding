@@ -46,7 +46,7 @@ api.interceptors.response.use(
 
       if (router.currentRoute.value.name !== "Auth") {
         message.warning("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
-        await router.replace({ name: "Auth" });
+        window.location.href = "/auth";
       }
     }
 
