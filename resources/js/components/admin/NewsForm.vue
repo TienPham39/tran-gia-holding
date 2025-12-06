@@ -26,7 +26,11 @@
     <!-- Excerpt -->
     <div>
       <label class="font-bold">Mô tả ngắn</label>
-      <Editor v-model="form.excerpt" :api-key="TINYMCE_KEY" :init="excerptEditorInit" />
+      <Editor
+        v-model="form.excerpt"
+        :api-key="TINYMCE_KEY"
+        :init="excerptEditorInit"
+      />
 
       <p v-if="errors.excerpt" class="text-red-600 text-sm mt-1">
         {{ errors.excerpt[0] }}
@@ -158,7 +162,7 @@
 import { ref } from "vue";
 import Editor from "@tinymce/tinymce-vue";
 import { usePage } from "@inertiajs/vue3";
-
+import { message } from "ant-design-vue";
 
 const page = usePage();
 const TINYMCE_KEY = page.props.tinymce_api_key;
@@ -169,6 +173,9 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["submit"]);
+defineExpose({
+  resetForm,
+});
 
 // Form state
 const form = ref({
@@ -179,7 +186,21 @@ const form = ref({
   thumbnail_base64: props.news?.thumbnail_base64 ?? "",
   gallery_base64: props.news?.gallery_base64 ?? [],
 });
-console.log(props.news)
+
+function resetForm() {
+  form.value = {
+    title: "",
+    excerpt: "",
+    category_id: "",
+    content: "",
+    thumbnail_base64: "",
+    gallery_base64: [],
+  };
+
+  previewThumbnail.value = null;
+  previewGallery.value = [];
+}
+
 const errors = ref({});
 const isSubmitting = ref(false);
 
@@ -212,8 +233,11 @@ function fileToBase64(file) {
 // Thumbnail
 async function onThumbnailChange(e) {
   const file = e.target.files[0];
+  if (!file) return;
+
   previewThumbnail.value = URL.createObjectURL(file);
   form.value.thumbnail_base64 = await fileToBase64(file);
+  e.target.value = null;
 }
 
 function removeThumbnail() {
@@ -231,6 +255,7 @@ async function onGalleryChange(e) {
     previewGallery.value.push(URL.createObjectURL(f));
     form.value.gallery_base64.push(await fileToBase64(f));
   }
+  e.target.value = null;
 }
 
 // Remove gallery item
@@ -241,6 +266,10 @@ function removeGalleryImage(i) {
 
 // Submit wrapper (gửi toàn bộ dữ liệu sang trang cha Create.vue hoặc Edit.vue)
 async function handleSubmit() {
+  if (previewGallery.value.length < 6) {
+    message.error("Gallery phải có it nhất 6 ảnh");
+    return;
+  }
   emit("submit", form.value);
 }
 </script>
