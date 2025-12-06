@@ -49,59 +49,100 @@ class AdminNewsController extends Controller
             'content' => 'nullable|string',
             'category_id' => 'required|integer|exists:news_categories,id',
 
-            'thumbnail' => 'nullable|file|mimes:jpg,jpeg,png,webp|max:4096',
-
-            'gallery' => 'nullable|array|size:6',
-            'gallery.*' => 'file|mimes:jpg,jpeg,png,webp|max:4096',
-        ], [
-            'title.required' => 'Vui lòng nhập tiêu đề',
-            'title.string' => 'Tiêu đề không hợp lệ',
-            'title.max' => 'Tiêu đề không được vượt quá 255 ký tự',
-
-            'category_id.required' => 'Vui lòng chọn danh mục',
-            'category_id.exists' => 'Danh mục không tồn tại',
-
-            'thumbnail.mimes' => 'Chỉ cho phép ảnh JPG, JPEG, PNG hoặc WebP',
-            'thumbnail.max' => 'Ảnh thumbnail tối đa 4MB',
-
-            'gallery.required' => 'Vui lòng upload đầy đủ 6 ảnh',
-            'gallery.array' => 'Dữ liệu gallery không hợp lệ',
-            'gallery.size' => 'Gallery phải bao gồm đúng 6 ảnh',
-            'gallery.*.mimes' => 'Ảnh trong gallery không đúng định dạng',
-            'gallery.*.max' => 'Mỗi ảnh trong gallery tối đa 4MB',
+            // Base64
+            'thumbnail_base64' => 'nullable|string',
+            'gallery_base64'   => 'nullable|array|max:6',
+            'gallery_base64.*' => 'string',
         ]);
-
-
-        $thumbnailPath = null;
-
-        if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')
-                ->store('news/thumbnails', 'public');
-        }
-
-        $galleryPaths = [];
-
-        if ($request->hasFile('gallery')) {
-            foreach ($request->file('gallery') as $file) {
-                $galleryPaths[] = $file->store('news/gallery', 'public');
-            }
-        }
 
         $news = News::create([
             'title' => $request->title,
             'slug' => \Str::slug($request->title) . '-' . \Str::random(5),
+
             'excerpt' => $request->excerpt,
-            'content' => $request->input('content'),
+            'content' => $request->content,
             'category_id' => $request->category_id,
 
-            'thumbnail' => $thumbnailPath,
-            'gallery' => $galleryPaths,
+            // ⬅️ LƯU BASE64 TRỰC TIẾP VÀO DB
+            'thumbnail_base64' => $request->thumbnail_base64,
+            'gallery_base64'   => $request->gallery_base64,
 
             'author' => $request->author ?? 'Admin',
         ]);
 
         return redirect()->route('admin.news.index')
             ->with('success', 'Đã tạo tin tức thành công!');
+    }
+
+    public function edit($id)
+    {
+        $news = News::findOrFail($id);
+        return Inertia::render("admin/news/Edit", [
+            "news" => $news
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $news = News::findOrFail($id);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'excerpt' => 'nullable|string',
+            'content' => 'nullable|string',
+            'category_id' => 'required|integer|exists:news_categories,id',
+
+            'thumbnail_base64' => 'nullable|string',
+            'gallery_base64' => 'nullable|array|max:6',
+            'gallery_base64.*' => 'string',
+        ]);
+        // Thumbnail: nếu có thì cập nhật, nếu không thì giữ nguyên
+        $thumbnail = $request->thumbnail_base64 ?: $news->thumbnail;
+
+        if ($request->has('gallery_base64')) {
+            $gallery = $request->gallery_base64; 
+        } else {
+            $gallery = $news->gallery_base64;
+        }
+
+        // Update DB
+        $news->update([
+            'title'       => $request->title,
+            'excerpt'     => $request->excerpt,
+            'content'     => $request->content,
+            'category_id' => $request->category_id,
+            'thumbnail_base64'   => $thumbnail,
+            'gallery_base64'     => $gallery,
+        ]);
+
+        return redirect()
+            ->route('admin.news.index')
+            ->with('success', 'Đã cập nhật tin tức thành công!');
+    }
+
+
+    private function saveBase64($base64, $folder)
+    {
+        if (!$base64) return null;
+
+        // Tách phần header
+        if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
+            $base64 = substr($base64, strpos($base64, ',') + 1);
+            $extension = strtolower($type[1]);
+        } else {
+            return null;
+        }
+
+        // Decode
+        $imageData = base64_decode($base64);
+        if ($imageData === false) return null;
+
+        // Tên file
+        $fileName = uniqid() . '.' . $extension;
+
+        Storage::disk('public')->put("$folder/$fileName", $imageData);
+
+        return "storage/$folder/$fileName";
     }
 
 
@@ -121,26 +162,10 @@ class AdminNewsController extends Controller
     public function destroy($id)
     {
         $news = News::findOrFail($id);
-
-        // XÓA THUMBNAIL
-        if (!empty($news->thumbnail)) {
-            Storage::disk('public')->delete($news->thumbnail);
-        }
-
-        // XÓA GALLERY (MẢNG)
-        if (is_array($news->gallery)) {
-            foreach ($news->gallery as $img) {
-                Storage::disk('public')->delete($img);
-            }
-        }
-
-        // XÓA RECORD
         $news->delete();
 
         return redirect()
             ->route('admin.news.index')
             ->with('success', 'Đã xóa tin tức!');
     }
-
-
 }

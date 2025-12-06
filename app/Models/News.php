@@ -10,37 +10,35 @@ class News extends Model
     protected $fillable = [
         'title',
         'slug',
-        'thumbnail',
+        'thumbnail_base64',
+        'gallery_base64',
         'excerpt',
         'content',
         'author',
-        'gallery',
         'category_id',
     ];
 
     protected $casts = [
-        'gallery' => 'array',
+        'gallery_base64' => 'array', 
     ];
 
-    // Tự generate slug
+    // Auto-generate slug
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($news) {
             if (empty($news->slug)) {
-                $news->slug = Str::slug($news->title);
+                $news->slug = Str::slug($news->title) . '-' . Str::random(5);
             }
         });
     }
 
-    // Quan hệ category
     public function category()
     {
         return $this->belongsTo(NewsCategory::class, 'category_id');
     }
 
-    // Lấy danh sách tin tức liên quan
     public function related($limit = 4)
     {
         return self::where('category_id', $this->category_id)

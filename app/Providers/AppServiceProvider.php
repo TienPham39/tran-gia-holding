@@ -18,6 +18,9 @@ class AppServiceProvider extends ServiceProvider
         Inertia::share('auth.user', function () {
             return Auth::user() ? Auth::user()->load('role') : null;
         });
+        Inertia::share([
+            'tinymce_api_key' => env('TINYMCE_API_KEY'),
+        ]);
 
         // Định nghĩa route (nếu bạn thật sự cần trong provider này)
         $this->routes(function () {

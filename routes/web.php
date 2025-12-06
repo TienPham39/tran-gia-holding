@@ -63,15 +63,18 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
   Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
   Route::put('/contacts/{id}/mark-as-read', [ContactController::class, 'markAsRead'])->name('admin.contacts.markAsRead');
 
-  // Module Tin tức
-  Route::get('/news', [AdminNewsController::class, 'index'])->name('admin.news.index');
+  Route::prefix('news')->name('admin.news.')->group(function () {
 
-  Route::get('/news/create', [AdminNewsController::class, 'create'])->name('admin.news.create');
+    Route::get('/', [AdminNewsController::class, 'index'])->name('index');
 
-  Route::post('/news', [AdminNewsController::class, 'store'])->name('admin.news.store');
+    Route::get('/create', [AdminNewsController::class, 'create'])->name('create');
+    Route::post('/', [AdminNewsController::class, 'store'])->name('store');
 
-  Route::post('/news/upload-image', [AdminNewsController::class, 'uploadImage']);
+    Route::get('/{id}/edit', [AdminNewsController::class, 'edit'])->name('edit');
+    Route::post('/{id}', [AdminNewsController::class, 'update'])->name('update');
 
-  Route::post('/news/{id}/destroy', [AdminNewsController::class, 'destroy'])
-    ->name('admin.news.destroy');
+    Route::post('/{id}/destroy', [AdminNewsController::class, 'destroy'])->name('destroy');
+
+    Route::post('/upload-image', [AdminNewsController::class, 'uploadImage'])->name('uploadImage');
+  });
 });

@@ -47,11 +47,9 @@
           <!-- Action -->
           <template v-if="column.key === 'action'">
             <a-space>
-              <Link>
-              <a-button type="link" class="text-blue-600">
+              <a-button @click="editNews(record.id)" type="link" class="text-blue-600">
                 <EditOutlined />
               </a-button>
-              </Link>
 
               <a-button @click="deleteNews(record.id)" type="link" class="text-red-600! hover:text-red-400!">
                 <DeleteOutlined />
@@ -140,6 +138,12 @@ function deleteNews(id) {
     },
   });
 }
+function editNews(id) {
+  router.visit(`/admin/news/${id}/edit`, {
+    preserveScroll: true,
+  });
+}
+
 
 </script>
 

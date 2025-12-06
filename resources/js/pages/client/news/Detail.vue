@@ -8,7 +8,10 @@
 
       <span class="text-xl">›</span>
 
-      <a href="/news" class="uppercase text-sm tracking-wide hover:text-gray-200">
+      <a
+        href="/news"
+        class="uppercase text-sm tracking-wide hover:text-gray-200"
+      >
         TIN TỨC
       </a>
 
@@ -24,7 +27,9 @@
 
     <!-- Title -->
     <div class="text-center mb-10 px-40">
-      <h1 class="font-banque font-bold uppercase leading-tight text-[24px] md:text-[36px] tracking-wide">
+      <h1
+        class="font-banque font-bold uppercase leading-tight text-[24px] md:text-[36px] tracking-wide"
+      >
         {{ news.title }}
       </h1>
 
@@ -33,7 +38,9 @@
     </div>
 
     <!-- Content -->
-    <div class="max-w-7xl ml-50 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-start">
+    <div
+      class="max-w-7xl ml-50 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-20 items-start"
+    >
       <!-- Left text -->
       <div class="font-mont text-lg text-justify leading-relaxed space-y-6">
         <div v-html="news.excerpt"></div>
@@ -41,7 +48,11 @@
 
       <!-- Right image -->
       <div class="w-full">
-        <img :src="`/storage/${news.thumbnail}`" alt="Thumbnail" class="w-[500px] h-auto object-cover rounded" u />
+        <img
+          :src="getThumbnail(news)"
+          alt="Thumbnail"
+          class="w-[500px] h-auto object-cover rounded"
+        />
       </div>
     </div>
 
@@ -53,8 +64,11 @@
       <div v-html="news.content" class="prose prose-lg max-w-none"></div>
 
       <!-- GALLERY nếu có -->
-      <div class="max-w-6xl mx-auto mt-16 pb-10 font-mont" v-if="news.gallery?.length">
-        <NewsGallery :images="news.gallery" />
+      <div
+        class="max-w-6xl mx-auto mt-16 pb-10 font-mont"
+        v-if="news.gallery_base64?.length"
+      >
+        <NewsGallery :images="news.gallery_base64" />
       </div>
     </div>
   </section>
@@ -67,33 +81,50 @@
 
       <!-- Header row -->
       <div class="flex items-center justify-between mb-10">
-        <h2 class="font-banque font-bold text-[20px] md:text-[22px] text-[#2e2e2e] uppercase tracking-wide">
+        <h2
+          class="font-banque font-bold text-[20px] md:text-[22px] text-[#2e2e2e] uppercase tracking-wide"
+        >
           TIN TỨC KHÁC
         </h2>
 
-        <a href="/news" class="text-[14px] font-semibold uppercase text-[#7f7f7f] hover:text-[#9B1C1C] cursor-pointer">
+        <a
+          href="/news"
+          class="text-[14px] font-semibold uppercase text-[#7f7f7f] hover:text-[#9B1C1C] cursor-pointer"
+        >
           Xem tất cả >>
         </a>
       </div>
 
       <!-- NEWS LIST -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mt-10">
-        <div v-for="(item, idx) in relatedNews" :key="idx" @click="$inertia.visit(`/news/${item.slug}`)"
-          class="cursor-pointer font-mont group">
+        <div
+          v-for="(item, idx) in relatedNews"
+          :key="idx"
+          @click="$inertia.visit(`/news/${item.slug}`)"
+          class="cursor-pointer font-mont group"
+        >
           <!-- Thumbnail -->
-          <div class="w-full h-[220px] bg-[#e3e3e3] border border-[#d8d8d8] rounded-md 
-             overflow-hidden shadow-sm mb-4">
-            <img :src="`/storage/${item.thumbnail}`" alt="News thumbnail"
-              class="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+          <div
+            class="w-full h-[220px] bg-[#e3e3e3] border border-[#d8d8d8] rounded-md overflow-hidden shadow-sm mb-4"
+          >
+            <img
+              :src="getThumbnail(item)"
+              class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+            />
           </div>
 
           <!-- Title -->
-          <h3 class="text-[#9B1C1C] font-bold text-[18px] uppercase leading-snug mb-2 group-hover:underline">
+          <h3
+            class="text-[#9B1C1C] font-bold text-[18px] uppercase leading-snug mb-2 group-hover:underline"
+          >
             {{ item.title }}
           </h3>
 
           <!-- Excerpt (giới hạn 3 dòng) -->
-          <p class="text-[#4a4a4a] text-[15px] leading-relaxed line-clamp-3" v-html="item.excerpt"></p>
+          <p
+            class="text-[#4a4a4a] text-[15px] leading-relaxed line-clamp-3"
+            v-html="item.excerpt"
+          ></p>
         </div>
       </div>
     </div>
@@ -113,6 +144,28 @@ const page = usePage();
 
 const news = page.props.news;
 const relatedNews = page.props.relatedNews;
-
 console.log(news);
+function getThumbnail(news) {
+  // Nếu backend trả về base64
+  if (news.thumbnail_base64) {
+    return news.thumbnail_base64;
+  }
+
+  // Nếu backend lưu file vào storage
+  if (news.thumbnail) {
+    return `/storage/${news.thumbnail}`;
+  }
+
+  // fallback khi không có ảnh
+  return "/images/default-news.png";
+}
+
+function getGalleryImage(img) {
+  // img có thể là base64 hoặc path trong storage
+  if (img.startsWith("data:image")) {
+    return img;
+  }
+
+  return `/storage/${img}`;
+}
 </script>
