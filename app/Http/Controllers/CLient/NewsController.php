@@ -18,27 +18,41 @@ class NewsController extends Controller
     }
 
     public function index(Request $request)
-    {   
-        $latestNews = News::latest()->paginate(5);
+    {
+        // Đọc số trang của từng block
+        $thiTruongPage       = $request->get('thiTruongPage', 1);
+        $quyHoachVungPage    = $request->get('quyHoachVungPage', 1);
+        $tranGiaHoldingPage  = $request->get('tranGiaHoldingPage', 1);
 
+        // Tin mới nhất
+        $latestNews = News::latest()->paginate(5)
+            ->appends($request->query());
+
+        // Thị Trường
         $thiTruong = News::where('category_id', 2)
-            ->latest()
-            ->take(6)
-            ->get();
+            ->orderByDesc('created_at')
+            ->paginate(4, ['*'], 'thiTruongPage', $thiTruongPage)
+            ->appends($request->query());
 
+        // Quy Hoạch Vùng
         $quyHoachVung = News::where('category_id', 3)
-            ->latest()
-            ->take(6)
-            ->get();
+            ->orderByDesc('created_at')
+            ->paginate(4, ['*'], 'quyHoachVungPage', $quyHoachVungPage)
+            ->appends($request->query());
+
+        // Trần Gia Holding
+        $tranGiaHolding = News::where('category_id', 4)
+            ->orderByDesc('created_at')
+            ->paginate(4, ['*'], 'tranGiaHoldingPage', $tranGiaHoldingPage)
+            ->appends($request->query());
 
         return Inertia::render('client/news/Index', [
-            'latestNews' => $latestNews,
-            'thiTruong' => $thiTruong,
-            'quyHoachVung' => $quyHoachVung,
+            'latestNews'       => $latestNews,
+            'thiTruong'        => $thiTruong,
+            'quyHoachVung'     => $quyHoachVung,
+            'tranGiaHolding'   => $tranGiaHolding,
         ]);
     }
-
-
     public function show($slug)
     {
         $news = News::with('category')->where('slug', $slug)->firstOrFail();
