@@ -28,7 +28,7 @@ Route::get('/news', [NewsController::class, 'index'])
 Route::get('/news/{slug}', [NewsController::class, 'show'])
     ->name('client.news.show');
 
-Route::post('/contact', [ContactController::class, 'store'])
+Route::post('/contacts', [ContactController::class, 'store'])
   ->name('contact.store');
 
 Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
