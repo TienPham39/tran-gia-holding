@@ -3,8 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "node scripts/remove-hot.cjs && vite build",
-        "build:prod": "node scripts/remove-hot.js && vite build",
+        "build": "vite build",
         "dev": "vite --host=localhost --port=5173"
     },
     "devDependencies": {
