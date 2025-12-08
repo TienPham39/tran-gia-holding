@@ -1,5 +1,5 @@
 <template>
-  <NewsForm mode="create" @submit="store" ref="newsForm" />
+  <NewsForm mode="create" @submit="store" ref="newsForm" @done="stopLoading"/>
 </template>
 
 <script setup>
@@ -21,6 +21,12 @@ async function store(payload) {
     newsForm.value.resetForm();
   } catch (e) {
     message.error("Lỗi tạo tin");
+  } finally {
+    newsForm.value?.$emit("done");
   }
+}
+
+function stopLoading() {
+  newsForm.value.stopLoading();
 }
 </script>

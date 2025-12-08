@@ -6,55 +6,38 @@
     <div class="flex justify-center gap-4 font-gotham">
       <!-- Nút 1 -->
       <button
-        class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
-      >
+        class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white">
         Xem tất cả dự án →
       </button>
 
       <!-- Nút 2 -->
       <button
-        class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
-      >
+        class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white">
         <img src="/images/homepage/phone-icon.png" class="w-6 h-6 opacity-90" />
         Liên hệ ngay
       </button>
     </div>
   </section>
 
-  <NewsList
-    title="Thị trường"
-    :data="props.thiTruong"
-    paginateParam="thiTruongPage"
-  />
+  <section>
+    <div class="bg-[#f3f3f3]">
+      <NewsList title="Thị trường" :data="props.thiTruong" paginateParam="thiTruongPage" />
+    </div>
 
-  <NewsList
-    title="Quy hoạch vùng"
-    :data="props.quyHoachVung"
-    paginateParam="quyHoachVungPage"
-  />
+    <div>
+      <NewsList title="Quy hoạch vùng" :data="props.quyHoachVung" paginateParam="quyHoachVungPage" />
+    </div>
 
-  <section
-    class="relative w-full md:px-0 pt-20 pb-30 text-black min-h-[750px]"
-    style="background-color: #f3f3f3"
-  >
-    <!-- Decorative BG under everything -->
-    <img
-      src="/images/homepage/bg-contact.png"
-      class="hidden md:block absolute bottom-0 right-[16%] w-[400px] opacity-40 pointer-events-none z-0"
-      alt=""
-    />
+    <div class="relative w-full md:px-0 pt-20 pb-30 text-black min-h-[750px]" style="background-color: #f3f3f3">
+      <!-- Decorative BG under everything -->
+      <img src="/images/homepage/bg-contact.png"
+        class="hidden md:block absolute bottom-0 right-[16%] w-[400px] opacity-40 pointer-events-none z-0" alt="" />
 
-    <img
-      src="/images/homepage/bg-contact.png"
-      class="hidden md:block absolute bottom-24 right-0 w-[400px] opacity-80 pointer-events-none z-0"
-      alt=""
-    />
+      <img src="/images/homepage/bg-contact.png"
+        class="hidden md:block absolute bottom-24 right-0 w-[400px] opacity-80 pointer-events-none z-0" alt="" />
 
-    <NewsList
-      title="Trần Gia Holding"
-      :data="props.tranGiaHolding"
-      paginateParam="tranGiaHoldingPage"
-    />
+      <NewsList title="Trần Gia Holding" :data="props.tranGiaHolding" paginateParam="tranGiaHoldingPage" />
+    </div>
   </section>
 </template>
 

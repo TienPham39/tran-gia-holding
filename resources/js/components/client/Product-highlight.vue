@@ -3,21 +3,15 @@
     <div class="max-w-[1500px] w-full px-6 sm:px-6 lg:px-20 mx-auto">
       <header class="text-center mb-8">
         <h1
-          class="font-utm font-bold uppercase text-white tracking-[0.28px] pb-6 text-[26px] leading-[42px] md:text-[28px] md:leading-[34px] sm:text-[210px] sm:leading-[28px]"
-        >
+          class="font-utm font-bold uppercase text-white tracking-[0.28px] pb-6 text-[26px] leading-[42px] md:text-4xl md:leading-[34px] sm:text-[210px] sm:leading-[28px]">
           SẢN PHẨM NỔI BẬT
         </h1>
 
         <nav class="mt-2">
           <ul
-            class="grid grid-cols-4 gap-x-6 gap-y-3 justify-center items-center text-center text-white/90 font-svn font-bold uppercase text-[10px] sm:flex sm:gap-x-4 sm:text-sm pb-7"
-          >
-            <li
-              v-for="(link, idx) in links"
-              :key="idx"
-              class="px-2"
-              :class="{ 'border-r border-white/30 pr-3': idx % 4 !== 3 }"
-            >
+            class="grid grid-cols-4 gap-x-6 gap-y-3 justify-center items-center text-center text-white/90 font-mont uppercase text-[10px] sm:flex sm:gap-x-4 sm:text-sm pb-7">
+            <li v-for="(link, idx) in links" :key="idx" class="px-2"
+              :class="{ 'border-r border-white/30 pr-3': idx % 4 !== 3 }">
               <span class="block">{{ link }}</span>
             </li>
           </ul>
@@ -25,52 +19,30 @@
       </header>
 
       <!-- Mobile: horizontal carousel -->
-      <div class="sm:hidden">
-        <div
-          ref="carousel"
-          class="mobile-carousel overflow-x-auto py-2 flex touch-pan-x scroll-snap-x snap-mandatory"
-          @scroll="onScroll"
-          :style="{ gap: mobileGap + 'px' }"
-        >
-          <div
-            v-for="(p, idx) in products"
-            :key="`mobile-${idx}`"
-            class="group shrink-0 cursor-pointer"
-            :style="{ width: mobileCardWidth + 'px', scrollSnapAlign: 'start' }"
-          >
-            <div
-              class="relative rounded-lg overflow-hidden shadow-lg bg-white/5"
-            >
-              <img
-                :src="p.image"
-                alt="project image"
-                class="w-full h-[340px] object-cover block rounded-b-lg"
-              />
+      <div class="sm:hidden font-mont">
+        <div ref="carousel" class="mobile-carousel overflow-x-auto py-2 flex touch-pan-x scroll-snap-x snap-mandatory"
+          @scroll="onScroll" :style="{ gap: mobileGap + 'px' }">
+          <div v-for="(p, idx) in products" :key="`mobile-${idx}`" class="group shrink-0 cursor-pointer"
+            :style="{ width: mobileCardWidth + 'px', scrollSnapAlign: 'start' }">
+            <div class="relative rounded-lg overflow-hidden shadow-lg bg-white/5">
+              <img :src="p.image" alt="project image" class="w-full h-[340px] object-cover block rounded-b-lg" />
               <div
-                class="absolute inset-1 bg-linear-to-b from-black/80 via-black/40 to-transparent z-1 pointer-events-none rounded-t-lg"
-              ></div>
+                class="absolute inset-1 bg-linear-to-b from-black/80 via-black/40 to-transparent z-1 pointer-events-none rounded-t-lg">
+              </div>
               <div class="absolute inset-0 z-2">
                 <div
-                  class="absolute left-4 top-4 bg-black/40 backdrop-blur-sm py-1 px-3 rounded-sm text-sm font-utm font-bold text-white tracking-[0.5px] border border-transparent"
-                >
+                  class="absolute left-4 top-4 bg-black/40 backdrop-blur-sm py-1 px-3 rounded-sm text-sm font-utm font-bold text-white tracking-[0.5px] border border-transparent">
                   {{ p.name }}
                 </div>
                 <div class="absolute right-4 top-3 flex items-center gap-2">
-                  <img
-                    :src="p.logo"
-                    alt="logo"
-                    class="w-16 h-16 object-contain brightness-125 contrast-125 drop-shadow-md"
-                  />
+                  <img :src="p.logo" alt="logo"
+                    class="w-16 h-16 object-contain brightness-125 contrast-125 drop-shadow-md" />
                 </div>
                 <div
-                  class="absolute right-4 bottom-12 font-utm font-bold uppercase text-white/90 tracking-[0.28px] flex items-end gap-1"
-                >
+                  class="absolute right-4 bottom-12 font-utm font-bold uppercase text-white/90 tracking-[0.28px] flex items-end gap-1">
                   <span class="text-[42px] leading-none">{{
                     p.area.split(".")[0]
-                  }}</span
-                  ><span class="text-[20px] leading-none"
-                    >.{{ p.area.split(".")[1] }}</span
-                  >
+                    }}</span><span class="text-[20px] leading-none">.{{ p.area.split(".")[1] }}</span>
                 </div>
               </div>
             </div>
@@ -83,76 +55,75 @@
         </div>
 
         <div class="mt-6 flex justify-center items-center gap-3">
-          <button
-            v-for="(p, idx) in products"
-            :key="`dot-${idx}`"
-            :class="[
-              'w-2.5 h-2.5 rounded-full',
-              {
-                'bg-white': activeIndex === idx,
-                'bg-white/40': activeIndex !== idx,
-              },
-            ]"
-            @click="scrollToIndex(idx)"
-            aria-label="Go to slide"
-          ></button>
+          <button v-for="(p, idx) in products" :key="`dot-${idx}`" :class="[
+            'w-2.5 h-2.5 rounded-full',
+            {
+              'bg-white': activeIndex === idx,
+              'bg-white/40': activeIndex !== idx,
+            },
+          ]" @click="scrollToIndex(idx)" aria-label="Go to slide"></button>
         </div>
       </div>
 
       <!-- Desktop/tablet: 3-column grid -->
       <div class="hidden sm:grid gap-10 grid-cols-3">
-        <div
-          v-for="(p, idx) in products"
-          :key="idx"
-          class="group cursor-pointer"
-        >
-          <!-- IMAGE CARD -->
-          <div class="relative rounded-lg overflow-hidden shadow-lg bg-white/5">
-            <img
-              :src="p.image"
-              alt="project image"
-              class="w-full h-[300px] object-cover block rounded-b-lg"
-            />
+        <div v-for="(p, idx) in products" :key="idx" class="group cursor-pointer transition-all duration-500">
 
-            <!-- Overlay -->
-            <div
-              class="absolute inset-1 bg-linear-to-b from-black/80 via-black/40 to-transparent rounded-t-lg"
-            ></div>
+          <!-- IMAGE CARD -->
+          <div class="relative rounded-lg overflow-hidden bg-white/5 shadow-lg
+           transition-all duration-700 group-hover:shadow-2xl group-hover:-translate-y-1">
+
+            <div class="relative w-full h-[300px] rounded-b-lg overflow-hidden">
+
+              <!-- BORDER TOP -->
+              <div class="absolute top-0 left-0 w-full h-[10px]
+                  bg-gradient-to-b from-[#727272] to-transparent z-20
+                  transition-opacity duration-500 group-hover:opacity-80"></div>
+
+              <!-- BORDER BOTTOM -->
+              <div class="absolute bottom-0 left-0 w-full h-[10px]
+                  bg-gradient-to-t from-[#727272] to-transparent z-20
+                  transition-opacity duration-500 group-hover:opacity-80"></div>
+
+              <!-- IMAGE -->
+              <img :src="p.image" alt="project image" class="w-full h-full object-cover block
+               transition-transform duration-700 group-hover:scale-105" />
+            </div>
 
             <!-- Content inside image -->
             <div class="absolute inset-0 z-2">
+
               <!-- Name tag -->
-              <div
-                class="absolute left-4 top-4 bg-black/40 backdrop-blur-sm py-1.5 px-4 rounded-sm text-sm font-utm font-bold text-white tracking-[0.5px]"
-              >
+              <div class="absolute left-4 top-4 py-1.5 px-4 rounded-sm text-sm font-utm font-bold text-white tracking-[0.5px]
+               transition-all duration-500 group-hover:brightness-110 group-hover:scale-105" style="
+            background-image: url('/images/products-border.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        ">
                 {{ p.label }}
               </div>
 
-              <!-- Logo -->
-              <div class="absolute right-4 top-1">
-                <img
-                  :src="p.logo"
-                  alt="logo"
-                  class="w-20 h-20 object-contain brightness-125 contrast-125 drop-shadow-md"
-                />
-              </div>
-
               <!-- Area -->
-              <div
-                class="absolute right-4 bottom-4 font-utm font-bold uppercase text-white/90 tracking-[0.28px] flex items-end gap-1"
-              >
-                <span class="text-[45px] leading-none">{{
-                  p.area.split(".")[0]
-                }}</span>
-                <span class="text-[22px] leading-none"
-                  >.{{ p.area.split(".")[1] }}</span
-                >
+              <div class="absolute right-4 bottom-4 font-utm font-bold uppercase text-white/90 tracking-[0.28px]
+               flex items-end gap-1 transition-all duration-500
+               group-hover:text-white group-hover:scale-105">
+
+                <!-- Number -->
+                <span class="text-[45px] leading-none">
+                  {{ p.area.replace(/[^0-9]/g, "") }}
+                </span>
+
+                <!-- Unit -->
+                <span class="text-[20px] leading-none">
+                  {{ p.area.replace(/[0-9]/g, "") }}
+                </span>
               </div>
             </div>
           </div>
 
           <!-- TEXT CONTENT BELOW IMAGE -->
-          <div class="font-mont mt-4 text-white px-1">
+          <div class="font-mont mt-4 text-white px-1 transition-all duration-500 group-hover:translate-x-1">
             <!-- Title -->
             <h3 class="font-mont font-bold text-xl uppercase mb-4">
               {{ p.name }}
@@ -164,9 +135,7 @@
             </p>
 
             <div class="mt-3 mb-2 flex justify-end">
-              <p
-                class="text-[12px] tracking-wide uppercase text-white/80 hover:text-white cursor-pointer"
-              >
+              <p class="text-[12px] tracking-wide uppercase text-white/80 hover:text-white cursor-pointer">
                 Xem chi tiết
               </p>
             </div>
@@ -194,54 +163,54 @@ const products = ref([
     name: "TRẦN GIA VILLAGE 01",
     description:
       "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/homepage/producthighlight.png",
+    image: "/images/products/tran-gia-village-6.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000",
+    area: "1000m²",
   },
   {
     label: "TRẦN GIA VILLAGE 1",
     name: "ĐẤT NỀN NAM BAN - VIEW ĐỒI",
     description:
       "Diện tích: 120m² - 500m². Thế đất dương, view trọn thung lũng, hạ tầng…",
-    image: "/images/homepage/producthighlight.png",
+    image: "/images/products/tran-gia-village-6.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000",
+    area: "1000m²",
   },
   {
     label: "TRẦN GIA VILLAGE 1",
     name: "TRẦN GIA VILLAGE 01",
     description:
       "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/homepage/producthighlight.png",
+    image: "/images/products/tran-gia-village-2.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000",
+    area: "1000m²",
   },
   {
     label: "TRẦN GIA VILLAGE 1",
     name: "TRẦN GIA VILLAGE 01",
     description:
       "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/homepage/producthighlight.png",
+    image: "/images/products/tran-gia-village-1.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000",
+    area: "1000m²",
   },
   {
     label: "TRẦN GIA VILLAGE 1",
     name: "ĐẤT NỀN NAM BAN - VIEW ĐỒI",
     description:
       "Diện tích: 120m² - 500m². Thế đất dương, view trọn thung lũng, hạ tầng…",
-    image: "/images/homepage/producthighlight.png",
+    image: "/images/products/tran-gia-village-4.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000",
+    area: "1000m²",
   },
   {
     label: "TRẦN GIA VILLAGE 1",
     name: "TRẦN GIA VILLAGE 01",
     description:
       "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/homepage/producthighlight.png",
+    image: "/images/products/tran-gia-village-2.png",
     logo: "/images/homepage/footer_logo.png",
-    area: "20.000",
+    area: "1000m²",
   },
 ]);
 
@@ -322,6 +291,7 @@ onMounted(() => {
 .font-utm {
   font-family: "UTM Banque", sans-serif;
 }
+
 .font-svn {
   font-family: "SVN-Gotham", sans-serif;
 }
@@ -330,6 +300,7 @@ onMounted(() => {
 .shadow-lg {
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
 }
+
 p {
   margin: 0;
 }
