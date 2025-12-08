@@ -11,6 +11,7 @@ use App\Http\Controllers\Client\ServiceController;
 use App\Http\Controllers\Client\CommunityController;
 use App\Http\Controllers\Client\CareerController;
 use App\Http\Controllers\Admin\AdminNewsController;
+use App\Http\Controllers\Admin\AdminProductsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -62,6 +63,10 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
   Route::get('/profile', fn() => Inertia::render('admin/profile/index'))->name('admin.profile');
   Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
   Route::put('/contacts/{id}/mark-as-read', [ContactController::class, 'markAsRead'])->name('admin.contacts.markAsRead');
+
+  Route::prefix('products')->name('admin.products.')->group(function () {
+    Route::get('/', [AdminProductsController::class, 'index'])->name('index');
+  });
 
   Route::prefix('news')->name('admin.news.')->group(function () {
 
