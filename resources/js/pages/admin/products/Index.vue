@@ -1,6 +1,7 @@
 <template>
   <div class="w-full">
     <CustomTable
+      :title="'Danh Sách Sản Phẩm'"
       :data="products"
       :columns="columns"
       :pagination="pagination"
@@ -8,6 +9,13 @@
       :categoryClass="categoryClass"
       @change="handleTableChange"
     >
+      <template #btn>
+        <div class="flex justify-end">
+          <Link :href="route('admin.products.category')">
+            <a-button type="primary">Thêm Loại</a-button>
+          </Link>
+        </div>
+      </template>
       <template #action="{ record }">
         <a-button
           @click="editProduct(record.id)"
@@ -33,16 +41,16 @@
 <script setup>
 import admin from "@/layouts/admin.vue";
 import CustomTable from "@/components/admin/CustomTable.vue";
+import { ref } from 'vue'
+import { usePage, Link } from '@inertiajs/vue3'
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons-vue";
-import { ref } from "vue";
 
 // Sample/mock setup, replace with real logic
 const products = ref([]);
 const columns = ref([
-  { title: 'ID', dataIndex: 'id', key: 'id' },
   { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+  { title: 'Loại', dataIndex: 'category', key: 'category' },
   { title: 'Hình ảnh', dataIndex: 'thumbnail', key: 'thumbnail', slot: 'thumbnail' },
-  { title: 'Danh mục', dataIndex: 'category', key: 'category' },
   { title: 'Hành động', key: 'action', slot: 'action' },
 ]);
 const pagination = ref({

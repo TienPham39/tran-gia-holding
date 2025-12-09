@@ -13,8 +13,13 @@ class AdminProductsController extends Controller
         return Inertia::render('admin/products/Index', [
         ]);
     }
-    public function create()
+    public function createCategory()
     {
-        return Inertia::render(('admin/products/Create'),[]);
+        return "HAHA";
+    }
+
+    public function category()
+    {
+        return Inertia::render(('admin/products/CreateCategory'),[]);
     }
 }

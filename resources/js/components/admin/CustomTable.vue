@@ -2,7 +2,15 @@
   <div
     class="bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300"
   >
-    <a-card :title="title" :bordered="false">
+    <a-card :bordered="false">
+      <template #title>
+        <div class="flex items-center justify-between">
+          <span>{{ title }}</span>
+          <span v-if="$slots.btn">
+            <slot name="btn"></slot>
+          </span>
+        </div>
+      </template>
       <template v-if="$slots.extra" #extra>
         <slot name="extra"></slot>
       </template>
