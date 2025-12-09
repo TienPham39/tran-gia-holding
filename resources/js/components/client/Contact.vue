@@ -15,7 +15,7 @@
           tư vấn ngay
         </h2>
 
-        <div class="text-[#595959] font-bold space-y-2 text-3xl mb-12 w-[500px]">
+        <div class="text-[#595959] font-semibold space-y-2 text-3xl mb-12 w-[500px]">
           <p>Để lại thông tin để nhận bảng giá và quy hoạch mới nhất.</p>
         </div>
 
@@ -35,20 +35,20 @@
         <form @submit.prevent="submitForm" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mont">
             <input v-model="form.name" type="text" placeholder="HỌ VÀ TÊN"
-              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full" />
+              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]" />
             <input v-model="form.phone" type="text" placeholder="SỐ ĐIỆN THOẠI"
-              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full" />
+              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]" />
           </div>
 
           <input v-model="form.email" type="email" placeholder="EMAIL"
-            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont" />
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px]" />
 
           <textarea v-model="form.message" rows="4" placeholder="LỜI NHẮN..."
-            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont"></textarea>
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px]"></textarea>
 
           <button type="submit"
-            class="bg-[#9B1C1C] md:text-xl text-white font-semibold px-6 py-3 rounded-md hover:bg-[#7d1a1a] transition uppercase tracking-wide">
-            Gửi ngay >>
+            class="flex items-center gap-2 bg-[#9B1C1C] md:text-xl text-white font-semibold px-6 py-3 rounded-md hover:bg-[#7d1a1a] transition uppercase tracking-wide">
+            Gửi ngay <ChevronsRight class="w-6 h-6 text-white" />
           </button>
         </form>
       </div>
@@ -68,21 +68,20 @@
         <div class="grid grid-cols-2 gap-4">
 
           <!-- NAME -->
-          <input v-model="form.name" type="text" placeholder="HỌ VÀ TÊN" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
-                placeholder:text-[10px] placeholder:items-center placeholder:text-[#D3D3D3]" />
+          <input v-model="form.name" type="text" placeholder="HỌ VÀ TÊN" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]" />
 
           <!-- PHONE -->
           <input v-model="form.phone" type="text" placeholder="SỐ ĐIỆN THOẠI" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
-                placeholder:text-[10px] placeholder:items-center placeholder:text-[#D3D3D3]" />
+                placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]" />
         </div>
 
         <!-- EMAIL -->
         <input v-model="form.email" type="email" placeholder="EMAIL" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
-              placeholder:text-[10px] placeholder:items-center placeholder:text-[#D3D3D3]" />
+              placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]" />
 
         <!-- MESSAGE -->
         <textarea v-model="form.message" rows="4" placeholder="LỜI NHẮN...." class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
-              placeholder:text-[10px] placeholder:items-center placeholder:text-[#D3D3D3]"></textarea>
+              placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]"></textarea>
 
         <!-- BUTTON -->
         <button type="submit"
