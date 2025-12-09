@@ -3,19 +3,19 @@
     <!-- BG Map -->
     <SliderSwiper :slides="slides" />
 
-    <div class="flex justify-center gap-4 font-gotham">
+    <div class="flex justify-center gap-4 font-mont">
       <!-- Nút 1 -->
-      <button
-        class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png?v=1')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white">
+      <ButtonEffect class="text-sm">
         Xem tất cả dự án →
-      </button>
+      </ButtonEffect>
 
       <!-- Nút 2 -->
-      <button
-        class="cursor-pointer font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png?v=1')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white">
-        <img src="/images/homepage/phone-icon.png" class="w-6 h-6 opacity-90" />
+      <ButtonEffect>
+        <template #icon>
+          <img src="/images/homepage/phone-icon.png" class="w-6 h-6 opacity-90 text-sm" />
+        </template>
         Liên hệ ngay
-      </button>
+      </ButtonEffect>
     </div>
   </section>
 
@@ -49,6 +49,7 @@ import SliderSwiper from "../../../components/client/Slider-Swiper.vue";
 import Pagination from "@/Components/client/Paginate.vue";
 import NewsList from "@/Components/client/NewsList.vue";
 import Layouts from "../../../layouts/client.vue";
+import BaseButton from "@/components/client/ButtonEffect.vue";
 
 defineOptions({
   layout: Layouts,
