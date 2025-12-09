@@ -1,7 +1,7 @@
 <template>
   <!-- Navbar Desktop -->
   <section
-    class="relative z-[100] h-[80px] items-center justify-end xl:justify-center hidden xl:flex bg-transparent"
+    class="relative z-[100] h-[80px] font-mont items-center justify-end xl:justify-center hidden xl:flex bg-transparent"
   >
     <!-- Logo -->
     <img
@@ -19,7 +19,7 @@
         :class="
           page.url === item.href
             ? 'text-[#880000B8]'
-            : 'text-black hover:text-[#880000B8]'
+            : 'text-gray-700 hover:text-[#880000B8]'
         "
       >
         <Link :href="item.href" class="px-3.5 py-4 block">

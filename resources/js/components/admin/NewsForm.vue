@@ -26,11 +26,7 @@
     <!-- Excerpt -->
     <div>
       <label class="font-bold">Mô tả ngắn</label>
-      <Editor
-        v-model="form.excerpt"
-        :api-key="TINYMCE_KEY"
-        :init="excerptEditorInit"
-      />
+      <Editor v-model="form.excerpt" :api-key="TINYMCE_KEY" :init="excerptEditorInit" />
 
       <p v-if="errors.excerpt" class="text-red-600 text-sm mt-1">
         {{ errors.excerpt[0] }}
@@ -42,8 +38,7 @@
       <label class="font-bold block mb-3">Thumbnail</label>
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
-        @click="$refs.thumbnailInput.click()"
-      >
+        @click="$refs.thumbnailInput.click()">
         <img src="/images/upload-img.png" class="w-10 opacity-60 mb-2" />
 
         <p class="text-gray-600 text-sm">
@@ -54,13 +49,7 @@
         <p class="text-gray-400 text-xs">(1 ảnh – jpg, png, webp)</p>
       </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        class="hidden"
-        ref="thumbnailInput"
-        @change="onThumbnailChange"
-      />
+      <input type="file" accept="image/*" class="hidden" ref="thumbnailInput" @change="onThumbnailChange" />
 
       <p class="mt-3 text-sm text-gray-600">
         Đã chọn:
@@ -68,16 +57,11 @@
       </p>
 
       <div class="mt-4 w-40">
-        <div
-          v-if="previewThumbnail"
-          class="relative group w-full h-32 rounded-lg overflow-hidden border shadow"
-        >
+        <div v-if="previewThumbnail" class="relative group w-full h-32 rounded-lg overflow-hidden border shadow">
           <img :src="previewThumbnail" class="object-cover w-full h-full" />
 
-          <button
-            @click.stop="removeThumbnail"
-            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button @click.stop="removeThumbnail"
+            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
         </div>
@@ -91,7 +75,7 @@
     <!-- Content -->
     <div>
       <label class="font-bold">Nội dung</label>
-      <Editor v-model="form.content" :init="editorInit" />
+      <Editor v-model="form.content" :api-key="TINYMCE_KEY" :init="editorInit" />
       <p v-if="errors.content" class="text-red-600 text-sm mt-1">
         {{ errors.content[0] }}
       </p>
@@ -103,8 +87,7 @@
 
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
-        @click="$refs.galleryInput.click()"
-      >
+        @click="$refs.galleryInput.click()">
         <img src="/images/upload-img.png" class="w-10 opacity-60 mb-2" />
         <p class="text-gray-600 text-sm">
           Kéo thả ảnh vào đây hoặc
@@ -112,14 +95,7 @@
         </p>
       </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        class="hidden"
-        ref="galleryInput"
-        @change="onGalleryChange"
-      />
+      <input type="file" accept="image/*" multiple class="hidden" ref="galleryInput" @change="onGalleryChange" />
 
       <p class="mt-3 text-sm text-gray-600">
         Đã chọn:
@@ -127,17 +103,12 @@
       </p>
 
       <div class="grid grid-cols-3 gap-4 mt-4">
-        <div
-          v-for="(img, idx) in previewGallery"
-          :key="idx"
-          class="relative group w-full h-32 rounded-lg overflow-hidden shadow"
-        >
+        <div v-for="(img, idx) in previewGallery" :key="idx"
+          class="relative group w-full h-32 rounded-lg overflow-hidden shadow">
           <img :src="img" class="object-cover w-full h-full" />
 
-          <button
-            @click.stop="removeGalleryImage(idx)"
-            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button @click.stop="removeGalleryImage(idx)"
+            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
         </div>
@@ -145,14 +116,12 @@
     </div>
 
     <!-- Submit -->
-    <button
-      class="cursor-pointer px-6 py-3 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
-      :disabled="isSubmitting"
-      @click="handleSubmit"
-    >
+    <button class="cursor-pointer px-6 py-3 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
+      :disabled="isSubmitting" @click="handleSubmit">
       <span v-if="!isSubmitting">{{
         mode === "create" ? "Lưu bài viết" : "Cập nhật bài viết"
-      }}</span>
+      }}
+      </span>
       <span v-else>Đang xử lý...</span>
     </button>
   </div>
@@ -172,9 +141,10 @@ const props = defineProps({
   news: { type: Object, default: null },
 });
 
-const emit = defineEmits(["submit"]);
+const emit = defineEmits(["submit", "done"]);
 defineExpose({
   resetForm,
+  stopLoading
 });
 
 // Form state
@@ -219,6 +189,10 @@ if (props.news?.gallery_base64?.length) {
   previewGallery.value = props.news.gallery_base64.map((img) =>
     img.startsWith("data:image") ? img : `/storage/${img}`
   );
+}
+
+function stopLoading() {
+  isSubmitting.value = false;
 }
 
 // Convert file to base64
@@ -270,6 +244,69 @@ async function handleSubmit() {
     message.error("Gallery phải có it nhất 6 ảnh");
     return;
   }
+  isSubmitting.value = true;
   emit("submit", form.value);
 }
+
+const excerptEditorInit = {
+  height: 200,
+  menubar: false,
+
+  plugins: [
+    "image", "media", "link", "lists", "table",
+    "code", "autolink", "charmap", "preview",
+    "searchreplace", "visualblocks", "wordcount"
+  ],
+
+  toolbar: `
+    undo redo |
+    blocks fontfamily fontsize |
+    bold italic underline strikethrough |
+    image media link table |
+    alignleft aligncenter alignright alignjustify |
+    bullist numlist outdent indent |
+    removeformat preview
+  `,
+
+  toolbar_mode: "sliding",
+  automatic_uploads: true,
+  images_upload_handler: (blobInfo) =>
+    new Promise((resolve) => {
+      resolve(
+        "data:" + blobInfo.blob().type + ";base64," + blobInfo.base64()
+      );
+    }),
+};
+
+const editorInit = {
+  height: 600,
+  menubar: true,
+
+  plugins: [
+    "image", "media", "link", "lists", "table",
+    "code", "autolink", "charmap", "preview",
+    "searchreplace", "visualblocks", "wordcount"
+  ],
+
+  toolbar: `
+    undo redo |
+    blocks fontfamily fontsize |
+    bold italic underline strikethrough |
+    image media link table |
+    alignleft aligncenter alignright alignjustify |
+    bullist numlist outdent indent |
+    removeformat preview
+  `,
+
+  automatic_uploads: true,
+
+  images_file_types: "jpg,jpeg,png,webp",
+
+  images_upload_handler: (blobInfo) =>
+    new Promise((resolve) => {
+      resolve(
+        "data:" + blobInfo.blob().type + ";base64," + blobInfo.base64()
+      );
+    }),
+};
 </script>

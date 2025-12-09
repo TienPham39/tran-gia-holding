@@ -86,7 +86,7 @@
 
         <!-- BUTTON -->
         <button type="submit"
-          class="font-mont bg-[#9B1C1C] text-white font-bold px-5 py-2 rounded hover:bg-[#7d1a1a] transition text-lg w-fit">
+          class="font-mont bg-[#9B1C1C] text-white font-bold px-5 py-2 rounded hover:bg-[#7d1a1a] transition text-lg w-fit cursor-pointer ">
           Gửi ngay >>
         </button>
       </form>
