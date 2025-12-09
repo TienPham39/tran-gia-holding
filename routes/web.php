@@ -66,8 +66,9 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
 
   Route::prefix('products')->name('admin.products.')->group(function () {
     Route::get('/', [AdminProductsController::class, 'index'])->name('index');
-    Route::post('/create', [AdminProductsController::class, 'createCategory'])->name('createCategory');
-    Route::get('/category', [AdminProductsController::class, 'category'])->name('category');
+    Route::get('/categories', [AdminProductsController::class, 'categories'])->name('categories');
+    Route::get('/categories/create', [AdminProductsController::class, 'category'])->name('categories.create');
+    Route::post('/categories', [AdminProductsController::class, 'createCategory'])->name('categories.store');
   });
 
   Route::prefix('news')->name('admin.news.')->group(function () {

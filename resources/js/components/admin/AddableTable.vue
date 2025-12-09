@@ -32,10 +32,62 @@
           <template v-if="record.isNewRow">
             <!-- Input cho các cột (trừ Action và index) -->
             <template v-if="column.key !== 'action' && column.key !== 'index'">
-              <a-input
+              <!-- Dropdown Select -->
+              <a-select
+                v-if="column.type === 'select'"
+                v-model:value="newRowData[column.dataIndex || column.key]"
+                :placeholder="`Chọn ${column.title}`"
+                class="w-full"
+                :allowClear="column.allowClear !== false"
+              >
+                <a-select-option
+                  v-for="option in column.options || []"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </a-select-option>
+              </a-select>
+
+              <!-- Number Input -->
+              <a-input-number
+                v-else-if="column.type === 'number'"
                 v-model:value="newRowData[column.dataIndex || column.key]"
                 :placeholder="`Nhập ${column.title}`"
                 class="w-full"
+                :min="column.min"
+                :max="column.max"
+                :step="column.step"
+              />
+
+              <!-- Textarea -->
+              <a-input
+                v-else-if="column.type === 'textarea'"
+                v-model:value="newRowData[column.dataIndex || column.key]"
+                :placeholder="`Nhập ${column.title}`"
+                class="w-full"
+                type="textarea"
+                :rows="column.rows || 3"
+                :autoSize="column.autoSize"
+              />
+
+              <!-- Date Picker -->
+              <a-date-picker
+                v-else-if="column.type === 'date'"
+                v-model:value="newRowData[column.dataIndex || column.key]"
+                :placeholder="`Chọn ${column.title}`"
+                class="w-full"
+                :format="column.format || 'DD/MM/YYYY'"
+              />
+
+              <!-- Default Text Input -->
+              <a-input
+                v-else
+                v-model:value="newRowData[column.dataIndex || column.key]"
+                :placeholder="`Nhập ${column.title}`"
+                class="w-full"
+                :type="column.type || 'text'"
+                :maxLength="column.maxLength"
               />
             </template>
             
@@ -179,7 +231,7 @@ const props = defineProps({
   // Route để POST dữ liệu
   saveRoute: {
     type: String,
-    default: "admin.products.createCategory",
+    default: "admin.products.categories.store",
   },
 });
 

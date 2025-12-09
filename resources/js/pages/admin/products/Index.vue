@@ -11,7 +11,7 @@
     >
       <template #btn>
         <div class="flex justify-end">
-          <Link :href="route('admin.products.category')">
+          <Link :href="route('admin.products.categories.create')">
             <a-button type="primary">Thêm Loại</a-button>
           </Link>
         </div>

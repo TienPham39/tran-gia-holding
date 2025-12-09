@@ -33,22 +33,26 @@ const columns = ref([
   { 
     title: 'Tên danh mục', 
     dataIndex: 'name', 
-    key: 'name' 
+    key: 'name',
+    type: 'text' // Mặc định là text input
   },
   { 
     title: 'Mô tả', 
     dataIndex: 'description', 
-    key: 'description' 
-  },
-  { 
-    title: 'Slug', 
-    dataIndex: 'slug', 
-    key: 'slug' 
+    key: 'description',
+    type: 'textarea', // Textarea cho mô tả dài
+    rows: 3
   },
   { 
     title: 'Trạng thái', 
     dataIndex: 'status', 
-    key: 'status' 
+    key: 'status',
+    type: 'select', // Dropdown select
+    options: [
+      { label: 'Hoạt động', value: 'active' },
+      { label: 'Không hoạt động', value: 'inactive' },
+      { label: 'Đang chờ', value: 'pending' }
+    ]
   },
   { 
     title: 'Hành động', 
