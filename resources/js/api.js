@@ -2,8 +2,9 @@ import axios from "axios";
 import { message } from "ant-design-vue";
 import router from "./router";
 
+const baseURL = import.meta.env.VITE_API_BASE_URL;
 const api = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: baseURL,
   withCredentials: true,
   timeout: 10000,
   headers: {
