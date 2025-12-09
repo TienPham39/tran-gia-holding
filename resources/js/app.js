@@ -29,6 +29,8 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons-vue";
 
+import { ArrowRight, ChevronsRight } from "lucide-vue-next";
+
 createInertiaApp({
   resolve: (name) =>
     resolvePageComponent(
@@ -61,6 +63,10 @@ createInertiaApp({
     vueApp.component("KeyOutlined", KeyOutlined);
     vueApp.component("SafetyOutlined", SafetyOutlined);
     vueApp.component("LoadingOutlined", LoadingOutlined);
+
+    // Lucide icons
+    vueApp.component("ArrowRight", ArrowRight);
+    vueApp.component("ChevronsRight", ChevronsRight);
 
     vueApp.config.globalProperties.$message = message;
 

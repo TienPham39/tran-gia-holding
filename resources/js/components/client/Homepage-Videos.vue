@@ -37,8 +37,10 @@
           <img src="/images/homepage/footer_logo.png" alt="Trần Gia Holding" class="h-50 md:h-70 w-auto z-30" />
 
           <!-- GRADIENT IMAGE BELOW LOGO -->
-          <img src="/images/holding/gradient-top.png" alt="gradient"
-            class="absolute top-[320px] left-140 -translate-y-1/2 w-[400px] h-auto z-10 pointer-events-none" />
+          <img src="/images/holding/gradient-top.png" alt="gradient" class="
+            absolute left-1/2 -translate-x-1/2 top-[290px] md:top-[200px] lg:top-[250px]
+            hidden md:block w-[28vw] min-w-[240px] max-w-[380px] md:w-[300px] lg:w-[360px]
+            xl:w-[400px] h-auto z-10 pointer-events-none" />
 
           <!-- SWIPER BELOW -->
           <swiper direction="vertical" :slides-per-view="2" :space-between="520" :loop="true"
