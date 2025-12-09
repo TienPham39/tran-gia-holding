@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Product;
 
-use App\Repositories\ProductTypeRepository;
+use App\Repositories\Product\ProductTypeRepository;
 
 class ProductTypeService
 {

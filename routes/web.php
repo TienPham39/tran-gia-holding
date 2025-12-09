@@ -69,6 +69,9 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
     Route::get('/categories', [AdminProductsController::class, 'categories'])->name('categories');
     Route::get('/categories/create', [AdminProductsController::class, 'category'])->name('categories.create');
     Route::post('/categories', [AdminProductsController::class, 'createCategory'])->name('categories.store');
+    Route::get('/types', [AdminProductsController::class, 'getProductTypes'])->name('types');
+    Route::put('/types/{id}', [AdminProductsController::class, 'updateProductType'])->name('types.update');
+    Route::delete('/types/{id}', [AdminProductsController::class, 'deleteProductType'])->name('types.delete');
   });
 
   Route::prefix('news')->name('admin.news.')->group(function () {

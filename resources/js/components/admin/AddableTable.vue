@@ -166,6 +166,116 @@
               <slot name="action" :record="record" :index="index"></slot>
             </template>
 
+            <!-- Action buttons (Edit & Delete) -->
+            <template v-else-if="column.key === 'action' && !record.isEditing">
+              <a-space>
+                <a-button
+                  v-if="editRoute"
+                  type="link"
+                  class="text-blue-600"
+                  @click="handleEdit(record)"
+                  title="Chỉnh sửa"
+                >
+                  <EditOutlined />
+                </a-button>
+                <a-button
+                  v-if="deleteRoute"
+                  type="link"
+                  class="!text-red-600 hover:!text-red-400"
+                  @click="handleDelete(record)"
+                  title="Xóa"
+                >
+                  <DeleteOutlined />
+                </a-button>
+              </a-space>
+            </template>
+
+            <!-- Edit mode inputs -->
+            <template v-else-if="column.key !== 'action' && column.key !== 'index' && record.isEditing">
+              <!-- Dropdown Select -->
+              <a-select
+                v-if="column.type === 'select'"
+                v-model:value="editingData[record.id][column.dataIndex || column.key]"
+                :placeholder="`Chọn ${column.title}`"
+                class="w-full"
+                :allowClear="column.allowClear !== false"
+              >
+                <a-select-option
+                  v-for="option in column.options || []"
+                  :key="option.value"
+                  :value="option.value"
+                >
+                  {{ option.label }}
+                </a-select-option>
+              </a-select>
+
+              <!-- Number Input -->
+              <a-input-number
+                v-else-if="column.type === 'number'"
+                v-model:value="editingData[record.id][column.dataIndex || column.key]"
+                :placeholder="`Nhập ${column.title}`"
+                class="w-full"
+                :min="column.min"
+                :max="column.max"
+                :step="column.step"
+              />
+
+              <!-- Textarea -->
+              <a-input
+                v-else-if="column.type === 'textarea'"
+                v-model:value="editingData[record.id][column.dataIndex || column.key]"
+                :placeholder="`Nhập ${column.title}`"
+                class="w-full"
+                type="textarea"
+                :rows="column.rows || 3"
+                :autoSize="column.autoSize"
+              />
+
+              <!-- Date Picker -->
+              <a-date-picker
+                v-else-if="column.type === 'date'"
+                v-model:value="editingData[record.id][column.dataIndex || column.key]"
+                :placeholder="`Chọn ${column.title}`"
+                class="w-full"
+                :format="column.format || 'DD/MM/YYYY'"
+              />
+
+              <!-- Default Text Input -->
+              <a-input
+                v-else
+                v-model:value="editingData[record.id][column.dataIndex || column.key]"
+                :placeholder="`Nhập ${column.title}`"
+                class="w-full"
+                :type="column.type || 'text'"
+                :maxLength="column.maxLength"
+              />
+            </template>
+
+            <!-- Action buttons in edit mode -->
+            <template v-else-if="column.key === 'action' && record.isEditing">
+              <a-space>
+                <a-button
+                  type="primary"
+                  shape="circle"
+                  :loading="isUpdating[record.id]"
+                  @click="handleUpdate(record)"
+                >
+                  <template #icon>
+                    <CheckOutlined />
+                  </template>
+                </a-button>
+                <a-button
+                  type="default"
+                  shape="circle"
+                  @click="cancelEdit(record)"
+                >
+                  <template #icon>
+                    <CloseOutlined />
+                  </template>
+                </a-button>
+              </a-space>
+            </template>
+
             <!-- Default slot cho các cột khác -->
             <template v-else-if="column.slot">
               <slot :name="column.slot" :record="record" :column="column" :index="index"></slot>
@@ -186,9 +296,10 @@
 import { computed, ref } from "vue";
 import { router } from "@inertiajs/vue3";
 import { Modal, message } from "ant-design-vue";
-import { CheckOutlined, CloseOutlined } from "@ant-design/icons-vue";
+import { CheckOutlined, CloseOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons-vue";
 import { createVNode } from "vue";
 import { ExclamationCircleOutlined } from "@ant-design/icons-vue";
+import api from "@/api";
 
 const props = defineProps({
   // Dữ liệu bảng dạng array
@@ -233,14 +344,28 @@ const props = defineProps({
     type: String,
     default: "admin.products.categories.store",
   },
+  // Route để PUT cập nhật dữ liệu (cần có {id} placeholder)
+  editRoute: {
+    type: String,
+    default: null,
+  },
+  // Route để DELETE xóa dữ liệu (cần có {id} placeholder)
+  deleteRoute: {
+    type: String,
+    default: null,
+  },
 });
 
-const emit = defineEmits(["change", "save"]);
+const emit = defineEmits(["change", "save", "update", "delete"]);
 
 // State cho chế độ thêm mới
 const isAdding = ref(false);
 const isSaving = ref(false);
 const newRowData = ref({});
+
+// State cho chế độ chỉnh sửa
+const editingData = ref({});
+const isUpdating = ref({});
 
 // Xử lý columns để thêm cột STT nếu cần
 const processedColumns = computed(() => {
@@ -256,9 +381,12 @@ const processedColumns = computed(() => {
   return cols;
 });
 
-// Dữ liệu bảng bao gồm cả dòng thêm mới
+// Dữ liệu bảng bao gồm cả dòng thêm mới và đang chỉnh sửa
 const tableData = computed(() => {
-  const data = [...props.data];
+  const data = props.data.map(item => ({
+    ...item,
+    isEditing: editingData.value[item.id] !== undefined,
+  }));
   
   // Nếu đang ở chế độ thêm mới, thêm dòng input vào đầu bảng
   if (isAdding.value) {
@@ -355,6 +483,104 @@ function handleSave() {
 
 function handleTableChange(pagination, filters, sorter) {
   emit("change", pagination, filters, sorter);
+}
+
+// Xử lý chỉnh sửa
+function handleEdit(record) {
+  // Khởi tạo dữ liệu chỉnh sửa cho record này
+  editingData.value[record.id] = {};
+  inputColumns.value.forEach(col => {
+    const key = col.dataIndex || col.key;
+    editingData.value[record.id][key] = record[key] || '';
+  });
+}
+
+// Hủy chỉnh sửa
+function cancelEdit(record) {
+  delete editingData.value[record.id];
+}
+
+// Xử lý cập nhật
+async function handleUpdate(record) {
+  const data = editingData.value[record.id];
+  
+  // Kiểm tra dữ liệu có đầy đủ không
+  const emptyFields = inputColumns.value.filter(col => {
+    const key = col.dataIndex || col.key;
+    return !data[key] || data[key].toString().trim() === '';
+  });
+
+  if (emptyFields.length > 0) {
+    message.warning('Vui lòng điền đầy đủ thông tin!');
+    return;
+  }
+
+  if (!props.editRoute) {
+    message.error('Edit route chưa được cấu hình!');
+    return;
+  }
+
+  // Hiển thị xác nhận
+  Modal.confirm({
+    title: "Xác nhận",
+    icon: createVNode(ExclamationCircleOutlined),
+    content: "Bạn có chắc chắn muốn cập nhật?",
+    okText: "Cập nhật",
+    okType: "primary",
+    cancelText: "Hủy",
+    async onOk() {
+      isUpdating.value[record.id] = true;
+      
+      try {
+        // PUT dữ liệu đến route
+        const routeUrl = route(props.editRoute, record.id);
+        await api.put(routeUrl, data);
+        
+        message.success("Cập nhật thành công!");
+        cancelEdit(record);
+        
+        // Emit event để parent component reload dữ liệu
+        emit("update", record.id, data);
+      } catch (error) {
+        console.error("Update error:", error);
+        message.error("Cập nhật thất bại! Vui lòng thử lại.");
+      } finally {
+        isUpdating.value[record.id] = false;
+      }
+    },
+  });
+}
+
+// Xử lý xóa
+function handleDelete(record) {
+  if (!props.deleteRoute) {
+    message.error('Delete route chưa được cấu hình!');
+    return;
+  }
+
+  Modal.confirm({
+    title: "Xác nhận xóa",
+    icon: createVNode(ExclamationCircleOutlined),
+    content: "Bạn có chắc chắn muốn xóa mục này?",
+    okText: "Xóa",
+    okType: "danger",
+    cancelText: "Hủy",
+    async onOk() {
+      try {
+        // DELETE request đến route
+        const routeUrl = route(props.deleteRoute, record.id);
+        await api.delete(routeUrl);
+        
+        message.success("Xóa thành công!");
+        
+        // Emit event để parent component reload dữ liệu
+        emit("delete", record.id);
+      } catch (error) {
+        console.error("Delete error:", error);
+        message.error("Xóa thất bại! Vui lòng thử lại.");
+      }
+    },
+  });
 }
 </script>
 

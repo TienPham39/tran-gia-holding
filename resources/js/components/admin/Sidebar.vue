@@ -116,7 +116,7 @@ const links = ref([
     open: false,
     children: [
       { name: "DS. Sản Phẩm", to: route('admin.products.index') },
-      { name: "Loại Sản Phẩm", to: route('admin.products.category') },
+      { name: "Loại Sản Phẩm", to: route('admin.products.categories.create') },
     ],
   },
   {
