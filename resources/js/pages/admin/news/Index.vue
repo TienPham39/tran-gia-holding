@@ -1,27 +1,17 @@
 <template>
-  <div
-    class="bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300"
-  >
+  <div class="bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300">
     <a-card title="Quản lý tin tức" :bordered="false">
       <!-- Nút tạo tin tức -->
       <template #extra>
-        <Link
-          :href="route('admin.news.create')"
-          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-white! bg-blue-900! rounded-full shadow hover:bg-blue-800! transition-all duration-200"
-        >
+        <Link :href="route('admin.news.create')"
+          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-white! bg-blue-900! rounded-full shadow hover:bg-blue-800! transition-all duration-200">
           <span>Tạo tin tức</span>
         </Link>
       </template>
 
       <!-- Bảng -->
-      <a-table
-        :dataSource="news"
-        :columns="columns"
-        :scroll="{ x: 'max-content' }"
-        :pagination="pagination"
-        @change="handleTableChange"
-        rowKey="id"
-      >
+      <a-table :dataSource="news" :columns="columns" :scroll="{ x: 'max-content' }" :pagination="pagination"
+        @change="handleTableChange" rowKey="id">
         <template #bodyCell="{ column, index, record }">
           <!-- STT -->
           <template v-if="column.key === 'index'">
@@ -30,27 +20,18 @@
 
           <!-- Thumbnail -->
           <template v-else-if="column.key === 'thumbnail'">
-            <img
-              :src="getThumbnail(record)"
-              class="w-20 h-14 object-cover rounded border"
-              @error="(e) => (e.target.src = '/images/no-image.png')"
-            />
+            <img :src="getThumbnail(record)" class="w-20 h-14 object-cover rounded border"
+              @error="(e) => (e.target.src = '/images/no-image.png')" />
           </template>
 
           <!-- Category -->
           <template v-if="column.key === 'category'">
-            <div
-              v-if="record.category"
-              class="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white"
-              :class="categoryClass(record.category.id)"
-            >
+            <div v-if="record.category" class="inline-block px-3 py-1 rounded-full text-xs font-semibold text-white"
+              :class="categoryClass(record.category.id)">
               {{ record.category.name }}
             </div>
 
-            <div
-              v-else
-              class="inline-block px-3 py-1 rounded-full text-xs bg-gray-300 text-gray-700"
-            >
+            <div v-else class="inline-block px-3 py-1 rounded-full text-xs bg-gray-300 text-gray-700">
               Không có
             </div>
           </template>
@@ -63,19 +44,11 @@
           <!-- Action -->
           <template v-if="column.key === 'action'">
             <a-space>
-              <a-button
-                @click="editNews(record.id)"
-                type="link"
-                class="text-blue-600"
-              >
+              <a-button @click="editNews(record.id)" type="link" class="text-blue-600">
                 <EditOutlined />
               </a-button>
 
-              <a-button
-                @click="deleteNews(record.id)"
-                type="link"
-                class="text-red-600! hover:text-red-400!"
-              >
+              <a-button @click="deleteNews(record.id)" type="link" class="text-red-600! hover:text-red-400!">
                 <DeleteOutlined />
               </a-button>
             </a-space>
@@ -105,6 +78,7 @@ const { props } = usePage();
 
 // Lấy news từ server
 const news = ref(props.news.data);
+
 const pagination = ref({
   current: props.news.current_page,
   total: props.news.total,
@@ -167,8 +141,11 @@ function deleteNews(id) {
           preserveScroll: true,
           onSuccess: () => {
             message.success("Đã xóa tin tức!");
-            router.reload({ only: ["news"] });
-          },
+            router.visit('/admin/news', {
+              preserveScroll: true,
+              replace: true,
+            });
+          }
         }
       );
     },

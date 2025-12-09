@@ -29,6 +29,8 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons-vue";
 
+import ButtonEffect from "./components/client/ButtonEffect.vue";
+
 import { ArrowRight, ChevronsRight } from "lucide-vue-next";
 
 createInertiaApp({
@@ -63,6 +65,7 @@ createInertiaApp({
     vueApp.component("KeyOutlined", KeyOutlined);
     vueApp.component("SafetyOutlined", SafetyOutlined);
     vueApp.component("LoadingOutlined", LoadingOutlined);
+    vueApp.component("ButtonEffect", ButtonEffect);
 
     // Lucide icons
     vueApp.component("ArrowRight", ArrowRight);
