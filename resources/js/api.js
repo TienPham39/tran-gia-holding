@@ -6,7 +6,7 @@ const baseURL = import.meta.env.VITE_API_BASE_URL;
 const api = axios.create({
   baseURL: baseURL,
   withCredentials: true,
-  timeout: 10000,
+  timeout: 30000, // Tăng timeout mặc định lên 30 giây
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -22,13 +22,30 @@ api.ensureCsrfCookie = async function () {
   }
 };
 
-// ✅ Tự động gắn Authorization header
+// ✅ Tự động gắn Authorization header và CSRF token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("auth_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // Thêm CSRF token vào header hoặc FormData
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (csrfToken) {
+      // Nếu là FormData, thêm vào FormData
+      if (config.data instanceof FormData) {
+        config.data.append('_token', csrfToken);
+        // Tăng timeout cho FormData (upload file)
+        if (!config.timeout || config.timeout < 60000) {
+          config.timeout = 60000; // 60 giây
+        }
+      } else {
+        // Nếu không phải FormData, thêm vào header
+        config.headers['X-CSRF-TOKEN'] = csrfToken;
+      }
+    }
+    
     return config;
   },
   (error) => Promise.reject(error)

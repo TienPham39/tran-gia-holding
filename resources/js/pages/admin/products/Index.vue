@@ -1,0 +1,86 @@
+<template>
+  <div class="w-full">
+    <CustomTable
+      :title="'Danh Sách Sản Phẩm'"
+      :data="products"
+      :columns="columns"
+      :pagination="pagination"
+      :getThumbnail="getThumbnail"
+      :categoryClass="categoryClass"
+      @change="handleTableChange"
+    >
+      <template #btn>
+        <div class="flex justify-end">
+          <Link :href="route('admin.products.categories.create')">
+            <a-button type="primary">Thêm Loại</a-button>
+          </Link>
+        </div>
+      </template>
+      <template #action="{ record }">
+        <a-button
+          @click="editProduct(record.id)"
+          type="link"
+          class="text-blue-600"
+          title="Sửa sản phẩm"
+        >
+          <EditOutlined />
+        </a-button>
+        <a-button
+          @click="deleteProduct(record.id)"
+          type="link"
+          class="!text-red-600 hover:!text-red-400"
+          title="Xóa sản phẩm"
+        >
+          <DeleteOutlined />
+        </a-button>
+      </template>
+    </CustomTable>
+  </div>
+</template>
+
+<script setup>
+import admin from "@/layouts/admin.vue";
+import CustomTable from "@/components/admin/CustomTable.vue";
+import { ref } from 'vue'
+import { usePage, Link } from '@inertiajs/vue3'
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+
+// Sample/mock setup, replace with real logic
+const products = ref([]);
+const columns = ref([
+  { title: 'Tên sản phẩm', dataIndex: 'name', key: 'name' },
+  { title: 'Loại', dataIndex: 'category', key: 'category' },
+  { title: 'Hình ảnh', dataIndex: 'thumbnail', key: 'thumbnail', slot: 'thumbnail' },
+  { title: 'Hành động', key: 'action', slot: 'action' },
+]);
+const pagination = ref({
+  current: 1,
+  pageSize: 10,
+  total: 0,
+});
+
+function getThumbnail(record) {
+  // Giả sử record.thumbnail là URL
+  return record.thumbnail || '/images/no-image.png';
+}
+
+function categoryClass(record) {
+  return '';
+}
+
+function handleTableChange(pagination, filters, sorter) {
+  // Xử lý khi thay đổi page, bộ lọc, sắp xếp
+}
+
+function editProduct(id) {
+  // Xử lý sửa sản phẩm
+}
+
+function deleteProduct(id) {
+  // Xử lý xóa sản phẩm
+}
+
+defineOptions({
+  layout: admin,
+});
+</script>

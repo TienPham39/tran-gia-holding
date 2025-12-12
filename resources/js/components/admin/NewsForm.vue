@@ -153,8 +153,8 @@ const form = ref({
   excerpt: props.news?.excerpt ?? "",
   category_id: props.news?.category_id ?? "",
   content: props.news?.content ?? "",
-  thumbnail_base64: props.news?.thumbnail_base64 ?? "",
-  gallery_base64: props.news?.gallery_base64 ?? [],
+  thumbnail: null,  // File object
+  gallery: [],      // Array of file objects
 });
 
 function resetForm() {
@@ -163,8 +163,8 @@ function resetForm() {
     excerpt: "",
     category_id: "",
     content: "",
-    thumbnail_base64: "",
-    gallery_base64: [],
+    thumbnail: null,
+    gallery: [],
   };
 
   previewThumbnail.value = null;
@@ -177,65 +177,64 @@ const isSubmitting = ref(false);
 const previewThumbnail = ref(null);
 const previewGallery = ref([]);
 
-// Load thumbnail từ bản ghi cũ
+// Load thumbnail từ bản ghi cũ (URL path)
 if (props.news?.thumbnail_base64) {
-  previewThumbnail.value = props.news.thumbnail_base64.startsWith("data:image")
-    ? props.news.thumbnail_base64
-    : `/storage/${props.news.thumbnail_base64}`;
+  if (props.news.thumbnail_base64.startsWith("/storage/")) {
+    previewThumbnail.value = props.news.thumbnail_base64;
+  } else {
+    previewThumbnail.value = `/storage/${props.news.thumbnail_base64}`;
+  }
 }
 
-// Load gallery cũ
+// Load gallery cũ (URL paths)
 if (props.news?.gallery_base64?.length) {
-  previewGallery.value = props.news.gallery_base64.map((img) =>
-    img.startsWith("data:image") ? img : `/storage/${img}`
-  );
+  previewGallery.value = props.news.gallery_base64.map((img) => {
+    if (img.startsWith("/storage/")) {
+      return img;
+    }
+    return `/storage/${img}`;
+  });
 }
 
 function stopLoading() {
   isSubmitting.value = false;
 }
 
-// Convert file to base64
-function fileToBase64(file) {
-  return new Promise((resolve) => {
-    const r = new FileReader();
-    r.onload = () => resolve(r.result);
-    r.readAsDataURL(file);
-  });
-}
-
 // Thumbnail
-async function onThumbnailChange(e) {
+function onThumbnailChange(e) {
   const file = e.target.files[0];
   if (!file) return;
 
   previewThumbnail.value = URL.createObjectURL(file);
-  form.value.thumbnail_base64 = await fileToBase64(file);
+  form.value.thumbnail = file;  // Lưu file object
   e.target.value = null;
 }
 
 function removeThumbnail() {
   previewThumbnail.value = null;
-  form.value.thumbnail_base64 = "";
   form.value.thumbnail = null;
 }
 
 // Gallery
-async function onGalleryChange(e) {
+function onGalleryChange(e) {
   const files = Array.from(e.target.files);
 
   for (const f of files) {
     if (previewGallery.value.length >= 6) break;
     previewGallery.value.push(URL.createObjectURL(f));
-    form.value.gallery_base64.push(await fileToBase64(f));
+    form.value.gallery.push(f);  // Lưu file object
   }
   e.target.value = null;
 }
 
 // Remove gallery item
 function removeGalleryImage(i) {
+  // Revoke object URL để giải phóng memory
+  if (previewGallery.value[i] && previewGallery.value[i].startsWith('blob:')) {
+    URL.revokeObjectURL(previewGallery.value[i]);
+  }
   previewGallery.value.splice(i, 1);
-  form.value.gallery_base64.splice(i, 1);
+  form.value.gallery.splice(i, 1);
 }
 
 // Submit wrapper (gửi toàn bộ dữ liệu sang trang cha Create.vue hoặc Edit.vue)

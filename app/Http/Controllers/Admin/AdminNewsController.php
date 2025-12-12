@@ -24,7 +24,6 @@ class AdminNewsController extends Controller
     public function index()
     {
         $news = News::with('category')->latest()->paginate(5);
-
         return Inertia::render('admin/news/Index', [
             'news' => $news,
         ]);
@@ -48,25 +47,35 @@ class AdminNewsController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'nullable|string',
             'category_id' => 'required|integer|exists:news_categories,id',
-
-            // Base64
-            'thumbnail_base64' => 'nullable|string',
-            'gallery_base64'   => 'nullable|array|max:6',
-            'gallery_base64.*' => 'string',
+            'thumbnail' => 'nullable|image|max:20480', // 20MB
+            'gallery' => 'nullable|array|max:20',
+            'gallery.*' => 'image|max:20480', // 20MB mỗi ảnh
         ]);
+
+        // Upload thumbnail
+        $thumbnailPath = null;
+        if ($request->hasFile('thumbnail')) {
+            $path = $request->file('thumbnail')->store('news/thumbnails', 'public');
+            $thumbnailPath = "/storage/$path";
+        }
+
+        // Upload gallery
+        $galleryPaths = [];
+        if ($request->hasFile('gallery')) {
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('news/gallery', 'public');
+                $galleryPaths[] = "/storage/$path";
+            }
+        }
 
         $news = News::create([
             'title' => $request->title,
             'slug' => \Str::slug($request->title) . '-' . \Str::random(5),
-
             'excerpt' => $request->excerpt,
             'content' => $request->content,
             'category_id' => $request->category_id,
-
-            // ⬅️ LƯU BASE64 TRỰC TIẾP VÀO DB
-            'thumbnail_base64' => $request->thumbnail_base64,
-            'gallery_base64'   => $request->gallery_base64,
-
+            'thumbnail_base64' => $thumbnailPath,  // Lưu URL path
+            'gallery_base64' => !empty($galleryPaths) ? implode(',', $galleryPaths) : null,  // Comma-separated paths
             'author' => $request->author ?? 'Admin',
         ]);
 
@@ -77,8 +86,17 @@ class AdminNewsController extends Controller
     public function edit($id)
     {
         $news = News::findOrFail($id);
+        
+        // Chuyển gallery từ comma-separated → array cho frontend
+        $newsData = $news->toArray();
+        if (!empty($news->gallery_base64)) {
+            $newsData['gallery_base64'] = explode(',', $news->gallery_base64);
+        } else {
+            $newsData['gallery_base64'] = [];
+        }
+        
         return Inertia::render("admin/news/Edit", [
-            "news" => $news
+            "news" => $newsData
         ]);
     }
 
@@ -91,29 +109,50 @@ class AdminNewsController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'nullable|string',
             'category_id' => 'required|integer|exists:news_categories,id',
-
-            'thumbnail_base64' => 'nullable|string',
-            'gallery_base64' => 'nullable|array|max:6',
-            'gallery_base64.*' => 'string',
+            'thumbnail' => 'nullable|image|max:20480', // 20MB
+            'gallery' => 'nullable|array|max:6',
+            'gallery.*' => 'image|max:20480', // 10MB mỗi ảnh
         ]);
-        // Thumbnail: nếu có thì cập nhật, nếu không thì giữ nguyên
-        $thumbnail = $request->thumbnail_base64 ?: $news->thumbnail;
 
-        if ($request->has('gallery_base64')) {
-            $gallery = $request->gallery_base64; 
-        } else {
-            $gallery = $news->gallery_base64;
+        $data = [
+            'title' => $request->title,
+            'excerpt' => $request->excerpt,
+            'content' => $request->content,
+            'category_id' => $request->category_id,
+        ];
+
+        // Thumbnail: Nếu có file mới → upload và xóa file cũ
+        if ($request->hasFile('thumbnail')) {
+            // Xóa file cũ nếu có
+            if ($news->thumbnail_base64 && str_starts_with($news->thumbnail_base64, '/storage/')) {
+                $oldPath = str_replace('/storage/', '', $news->thumbnail_base64);
+                Storage::disk('public')->delete($oldPath);
+            }
+            // Upload file mới
+            $path = $request->file('thumbnail')->store('news/thumbnails', 'public');
+            $data['thumbnail_base64'] = "/storage/$path";
         }
 
-        // Update DB
-        $news->update([
-            'title'       => $request->title,
-            'excerpt'     => $request->excerpt,
-            'content'     => $request->content,
-            'category_id' => $request->category_id,
-            'thumbnail_base64'   => $thumbnail,
-            'gallery_base64'     => $gallery,
-        ]);
+        // Gallery: Nếu có files mới → upload và xóa files cũ
+        if ($request->hasFile('gallery')) {
+            // Xóa files cũ nếu có
+            if ($news->gallery_base64) {
+                $oldPaths = explode(',', $news->gallery_base64);
+                foreach ($oldPaths as $oldPath) {
+                    $path = str_replace('/storage/', '', trim($oldPath));
+                    Storage::disk('public')->delete($path);
+                }
+            }
+            // Upload files mới
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('news/gallery', 'public');
+                $galleryPaths[] = "/storage/$path";
+            }
+            $data['gallery_base64'] = !empty($galleryPaths) ? implode(',', $galleryPaths) : null;
+        }
+
+        $news->update($data);
 
         return redirect()
             ->route('admin.news.index')
@@ -121,29 +160,6 @@ class AdminNewsController extends Controller
     }
 
 
-    private function saveBase64($base64, $folder)
-    {
-        if (!$base64) return null;
-
-        // Tách phần header
-        if (preg_match('/^data:image\/(\w+);base64,/', $base64, $type)) {
-            $base64 = substr($base64, strpos($base64, ',') + 1);
-            $extension = strtolower($type[1]);
-        } else {
-            return null;
-        }
-
-        // Decode
-        $imageData = base64_decode($base64);
-        if ($imageData === false) return null;
-
-        // Tên file
-        $fileName = uniqid() . '.' . $extension;
-
-        Storage::disk('public')->put("$folder/$fileName", $imageData);
-
-        return "storage/$folder/$fileName";
-    }
 
 
     public function uploadImage(Request $request)

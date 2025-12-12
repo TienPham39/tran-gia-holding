@@ -20,8 +20,11 @@
 
           <!-- Thumbnail -->
           <template v-else-if="column.key === 'thumbnail'">
-            <img :src="getThumbnail(record)" class="w-20 h-14 object-cover rounded border"
-              @error="(e) => (e.target.src = '/images/no-image.png')" />
+            <img
+              :src="record.thumbnail_base64 ?? `/storage/${record.thumbnail}`"
+              class="w-20 h-14 object-cover rounded border"
+              @error="(e) => (e.target.src = '/images/no-image.png')"
+            />
           </template>
 
           <!-- Category -->
@@ -155,20 +158,6 @@ function editNews(id) {
   router.visit(`/admin/news/${id}/edit`, {
     preserveScroll: true,
   });
-}
-
-function getThumbnail(record) {
-  if (!record.thumbnail_base64 && !record.thumbnail) {
-    return "/images/no-image.png";
-  }
-
-  // Nếu là base64 → dùng trực tiếp
-  if (record.thumbnail_base64?.startsWith("data:image")) {
-    return record.thumbnail_base64;
-  }
-
-  // Nếu là đường dẫn file cũ → dùng từ storage
-  return `/storage/${record.thumbnail}`;
 }
 </script>
 

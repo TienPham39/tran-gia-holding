@@ -11,6 +11,7 @@ use App\Http\Controllers\Client\ServiceController;
 use App\Http\Controllers\Client\CommunityController;
 use App\Http\Controllers\Client\CareerController;
 use App\Http\Controllers\Admin\AdminNewsController;
+use App\Http\Controllers\Admin\AdminProductsController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -26,7 +27,7 @@ Route::get('/', [HomeController::class, 'index'])->name('index');
 Route::get('/news', [NewsController::class, 'index']);
 Route::get('/news/{slug}', [NewsController::class, 'show']);
 
-Route::post('/contact', [ContactController::class, 'store'])
+Route::post('/contacts', [ContactController::class, 'store'])
   ->name('contact.store');
 
 Route::get('/product', [ProductBDSController::class, 'index'])->name('client.product');
@@ -62,6 +63,16 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
   Route::get('/profile', fn() => Inertia::render('admin/profile/index'))->name('admin.profile');
   Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
   Route::put('/contacts/{id}/mark-as-read', [ContactController::class, 'markAsRead'])->name('admin.contacts.markAsRead');
+
+  Route::prefix('products')->name('admin.products.')->group(function () {
+    Route::get('/', [AdminProductsController::class, 'index'])->name('index');
+    Route::get('/categories', [AdminProductsController::class, 'categories'])->name('categories');
+    Route::get('/categories/create', [AdminProductsController::class, 'category'])->name('categories.create');
+    Route::post('/categories', [AdminProductsController::class, 'createCategory'])->name('categories.store');
+    Route::get('/types', [AdminProductsController::class, 'getProductTypes'])->name('types');
+    Route::put('/types/{id}', [AdminProductsController::class, 'updateProductType'])->name('types.update');
+    Route::delete('/types/{id}', [AdminProductsController::class, 'deleteProductType'])->name('types.delete');
+  });
 
   Route::prefix('news')->name('admin.news.')->group(function () {
 

@@ -110,6 +110,16 @@ const links = ref([
     ],
   },
   {
+    name: "Sản Phẩm",
+    icon: "tabler:shopping-cart",
+    active: false,
+    open: false,
+    children: [
+      { name: "DS. Sản Phẩm", to: route('admin.products.index') },
+      { name: "Loại Sản Phẩm", to: route('admin.products.categories.create') },
+    ],
+  },
+  {
     name: "Sơ đồ phân lô",
     icon: "line-md:document-list",
     active: false,

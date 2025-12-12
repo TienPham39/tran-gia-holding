@@ -16,6 +16,8 @@ import {
   Menu,
   Drawer,
   Input,
+  InputNumber,
+  DatePicker,
   Tag,
   Space,
   Checkbox,
@@ -57,6 +59,8 @@ createInertiaApp({
     vueApp.use(Menu);
     vueApp.use(Drawer);
     vueApp.use(Input);
+    vueApp.use(InputNumber);
+    vueApp.use(DatePicker);
     vueApp.use(Tag);
     vueApp.use(Space);
     vueApp.use(Checkbox);

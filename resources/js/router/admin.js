@@ -1,7 +1,6 @@
 const admin = [
   {
     path: "/admin",
-    component: () => import("../layouts/admin.vue"),
     meta: { requiresAuth: true },
     children: [
       // Dashboard / Analytics
