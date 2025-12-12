@@ -22,6 +22,7 @@ import {
   Space,
   Checkbox,
   Modal,
+  Switch,
   message,
 } from "ant-design-vue";
 
@@ -65,6 +66,7 @@ createInertiaApp({
     vueApp.use(Space);
     vueApp.use(Checkbox);
     vueApp.use(Modal);
+    vueApp.use(Switch);
 
     vueApp.component("KeyOutlined", KeyOutlined);
     vueApp.component("SafetyOutlined", SafetyOutlined);

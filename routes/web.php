@@ -66,6 +66,18 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
 
   Route::prefix('products')->name('admin.products.')->group(function () {
     Route::get('/', [AdminProductsController::class, 'index'])->name('index');
+    
+    // Product CRUD
+    Route::get('/create', [AdminProductsController::class, 'create'])->name('create');
+    Route::post('/', [AdminProductsController::class, 'store'])->name('store');
+    Route::get('/{id}/edit', [AdminProductsController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [AdminProductsController::class, 'update'])->name('update');
+    Route::delete('/{id}', [AdminProductsController::class, 'destroy'])->name('destroy');
+    
+    // Toggle highlight
+    Route::post('/{id}/toggle-highlight', [AdminProductsController::class, 'toggleHighlight'])->name('toggleHighlight');
+    
+    // Categories
     Route::get('/categories', [AdminProductsController::class, 'categories'])->name('categories');
     Route::get('/categories/create', [AdminProductsController::class, 'category'])->name('categories.create');
     Route::post('/categories', [AdminProductsController::class, 'createCategory'])->name('categories.store');

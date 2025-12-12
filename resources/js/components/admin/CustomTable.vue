@@ -68,13 +68,28 @@
           </template>
 
           <!-- Action slot -->
-          <template v-if="column.key === 'action' && $slots.action">
+          <template v-else-if="column.key === 'action' && $slots.action">
             <slot name="action" :record="record" :index="index"></slot>
+          </template>
+
+          <!-- is_highlight slot -->
+          <template v-else-if="column.key === 'is_highlight' && $slots.is_highlight">
+            <slot name="is_highlight" :record="record" :index="index"></slot>
+          </template>
+
+          <!-- Custom slot cho các cột khác -->
+          <template v-else-if="column.slot && $slots[column.slot]">
+            <slot :name="column.slot" :record="record" :column="column" :index="index"></slot>
           </template>
 
           <!-- Default slot cho các cột khác -->
           <template v-else-if="column.slot">
             <slot :name="column.slot" :record="record" :column="column" :index="index"></slot>
+          </template>
+
+          <!-- Hiển thị giá trị mặc định -->
+          <template v-else>
+            {{ record[column.dataIndex || column.key] }}
           </template>
         </template>
       </a-table>
