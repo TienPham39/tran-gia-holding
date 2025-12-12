@@ -18,9 +18,10 @@ class News extends Model
         'category_id',
     ];
 
-    protected $casts = [
-        'gallery_base64' => 'array', 
-    ];
+    // ❌ BỎ cast array - gallery lưu dưới dạng comma-separated paths
+    // protected $casts = [
+    //     'gallery_base64' => 'array', 
+    // ];
 
     // Auto-generate slug
     protected static function boot()
