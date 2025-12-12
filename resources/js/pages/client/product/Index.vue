@@ -11,14 +11,14 @@
         :image="item.image"
         :title="item.title"
         :description="item.description"
-        :isHot="true"
-        :isSelling="true"
+        :isHot="item.isHot"
+        :isSelling="item.isSelling"
       />
     </div>
     <Pagination
-      :currentPage="page"
+      :currentPage="currentPage"
       :totalPages="7"
-      @update:page="page = $event"
+      @update:page="currentPage = $event"
     />
 
     <div class="h-0.5 border border-[#884D4D] w-11/12 mx-auto mt-16"></div>
@@ -52,22 +52,23 @@
         :image="item.image"
         :title="item.title"
         :description="item.description"
-        :isHot="true"
-        :isSelling="true"
+        :isHot="item.isHot"
+        :isSelling="item.isSelling"
         :theme="'dark'"
       />
     </div>
     <Pagination
-      :currentPage="page"
+      :currentPage="currentPage"
       :totalPages="7"
       :theme="'dark'"
-      @update:page="page = $event"
+      @update:page="currentPage = $event"
     />
   </section>
 </template>
 
 <script setup>
-import { ref, defineOptions } from "vue";
+import { ref, computed, defineOptions } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import Layouts from "../../../layouts/client.vue";
 import Card from "@/Components/client/Card.vue";
 import Pagination from "@/Components/client/Paginate.vue";
@@ -76,14 +77,14 @@ import SliderSwiper from "../../../components/client/Slider-Swiper.vue";
 defineOptions({
   layout: Layouts,
 });
-const page = ref(1);
 
-const baseProduct = {
-  image: "/images/sample1.jpg",
-  title: "Lorem ipsum dolor sit amet, cons",
-  description:
-    "excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
-};
+const page = usePage();
+const currentPage = ref(1);
+
+// Get products from Inertia props
+const products = computed(() => {
+  return page.props.products || [];
+});
 
 const slides = ref([
   {
@@ -117,6 +118,4 @@ const slides = ref([
     image: "/images/slide1.png",
   },
 ]);
-
-const products = Array.from({ length: 9 }, () => baseProduct);
 </script>

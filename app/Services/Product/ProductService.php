@@ -34,6 +34,26 @@ class ProductService
     }
 
     /**
+     * Lấy tất cả products đã format cho client
+     */
+    public function getAllForClient()
+    {
+        $products = $this->productRepo->all();
+        
+        return $products->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'short_description' => $product->short_description ?? '',
+                'status' => $product->status ?? 'Đang bán',
+                'thumbnail_url' => $product->thumbnail && $product->thumbnail->image_url 
+                    ? $product->thumbnail->image_url 
+                    : '/images/no-image.png',
+            ];
+        });
+    }
+
+    /**
      * Tìm product theo ID với relationships
      */
     public function getById(int $id)
