@@ -1,13 +1,14 @@
 <template>
   <div class="w-full">
     <AddableTable
-      :title="'Quản lý Danh Mục'"
+      :title="'Quản lý Danh Mục Sản Phẩm'"
       :data="categories"
       :columns="columns"
       :pagination="pagination"
       save-route="admin.products.categories.store"
       edit-route="admin.products.types.update"
       delete-route="admin.products.types.delete"
+      :auto-reload="false"
       @change="handleTableChange"
       @save="handleSave"
       @update="handleUpdate"
@@ -33,21 +34,14 @@ const page = usePage();
 const categories = ref(page.props.categories || []);
 const loading = ref(false);
 
-// Định nghĩa các cột
-// Ví dụ: columns = [A, B, C, D, Action]
-// data sẽ có các field tương ứng: { a: valueA, b: valueB, c: valueC, d: valueD }
+// Định nghĩa các cột (không hiển thị slug trong giao diện)
 const columns = ref([
   { 
     title: 'Tên danh mục', 
     dataIndex: 'name', 
     key: 'name',
-    type: 'text' // Mặc định là text input
-  },
-  { 
-    title: 'Slug', 
-    dataIndex: 'slug', 
-    key: 'slug', 
-    type: 'text' // Textarea cho mô tả dài
+    type: 'text',
+    required: true
   },
   { 
     title: 'Hành động', 
@@ -61,7 +55,7 @@ const pagination = ref({
   total: categories.value.length || 0,
 });
 
-// Hàm lấy dữ liệu product types
+// Hàm lấy dữ liệu product types (categories)
 async function fetchProductTypes() {
   loading.value = true;
   try {
@@ -69,39 +63,62 @@ async function fetchProductTypes() {
     if (response.data.success && response.data.data) {
       categories.value = response.data.data;
       pagination.value.total = categories.value.length;
+    } else {
+      categories.value = [];
+      pagination.value.total = 0;
     }
   } catch (error) {
     console.error("Error fetching product types:", error);
     message.error("Không thể tải dữ liệu danh mục!");
+    categories.value = [];
+    pagination.value.total = 0;
   } finally {
     loading.value = false;
   }
 }
 
 // Lấy dữ liệu khi component được mount
+// Nếu đã có dữ liệu từ Inertia props, vẫn fetch lại để đảm bảo dữ liệu mới nhất
 onMounted(() => {
+  // Cập nhật pagination với dữ liệu hiện có
+  if (categories.value.length > 0) {
+    pagination.value.total = categories.value.length;
+  }
+  // Fetch lại để đảm bảo dữ liệu mới nhất
   fetchProductTypes();
 });
 
-function handleTableChange(pagination, filters, sorter) {
-  // Xử lý khi thay đổi page, bộ lọc, sắp xếp
-  console.log("Table changed:", { pagination, filters, sorter });
+// Xử lý khi thay đổi pagination, filters, sorter
+function handleTableChange(newPagination, filters, sorter) {
+  pagination.value = {
+    ...pagination.value,
+    current: newPagination.current,
+    pageSize: newPagination.pageSize,
+  };
 }
 
+// Xử lý sau khi lưu thành công
+// Fetch lại dữ liệu ngay sau khi save thành công để cập nhật danh sách
 function handleSave(data) {
-  // Xử lý trước khi lưu nếu cần
-  console.log("Saving data:", data);
-  // Sau khi lưu thành công, reload dữ liệu
+  console.log("Data saved:", data);
+  // Fetch lại dữ liệu ngay lập tức để cập nhật danh sách
+  // Sử dụng setTimeout nhỏ để đảm bảo server đã xử lý xong request
+  setTimeout(() => {
+    fetchProductTypes();
+  }, 300);
+}
+
+// Xử lý sau khi cập nhật thành công
+function handleUpdate(id, data) {
+  console.log("Data updated:", { id, data });
+  // Fetch lại dữ liệu sau khi update
   fetchProductTypes();
 }
 
-function handleUpdate(id) {
-  // Sau khi cập nhật thành công, reload dữ liệu
-  fetchProductTypes();
-}
-
+// Xử lý sau khi xóa thành công
 function handleDelete(id) {
-  // Sau khi xóa thành công, reload dữ liệu
+  console.log("Data deleted:", id);
+  // Fetch lại dữ liệu sau khi delete
   fetchProductTypes();
 }
 </script>

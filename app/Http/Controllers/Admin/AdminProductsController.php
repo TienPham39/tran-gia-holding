@@ -25,7 +25,20 @@ class AdminProductsController extends Controller
     // Hiển thị form tạo category
     public function category()
     {
-        return Inertia::render('admin/products/CreateCategory', []);
+        $categories = $this->productTypeService->getAll();
+        
+        // Format dữ liệu để phù hợp với columns trong component
+        $formattedData = $categories->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'name' => $item->name,
+                'slug' => $item->slug ?? '',
+            ];
+        });
+
+        return Inertia::render('admin/products/CreateCategory', [
+            'categories' => $formattedData
+        ]);
     }
 
     // Xử lý tạo category
@@ -49,8 +62,10 @@ class AdminProductsController extends Controller
         
         $category = $this->productTypeService->create($data);
 
-        return redirect()->route('admin.products.categories')
-                         ->with('success', 'Category created successfully');
+        // Redirect về lại trang tạo category
+        // AddableTable sẽ tự động reload trang sau khi save thành công
+        return redirect()->route('admin.products.categories.create')
+                         ->with('success', 'Tạo danh mục thành công!');
     }
 
     // Danh sách category

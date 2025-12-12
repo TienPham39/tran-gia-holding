@@ -354,6 +354,11 @@ const props = defineProps({
     type: String,
     default: null,
   },
+  // Tự động reload trang sau khi save thành công
+  autoReload: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const emit = defineEmits(["change", "save", "update", "delete"]);
@@ -452,17 +457,18 @@ function handleSave() {
       isSaving.value = true;
       
       try {
-        // Emit event để parent component xử lý
-        emit("save", newRowData.value);
-        
         // POST dữ liệu đến route
         await router.post(route(props.saveRoute), newRowData.value, {
           preserveScroll: true,
           onSuccess: () => {
             message.success("Lưu thành công!");
             cancelAdd();
-            // Reload trang để cập nhật dữ liệu
-            router.reload();
+            // Emit event sau khi save thành công để parent component cập nhật dữ liệu
+            emit("save", newRowData.value);
+            // Chỉ reload trang nếu autoReload = true
+            if (props.autoReload) {
+              router.reload();
+            }
           },
           onError: (errors) => {
             message.error("Lưu thất bại! Vui lòng thử lại.");
