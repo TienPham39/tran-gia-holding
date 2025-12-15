@@ -48,14 +48,17 @@ class ProductBDSController extends Controller
 
     public function show($id)
     {
-        $project = $this->productBDSService->getById($id);
+        // Lấy page từ query parameter, mặc định là 1
+        $page = request()->get('page', 1);
+        
+        $product = $this->productService->getDetailForClient($id, $page);
 
-        if (!$project) {
+        if (!$product) {
             abort(404);
         }
 
         return Inertia::render('client/product/Detail', [
-            'project' => $project,
+            'product' => $product,
         ]);
     }
 

@@ -34,7 +34,12 @@ class ProductRepository
      */
     public function findWithRelations(int $id)
     {
-        return $this->model->with(['productType', 'highlights', 'images'])->find($id);
+        return $this->model->with([
+            'productType', 
+            'highlights', 
+            'galleryImages',
+            'floorPlanImages'
+        ])->find($id);
     }
 
     /**

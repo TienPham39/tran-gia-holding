@@ -108,6 +108,89 @@ class ProductService
     }
 
     /**
+     * Lấy chi tiết product đã format cho client với pagination gallery
+     */
+    public function getDetailForClient(int $id, int $galleryPage = 1)
+    {
+        $product = $this->productRepo->findWithRelations($id);
+        
+        if (!$product) {
+            return null;
+        }
+
+        // Load relationships nếu chưa có
+        if (!$product->relationLoaded('highlights')) {
+            $product->load('highlights');
+        }
+        if (!$product->relationLoaded('galleryImages')) {
+            $product->load('galleryImages');
+        }
+        if (!$product->relationLoaded('floorPlanImages')) {
+            $product->load('floorPlanImages');
+        }
+
+        // Format highlights: split content thành 2 dòng, max 4 items
+        $highlights = $product->highlights->take(4)->map(function ($highlight) {
+            $content = trim($highlight->content ?? '');
+            $parts = explode(' ', $content, 2);
+            
+            return [
+                'line1' => $parts[0] ?? '',
+                'line2' => $parts[1] ?? ($parts[0] ?? ''),
+            ];
+        })->toArray();
+
+        // Đảm bảo có đủ 4 items (fill với empty nếu thiếu)
+        while (count($highlights) < 4) {
+            $highlights[] = ['line1' => '', 'line2' => ''];
+        }
+
+        // Paginate gallery images (6 per page)
+        $galleryImages = $product->galleryImages;
+        $totalGalleryImages = $galleryImages->count();
+        $perPage = 6;
+        $totalPages = $totalGalleryImages > 0 ? ceil($totalGalleryImages / $perPage) : 1;
+        
+        // Validate page number
+        $galleryPage = max(1, min($galleryPage, $totalPages));
+        
+        // Get images for current page
+        $currentPageImages = $galleryImages
+            ->skip(($galleryPage - 1) * $perPage)
+            ->take($perPage)
+            ->map(function ($image) {
+                return [
+                    'id' => $image->id,
+                    'image_url' => $image->image_url,
+                ];
+            })
+            ->toArray();
+
+        // Format floor plan images
+        $floorPlans = $product->floorPlanImages->map(function ($image) {
+            return [
+                'id' => $image->id,
+                'image_url' => $image->image_url,
+            ];
+        })->toArray();
+
+        return [
+            'id' => $product->id,
+            'solugon' => $product->solugon ?? '',
+            'short_description' => $product->short_description ?? '',
+            'highlights' => $highlights,
+            'gallery' => $currentPageImages,
+            'gallery_pagination' => [
+                'current_page' => $galleryPage,
+                'total_pages' => $totalPages,
+                'per_page' => $perPage,
+                'total' => $totalGalleryImages,
+            ],
+            'floor_plans' => $floorPlans,
+        ];
+    }
+
+    /**
      * Tạo mới product
      */
     public function create(array $data)
