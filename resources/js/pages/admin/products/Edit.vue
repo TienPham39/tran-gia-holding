@@ -29,13 +29,31 @@ async function update(payload) {
     // Đảm bảo có CSRF cookie trước khi gửi
     await api.ensureCsrfCookie();
 
+    // Validate required fields
+    const name = payload.name || product.value.name;
+    const productTypeId = payload.product_type_id || product.value.product_type_id;
+    
+    if (!name || name.trim() === "") {
+      message.error("Tên sản phẩm là bắt buộc");
+      return;
+    }
+    if (!productTypeId || productTypeId === "" || productTypeId === null || productTypeId === undefined) {
+      message.error("Loại sản phẩm là bắt buộc");
+      return;
+    }
+
     // Tạo FormData để gửi file
     const formData = new FormData();
-    formData.append("name", payload.name);
-    formData.append("product_type_id", payload.product_type_id);
-    formData.append("status", payload.status || "Đang bán");
-    formData.append("short_description", payload.short_description || "");
-    formData.append("solugon", payload.solugon || "");
+    // Đảm bảo name và product_type_id luôn có giá trị
+    formData.append("name", name.trim());
+    // Convert product_type_id to integer for Laravel validation
+    formData.append("product_type_id", parseInt(productTypeId, 10));
+    formData.append("status", payload.status || product.value.status || "Đang bán");
+    formData.append("short_description", payload.short_description || product.value.short_description || "");
+    formData.append("solugon", payload.solugon || product.value.solugon || "");
+    
+    // Add _method for PUT request (Laravel requires this for FormData)
+    formData.append("_method", "PUT");
 
     // Highlights
     if (payload.highlights && payload.highlights.length > 0) {
@@ -73,7 +91,8 @@ async function update(payload) {
       });
     }
 
-    await api.put(`/admin/products/${product.value.id}`, formData, {
+    // Use POST with _method=PUT for FormData (Laravel requirement)
+    await api.post(`/admin/products/${product.value.id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
@@ -89,7 +108,16 @@ async function update(payload) {
     message.success("Cập nhật sản phẩm thành công!");
   } catch (e) {
     console.error("Lỗi cập nhật sản phẩm:", e);
-    if (e.response?.data?.error) {
+    console.error("Response data:", e.response?.data);
+    
+    // Hiển thị lỗi validation từ server
+    if (e.response?.data?.errors) {
+      const errors = e.response.data.errors;
+      const errorMessages = Object.values(errors).flat().join(", ");
+      message.error(errorMessages || "Có lỗi xảy ra khi cập nhật sản phẩm");
+    } else if (e.response?.data?.message) {
+      message.error(e.response.data.message);
+    } else if (e.response?.data?.error) {
       message.error(e.response.data.error);
     } else {
       message.error("Lỗi cập nhật sản phẩm");

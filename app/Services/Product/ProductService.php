@@ -54,11 +54,140 @@ class ProductService
     }
 
     /**
+     * Lấy products theo product_type slug đã format cho client với pagination
+     */
+    public function getByTypeSlugForClient(string $slug, int $perPage = 9, int $page = 1)
+    {
+        $paginated = $this->productRepo->getByTypeSlug($slug, $perPage, $page);
+        
+        return [
+            'data' => $paginated->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'image' => $product->thumbnail && $product->thumbnail->image_url 
+                        ? $product->thumbnail->image_url 
+                        : '/images/no-image.png',
+                    'title' => $product->name,
+                    'description' => $product->short_description ?? '',
+                    'isHot' => $product->status === 'Hot',
+                    'isSelling' => $product->status === 'Đang bán',
+                ];
+            }),
+            'pagination' => [
+                'current_page' => $paginated->currentPage(),
+                'total_pages' => $paginated->lastPage(),
+                'per_page' => $paginated->perPage(),
+            ]
+        ];
+    }
+
+    /**
+     * Lấy products nổi bật đã format cho client
+     */
+    public function getHighlightForClient()
+    {
+        $products = $this->productRepo->getHighlight();
+        
+        return $products->map(function ($product) {
+            return [
+                'title' => $product->name,
+                'description' => $product->short_description ?? '',
+                'image' => $product->thumbnail && $product->thumbnail->image_url 
+                    ? $product->thumbnail->image_url 
+                    : '/images/no-image.png',
+            ];
+        });
+    }
+
+    /**
      * Tìm product theo ID với relationships
      */
     public function getById(int $id)
     {
         return $this->productRepo->findWithRelations($id);
+    }
+
+    /**
+     * Lấy chi tiết product đã format cho client với pagination gallery
+     */
+    public function getDetailForClient(int $id, int $galleryPage = 1)
+    {
+        $product = $this->productRepo->findWithRelations($id);
+        
+        if (!$product) {
+            return null;
+        }
+
+        // Load relationships nếu chưa có
+        if (!$product->relationLoaded('highlights')) {
+            $product->load('highlights');
+        }
+        if (!$product->relationLoaded('galleryImages')) {
+            $product->load('galleryImages');
+        }
+        if (!$product->relationLoaded('floorPlanImages')) {
+            $product->load('floorPlanImages');
+        }
+
+        // Format highlights: split content thành 2 dòng, max 4 items
+        $highlights = $product->highlights->take(4)->map(function ($highlight) {
+            $content = trim($highlight->content ?? '');
+            $parts = explode(' ', $content, 2);
+            
+            return [
+                'line1' => $parts[0] ?? '',
+                'line2' => $parts[1] ?? ($parts[0] ?? ''),
+            ];
+        })->toArray();
+
+        // Đảm bảo có đủ 4 items (fill với empty nếu thiếu)
+        while (count($highlights) < 4) {
+            $highlights[] = ['line1' => '', 'line2' => ''];
+        }
+
+        // Paginate gallery images (6 per page)
+        $galleryImages = $product->galleryImages;
+        $totalGalleryImages = $galleryImages->count();
+        $perPage = 6;
+        $totalPages = $totalGalleryImages > 0 ? ceil($totalGalleryImages / $perPage) : 1;
+        
+        // Validate page number
+        $galleryPage = max(1, min($galleryPage, $totalPages));
+        
+        // Get images for current page
+        $currentPageImages = $galleryImages
+            ->skip(($galleryPage - 1) * $perPage)
+            ->take($perPage)
+            ->map(function ($image) {
+                return [
+                    'id' => $image->id,
+                    'image_url' => $image->image_url,
+                ];
+            })
+            ->toArray();
+
+        // Format floor plan images
+        $floorPlans = $product->floorPlanImages->map(function ($image) {
+            return [
+                'id' => $image->id,
+                'image_url' => $image->image_url,
+            ];
+        })->toArray();
+
+        return [
+            'id' => $product->id,
+            'solugon' => $product->solugon ?? '',
+            'short_description' => $product->short_description ?? '',
+            'highlights' => $highlights,
+            'gallery' => $currentPageImages,
+            'gallery_pagination' => [
+                'current_page' => $galleryPage,
+                'total_pages' => $totalPages,
+                'per_page' => $perPage,
+                'total' => $totalGalleryImages,
+            ],
+            'floor_plans' => $floorPlans,
+        ];
     }
 
     /**
@@ -157,10 +286,14 @@ class ProductService
         // Upload files và chuẩn bị data cho full update
         $productData = $this->prepareProductData($data, $product);
         $highlights = $data['highlights'] ?? [];
-        $images = $this->prepareImagesData($data, $product);
+        
+        // Load product với images để kiểm tra
+        if (!$product->relationLoaded('images')) {
+            $product->load('images');
+        }
 
         // Transaction
-        return DB::transaction(function () use ($id, $productData, $highlights, $images) {
+        return DB::transaction(function () use ($id, $productData, $highlights, $data, $product) {
             // Update product
             $this->productRepo->update($id, $productData);
 
@@ -172,10 +305,65 @@ class ProductService
                 }
             }
 
-            // Xóa images cũ nếu có images mới
-            if (!empty($images)) {
-                $this->imageRepo->deleteByProductId($id);
-                $this->imageRepo->createMany($id, $images);
+            // Xử lý images theo từng loại riêng biệt
+            // 1. Thumbnail: nếu có thumbnail mới → xóa thumbnail cũ và thêm mới
+            if (isset($data['thumbnail']) && $data['thumbnail']) {
+                $this->imageRepo->deleteThumbnailByProductId($id);
+                $thumbnailPath = $this->uploadImage($data['thumbnail'], 'products/thumbnails');
+                if ($thumbnailPath) {
+                    $this->imageRepo->createMany($id, [[
+                        'image_url' => $thumbnailPath,
+                        'image_type' => '1',
+                        'is_thumbnail' => true,
+                        'sort_order' => 0,
+                    ]]);
+                }
+            }
+
+            // 2. Gallery: nếu có gallery mới → xóa gallery cũ và thêm mới
+            if (isset($data['gallery']) && is_array($data['gallery']) && !empty($data['gallery'])) {
+                $this->imageRepo->deleteGalleryByProductId($id);
+                $galleryImages = [];
+                $sortOrder = 0;
+                foreach ($data['gallery'] as $file) {
+                    if ($file) {
+                        $galleryPath = $this->uploadImage($file, 'products/gallery');
+                        if ($galleryPath) {
+                            $galleryImages[] = [
+                                'image_url' => $galleryPath,
+                                'image_type' => '1',
+                                'is_thumbnail' => false,
+                                'sort_order' => $sortOrder++,
+                            ];
+                        }
+                    }
+                }
+                if (!empty($galleryImages)) {
+                    $this->imageRepo->createMany($id, $galleryImages);
+                }
+            }
+
+            // 3. Floor plan: nếu có floor_plan mới → xóa floor_plan cũ và thêm mới
+            if (isset($data['floor_plan']) && is_array($data['floor_plan']) && !empty($data['floor_plan'])) {
+                $this->imageRepo->deleteFloorPlanByProductId($id);
+                $floorPlanImages = [];
+                $sortOrder = 0;
+                foreach ($data['floor_plan'] as $file) {
+                    if ($file) {
+                        $floorPlanPath = $this->uploadImage($file, 'products/floor_plans');
+                        if ($floorPlanPath) {
+                            $floorPlanImages[] = [
+                                'image_url' => $floorPlanPath,
+                                'image_type' => '2',
+                                'is_thumbnail' => false,
+                                'sort_order' => $sortOrder++,
+                            ];
+                        }
+                    }
+                }
+                if (!empty($floorPlanImages)) {
+                    $this->imageRepo->createMany($id, $floorPlanImages);
+                }
             }
 
             return $this->productRepo->findWithRelations($id);

@@ -351,12 +351,32 @@ class AdminProductsController extends Controller
             $deleted = $this->productService->delete($id);
 
             if (!$deleted) {
+                if (request()->expectsJson() || request()->ajax()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Không tìm thấy sản phẩm',
+                    ], 404);
+                }
                 return back()->withErrors(['error' => 'Không tìm thấy sản phẩm']);
+            }
+
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Xóa sản phẩm thành công!',
+                ]);
             }
 
             return redirect()->route('admin.products.index')
                 ->with('success', 'Xóa sản phẩm thành công!');
         } catch (\Exception $e) {
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $e->getMessage(),
+                    'error' => $e->getMessage(),
+                ], 500);
+            }
             return back()->withErrors(['error' => $e->getMessage()]);
         }
     }

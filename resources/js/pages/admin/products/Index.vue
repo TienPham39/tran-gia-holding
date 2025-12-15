@@ -52,11 +52,11 @@
 <script setup>
 import admin from "@/layouts/admin.vue";
 import CustomTable from "@/components/admin/CustomTable.vue";
-import { ref } from 'vue'
-import { usePage, Link } from '@inertiajs/vue3'
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons-vue";
+import { ref, createVNode } from 'vue'
+import { usePage, Link, router } from '@inertiajs/vue3'
+import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons-vue";
 import api from "@/api";
-import { message } from "ant-design-vue";
+import { message, Modal } from "ant-design-vue";
 
 const page = usePage();
 const products = ref(page.props.products || []);
@@ -112,12 +112,37 @@ async function toggleHighlight(record) {
   }
 }
 
-function deleteProduct(id) {
-  // Xử lý xóa sản phẩm - có thể thêm confirmation modal
-  if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-    // Gọi API xóa
-    // Có thể implement sau
-  }
+async function deleteProduct(id) {
+  Modal.confirm({
+    title: "Xác nhận xóa",
+    icon: createVNode(ExclamationCircleOutlined),
+    content: "Bạn có chắc chắn muốn xóa sản phẩm này? Hành động này không thể hoàn tác.",
+    okText: "Xóa",
+    okType: "danger",
+    cancelText: "Hủy",
+    async onOk() {
+      try {
+        const routeUrl = route('admin.products.destroy', id);
+        await api.delete(routeUrl);
+        
+        message.success("Xóa sản phẩm thành công!");
+        
+        // Xóa sản phẩm khỏi danh sách local
+        const index = products.value.findIndex(p => p.id === id);
+        if (index !== -1) {
+          products.value.splice(index, 1);
+          pagination.value.total = products.value.length;
+        }
+        
+        // Reload trang để đảm bảo dữ liệu đồng bộ
+        router.reload({ only: ['products'] });
+      } catch (error) {
+        console.error("Delete error:", error);
+        const errorMessage = error.response?.data?.message || error.response?.data?.error || 'Xóa thất bại! Vui lòng thử lại.';
+        message.error(errorMessage);
+      }
+    },
+  });
 }
 
 defineOptions({

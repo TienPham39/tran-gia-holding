@@ -109,8 +109,9 @@ const coverflow = {
 const computedSlides = computed(() => {
   if (!props.slides || props.slides.length === 0) return [];
 
-  // nhân bản thủ công x3
-  return [...props.slides, ...props.slides, ...props.slides];
+  // Không nhân bản slides - Swiper sẽ tự xử lý loop effect khi cần
+  // Việc nhân bản thủ công gây ra hiển thị trùng lặp không mong muốn
+  return props.slides;
 });
 
 const onSwiper = (swiper) => {
