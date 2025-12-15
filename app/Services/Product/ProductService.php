@@ -54,6 +54,52 @@ class ProductService
     }
 
     /**
+     * Lấy products theo product_type slug đã format cho client với pagination
+     */
+    public function getByTypeSlugForClient(string $slug, int $perPage = 9, int $page = 1)
+    {
+        $paginated = $this->productRepo->getByTypeSlug($slug, $perPage, $page);
+        
+        return [
+            'data' => $paginated->map(function ($product) {
+                return [
+                    'id' => $product->id,
+                    'image' => $product->thumbnail && $product->thumbnail->image_url 
+                        ? $product->thumbnail->image_url 
+                        : '/images/no-image.png',
+                    'title' => $product->name,
+                    'description' => $product->short_description ?? '',
+                    'isHot' => $product->status === 'Hot',
+                    'isSelling' => $product->status === 'Đang bán',
+                ];
+            }),
+            'pagination' => [
+                'current_page' => $paginated->currentPage(),
+                'total_pages' => $paginated->lastPage(),
+                'per_page' => $paginated->perPage(),
+            ]
+        ];
+    }
+
+    /**
+     * Lấy products nổi bật đã format cho client
+     */
+    public function getHighlightForClient()
+    {
+        $products = $this->productRepo->getHighlight();
+        
+        return $products->map(function ($product) {
+            return [
+                'title' => $product->name,
+                'description' => $product->short_description ?? '',
+                'image' => $product->thumbnail && $product->thumbnail->image_url 
+                    ? $product->thumbnail->image_url 
+                    : '/images/no-image.png',
+            ];
+        });
+    }
+
+    /**
      * Tìm product theo ID với relationships
      */
     public function getById(int $id)

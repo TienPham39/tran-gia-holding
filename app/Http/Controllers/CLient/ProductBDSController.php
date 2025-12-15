@@ -24,21 +24,25 @@ class ProductBDSController extends Controller
      */
     public function index()
     {
-        $products = $this->productService->getAllForClient();
+        // Lấy page từ query parameter, mặc định là 1
+        $spPage = request()->get('sp_page', 1);
+        $kgPage = request()->get('kg_page', 1);
         
-        // Format products for Card component
-        $formattedProducts = $products->map(function ($product) {
-            return [
-                'image' => $product['thumbnail_url'],
-                'title' => $product['name'],
-                'description' => $product['short_description'],
-                'isHot' => true, // Hardcoded as requested
-                'isSelling' => $product['status'] === 'Đang bán',
-            ];
-        });
+        // Lấy products theo type slug "sp" (Sản phẩm BĐS)
+        $productsSP = $this->productService->getByTypeSlugForClient('sp', 9, $spPage);
+        
+        // Lấy products theo type slug "kg" (BĐS ký gửi)
+        $productsKG = $this->productService->getByTypeSlugForClient('kg', 9, $kgPage);
+        
+        // Lấy products nổi bật
+        $highlightProducts = $this->productService->getHighlightForClient();
 
         return Inertia::render('client/product/Index', [
-            'products' => $formattedProducts,
+            'productsSP' => $productsSP['data'],
+            'paginationSP' => $productsSP['pagination'],
+            'productsKG' => $productsKG['data'],
+            'paginationKG' => $productsKG['pagination'],
+            'highlightProducts' => $highlightProducts,
         ]);
     }
 

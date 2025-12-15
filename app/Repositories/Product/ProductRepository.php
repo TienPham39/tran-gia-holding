@@ -85,5 +85,29 @@ class ProductRepository
 
         return $product->delete();
     }
+
+    /**
+     * Lấy products theo product_type slug với pagination
+     */
+    public function getByTypeSlug(string $slug, int $perPage = 9, int $page = 1)
+    {
+        return $this->model
+            ->with(['productType', 'thumbnail'])
+            ->whereHas('productType', function($q) use ($slug) {
+                $q->where('slug', $slug);
+            })
+            ->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    /**
+     * Lấy products có is_highlight = true
+     */
+    public function getHighlight()
+    {
+        return $this->model
+            ->with(['productType', 'thumbnail'])
+            ->where('is_highlight', true)
+            ->get();
+    }
 }
 

@@ -6,8 +6,8 @@
       class="mb-10 md:max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6"
     >
       <Card
-        v-for="(item, index) in products"
-        :key="index"
+        v-for="(item, index) in productsSP"
+        :key="item.id || index"
         :image="item.image"
         :title="item.title"
         :description="item.description"
@@ -16,9 +16,10 @@
       />
     </div>
     <Pagination
-      :currentPage="currentPage"
-      :totalPages="7"
-      @update:page="currentPage = $event"
+      :currentPage="currentPageSP"
+      :totalPages="paginationSP.total_pages"
+      :param="'sp'"
+      @change="handlePageChange"
     />
 
     <div class="h-0.5 border border-[#884D4D] w-11/12 mx-auto mt-16"></div>
@@ -29,7 +30,7 @@
         dự án nổi bật
       </h2>
 
-      <SliderSwiper :slides="slides" />
+      <SliderSwiper :slides="highlightProducts" />
       <button
         class="cursor-pointer absolute left-1/2 -translate-x-1/2 bottom-16 font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
       >
@@ -47,8 +48,8 @@
       class="mb-10 md:max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-6"
     >
       <Card
-        v-for="(item, index) in products"
-        :key="index"
+        v-for="(item, index) in productsKG"
+        :key="item.id || index"
         :image="item.image"
         :title="item.title"
         :description="item.description"
@@ -58,17 +59,18 @@
       />
     </div>
     <Pagination
-      :currentPage="currentPage"
-      :totalPages="7"
+      :currentPage="currentPageKG"
+      :totalPages="paginationKG.total_pages"
       :theme="'dark'"
-      @update:page="currentPage = $event"
+      :param="'kg'"
+      @change="handlePageChange"
     />
   </section>
 </template>
 
 <script setup>
 import { ref, computed, defineOptions } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
 import Layouts from "../../../layouts/client.vue";
 import Card from "@/Components/client/Card.vue";
 import Pagination from "@/Components/client/Paginate.vue";
@@ -79,43 +81,50 @@ defineOptions({
 });
 
 const page = usePage();
-const currentPage = ref(1);
+
+// Separate pagination states for each section
+const currentPageSP = ref(page.props.paginationSP?.current_page || 1);
+const currentPageKG = ref(page.props.paginationKG?.current_page || 1);
 
 // Get products from Inertia props
-const products = computed(() => {
-  return page.props.products || [];
+const productsSP = computed(() => {
+  return page.props.productsSP || [];
 });
 
-const slides = ref([
-  {
-    title: "DỰ ÁN 1",
-    description: "consectetur adipiscing elit, sed do eiusmod tempor",
-    image: "/images/slide1.png",
-  },
-  {
-    title: "DỰ ÁN 2",
-    description: "consectetur adipiscing elit, sed do eiusmod tempor",
-    image: "/images/slide1.png",
-  },
-  {
-    title: "DỰ ÁN 3",
-    description: "consectetur adipiscing elit, sed do eiusmod tempor",
-    image: "/images/slide1.png",
-  },
-  {
-    title: "DỰ ÁN 4",
-    description: "consectetur adipiscing elit, sed do eiusmod tempor",
-    image: "/images/slide1.png",
-  },
-  {
-    title: "DỰ ÁN 5",
-    description: "consectetur adipiscing elit, sed do eiusmod tempor",
-    image: "/images/slide1.png",
-  },
-  {
-    title: "DỰ ÁN 6",
-    description: "consectetur adipiscing elit, sed do eiusmod tempor",
-    image: "/images/slide1.png",
-  },
-]);
+const productsKG = computed(() => {
+  return page.props.productsKG || [];
+});
+
+const highlightProducts = computed(() => {
+  return page.props.highlightProducts || [];
+});
+
+const paginationSP = computed(() => {
+  return page.props.paginationSP || { current_page: 1, total_pages: 1, per_page: 9 };
+});
+
+const paginationKG = computed(() => {
+  return page.props.paginationKG || { current_page: 1, total_pages: 1, per_page: 9 };
+});
+
+// Handle pagination change
+function handlePageChange(event) {
+  const { param, page } = event;
+  
+  if (param === 'sp') {
+    currentPageSP.value = page;
+    router.get('/product', { sp_page: page }, {
+      preserveState: true,
+      preserveScroll: true,
+      only: ['productsSP', 'paginationSP'],
+    });
+  } else if (param === 'kg') {
+    currentPageKG.value = page;
+    router.get('/product', { kg_page: page }, {
+      preserveState: true,
+      preserveScroll: true,
+      only: ['productsKG', 'paginationKG'],
+    });
+  }
+}
 </script>
