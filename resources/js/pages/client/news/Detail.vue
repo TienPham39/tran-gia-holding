@@ -56,8 +56,8 @@
       <div v-html="news.content" class="prose prose-lg max-w-none news-content"></div>
 
       <!-- GALLERY nếu có -->
-      <div class="max-w-6xl mx-auto mt-16 pb-10 font-mont" v-if="news.gallery_base64?.length">
-        <NewsGallery :images="news.gallery_base64" />
+      <div class="max-w-6xl mx-auto mt-16 pb-10 font-mont" v-if="galleryImages && galleryImages.length > 0">
+        <NewsGallery :images="galleryImages" />
       </div>
     </div>
   </section>
@@ -103,6 +103,7 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import Layouts from "../../../layouts/client.vue";
 import NewsGallery from "../../../components/client/NewsGallery.vue";
 import { usePage } from "@inertiajs/vue3";
@@ -115,7 +116,16 @@ const page = usePage();
 
 const news = page.props.news;
 const relatedNews = page.props.relatedNews;
-console.log(news);
+
+// Đảm bảo gallery_images luôn là array
+const galleryImages = computed(() => {
+  if (!news.gallery_base64) return [];
+  if (Array.isArray(news.gallery_base64)) {
+    return news.gallery_base64.filter(img => img && img.trim() !== '');
+  }
+  // Nếu vẫn là string (fallback)
+  return news.gallery_base64.split(',').map(img => img.trim()).filter(img => img !== '');
+});
 function getThumbnail(news) {
   // Nếu backend trả về base64
   if (news.thumbnail_base64) {
@@ -124,7 +134,7 @@ function getThumbnail(news) {
 
   // Nếu backend lưu file vào storage
   if (news.thumbnail) {
-    return `/storage/${news.thumbnail}`;
+    return `${news.thumbnail}`;
   }
 
   // fallback khi không có ảnh
@@ -137,7 +147,7 @@ function getGalleryImage(img) {
     return img;
   }
 
-  return `/storage/${img}`;
+  return `${img}`;
 }
 </script>
 

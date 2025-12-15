@@ -95,12 +95,17 @@ import { ref, computed } from "vue";
 import VueEasyLightbox from "vue-easy-lightbox";
 
 const props = defineProps({
-  images: Array,
+  images: {
+    type: Array,
+    default: () => [],
+  },
 });
 
 function getImage(img) {
   if (!img) return "/images/default-news.png";
-  return img.startsWith("data:image") ? img : `/storage/${img}`;
+  if (img.startsWith("data:image")) return img;
+  if (img.startsWith("/storage/")) return img;
+  return `/storage/${img}`;
 }
 
 /* 🔥 MOBILE pattern 2 – 1 – 2 – 1 – 2 – 1 ... */
