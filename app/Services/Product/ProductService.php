@@ -129,8 +129,8 @@ class ProductService
             $product->load('floorPlanImages');
         }
 
-        // Format highlights: split content thành 2 dòng, max 4 items
-        $highlights = $product->highlights->take(4)->map(function ($highlight) {
+        // Format highlights: split content thành 2 dòng, hiển thị tất cả highlights
+        $highlights = $product->highlights->map(function ($highlight) {
             $content = trim($highlight->content ?? '');
             $parts = explode(' ', $content, 2);
             
@@ -139,11 +139,6 @@ class ProductService
                 'line2' => $parts[1] ?? ($parts[0] ?? ''),
             ];
         })->toArray();
-
-        // Đảm bảo có đủ 4 items (fill với empty nếu thiếu)
-        while (count($highlights) < 4) {
-            $highlights[] = ['line1' => '', 'line2' => ''];
-        }
 
         // Paginate gallery images (6 per page)
         $galleryImages = $product->galleryImages;
@@ -154,17 +149,17 @@ class ProductService
         // Validate page number
         $galleryPage = max(1, min($galleryPage, $totalPages));
         
-        // Get images for current page
-        $currentPageImages = $galleryImages
-            ->skip(($galleryPage - 1) * $perPage)
-            ->take($perPage)
-            ->map(function ($image) {
-                return [
-                    'id' => $image->id,
-                    'image_url' => $image->image_url,
-                ];
-            })
-            ->toArray();
+        // Convert to array and get images for current page
+        $allImages = $galleryImages->map(function ($image) {
+            return [
+                'id' => $image->id,
+                'image_url' => $image->image_url,
+            ];
+        })->toArray();
+        
+        // Slice array for pagination
+        $offset = ($galleryPage - 1) * $perPage;
+        $currentPageImages = array_slice($allImages, $offset, $perPage);
 
         // Format floor plan images
         $floorPlans = $product->floorPlanImages->map(function ($image) {

@@ -91,48 +91,48 @@
     >
       <!-- Gallery Images - Dynamic based on product.gallery -->
       <!-- COLUMN 1 -->
-      <div v-if="galleryImages[0]" class="flex flex-col gap-6">
-        <div class="h-[410px] bg-[#AAAAAA] overflow-hidden shadow-lg">
+      <div v-if="galleryImages.length > 0" class="flex flex-col gap-6">
+        <div v-if="galleryImages[0]" class="h-[410px] bg-[#AAAAAA] overflow-hidden shadow-lg">
           <div class="h-[350px]">
-            <img :src="galleryImages[0].image_url" alt="Gallery image 1" class="w-full h-full object-cover" />
+            <img :src="galleryImages[0].image_url" :alt="`Gallery image ${galleryImages[0].id || 1}`" class="w-full h-full object-cover" />
           </div>
           <div class="h-[60px] bg-[#D9D9D9]"></div>
         </div>
         <div v-if="galleryImages[3]" class="h-[250px] bg-[#AAAAAA] overflow-hidden shadow-lg">
           <div class="h-[190px]">
-            <img :src="galleryImages[3].image_url" alt="Gallery image 4" class="w-full h-full object-cover" />
+            <img :src="galleryImages[3].image_url" :alt="`Gallery image ${galleryImages[3].id || 4}`" class="w-full h-full object-cover" />
           </div>
           <div class="h-[70px] bg-[#D9D9D9]"></div>
         </div>
       </div>
 
       <!-- COLUMN 2 -->
-      <div v-if="galleryImages[1]" class="flex flex-col gap-6">
-        <div class="h-[330px] bg-[#AAAAAA] overflow-hidden shadow-lg">
+      <div v-if="galleryImages.length > 1" class="flex flex-col gap-6">
+        <div v-if="galleryImages[1]" class="h-[330px] bg-[#AAAAAA] overflow-hidden shadow-lg">
           <div class="h-[270px]">
-            <img :src="galleryImages[1].image_url" alt="Gallery image 2" class="w-full h-full object-cover" />
+            <img :src="galleryImages[1].image_url" :alt="`Gallery image ${galleryImages[1].id || 2}`" class="w-full h-full object-cover" />
           </div>
           <div class="h-[60px] bg-[#D9D9D9]"></div>
         </div>
         <div v-if="galleryImages[4]" class="h-[330px] bg-[#AAAAAA] overflow-hidden shadow-lg">
           <div class="h-[270px]">
-            <img :src="galleryImages[4].image_url" alt="Gallery image 5" class="w-full h-full object-cover" />
+            <img :src="galleryImages[4].image_url" :alt="`Gallery image ${galleryImages[4].id || 5}`" class="w-full h-full object-cover" />
           </div>
           <div class="h-[60px] bg-[#D9D9D9]"></div>
         </div>
       </div>
 
       <!-- COLUMN 3 -->
-      <div v-if="galleryImages[2]" class="flex flex-col gap-6">
-        <div class="h-[260px] bg-[#AAAAAA] overflow-hidden shadow-lg">
+      <div v-if="galleryImages.length > 2" class="flex flex-col gap-6">
+        <div v-if="galleryImages[2]" class="h-[260px] bg-[#AAAAAA] overflow-hidden shadow-lg">
           <div class="h-[190px]">
-            <img :src="galleryImages[2].image_url" alt="Gallery image 3" class="w-full h-full object-cover" />
+            <img :src="galleryImages[2].image_url" :alt="`Gallery image ${galleryImages[2].id || 3}`" class="w-full h-full object-cover" />
           </div>
           <div class="h-[70px] bg-[#D9D9D9]"></div>
         </div>
         <div v-if="galleryImages[5]" class="h-[400px] bg-[#AAAAAA] overflow-hidden shadow-lg">
           <div class="h-[340px]">
-            <img :src="galleryImages[5].image_url" alt="Gallery image 6" class="w-full h-full object-cover" />
+            <img :src="galleryImages[5].image_url" :alt="`Gallery image ${galleryImages[5].id || 6}`" class="w-full h-full object-cover" />
           </div>
           <div class="h-[70px] bg-[#D9D9D9]"></div>
         </div>
@@ -169,11 +169,11 @@
 
     <!-- Map Image Wrapper -->
     <div class="relative max-w-[1100px] mx-auto">
-      <div v-for="(floorPlan, index) in floorPlans" :key="floorPlan.id || index" class="w-full overflow-hidden mb-6 md:mb-8">
+      <div v-for="(floorPlan, index) in floorPlans" :key="floorPlan.id || index" class="w-full overflow-hidden mt-6 md:mt-8 mb-6 md:mb-8 rounded-lg md:rounded-xl">
         <img
           :src="floorPlan.image_url"
           :alt="`Sơ đồ phân lô ${index + 1}`"
-          class="w-full h-auto object-contain"
+          class="w-full h-auto object-contain rounded-lg md:rounded-xl"
         />
       </div>
     </div>
@@ -233,9 +233,15 @@ function handlePageChange(event) {
     : `/product/detail/${product.value.id}`;
   
   router.visit(`${routeUrl}?page=${newPage}`, {
-    preserveState: true,
-    preserveScroll: true,
+    preserveState: false,
+    preserveScroll: false,
     only: ['product'],
+    onSuccess: () => {
+      // Scroll to gallery section after page loads
+      setTimeout(() => {
+        scrollToSection('gallery-section');
+      }, 100);
+    },
   });
 }
 </script>

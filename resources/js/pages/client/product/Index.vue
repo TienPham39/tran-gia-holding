@@ -13,6 +13,7 @@
         :description="item.description"
         :isHot="item.isHot"
         :isSelling="item.isSelling"
+        :productId="item.id"
       />
     </div>
     <Pagination
@@ -56,6 +57,7 @@
         :isHot="item.isHot"
         :isSelling="item.isSelling"
         :theme="'dark'"
+        :productId="item.id"
       />
     </div>
     <Pagination

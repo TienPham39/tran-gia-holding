@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full font-gotham">
+  <div class="w-full font-gotham cursor-pointer" @click="handleClick">
     <!-- Ảnh + Badge -->
     <div
       class="relative w-full h-[232px] bg-[#989898] rounded-[6px] mb-4 bg-cover bg-center"
@@ -36,18 +36,18 @@
     </p>
 
     <!-- Link -->
-    <a
-      href="#"
+    <div
       class="text-[12px] mt-3 block text-right font-semibold tracking-wide"
       :class="themeClasses.link"
     >
       XEM CHI TIẾT
-    </a>
+    </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
+import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
   image: { type: String, required: true },
@@ -55,7 +55,8 @@ const props = defineProps({
   description: { type: String, required: true },
   isHot: { type: Boolean, default: false },
   isSelling: { type: Boolean, default: false },
-  theme: { type: String, default: "light" }, 
+  theme: { type: String, default: "light" },
+  productId: { type: [Number, String], default: null },
 });
 
 const themeClasses = computed(() => {
@@ -71,4 +72,13 @@ const themeClasses = computed(() => {
         link: "text-[#660000] hover:underline",
       };
 });
+
+function handleClick() {
+  if (props.productId) {
+    const routeUrl = typeof route !== 'undefined' 
+      ? route('client.product.show', props.productId)
+      : `/product/detail/${props.productId}`;
+    router.visit(routeUrl);
+  }
+}
 </script>
