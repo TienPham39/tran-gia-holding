@@ -47,6 +47,38 @@ class ProductImageRepository
     }
 
     /**
+     * Xóa thumbnail của một product
+     */
+    public function deleteThumbnailByProductId(int $productId)
+    {
+        return $this->model->where('product_id', $productId)
+            ->where('image_type', '1')
+            ->where('is_thumbnail', true)
+            ->delete();
+    }
+
+    /**
+     * Xóa gallery images của một product (image_type=1, is_thumbnail=false)
+     */
+    public function deleteGalleryByProductId(int $productId)
+    {
+        return $this->model->where('product_id', $productId)
+            ->where('image_type', '1')
+            ->where('is_thumbnail', false)
+            ->delete();
+    }
+
+    /**
+     * Xóa floor plan images của một product (image_type=2)
+     */
+    public function deleteFloorPlanByProductId(int $productId)
+    {
+        return $this->model->where('product_id', $productId)
+            ->where('image_type', '2')
+            ->delete();
+    }
+
+    /**
      * Lấy images theo product_id
      */
     public function getByProductId(int $productId)

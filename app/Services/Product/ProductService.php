@@ -286,10 +286,14 @@ class ProductService
         // Upload files và chuẩn bị data cho full update
         $productData = $this->prepareProductData($data, $product);
         $highlights = $data['highlights'] ?? [];
-        $images = $this->prepareImagesData($data, $product);
+        
+        // Load product với images để kiểm tra
+        if (!$product->relationLoaded('images')) {
+            $product->load('images');
+        }
 
         // Transaction
-        return DB::transaction(function () use ($id, $productData, $highlights, $images) {
+        return DB::transaction(function () use ($id, $productData, $highlights, $data, $product) {
             // Update product
             $this->productRepo->update($id, $productData);
 
@@ -301,10 +305,65 @@ class ProductService
                 }
             }
 
-            // Xóa images cũ nếu có images mới
-            if (!empty($images)) {
-                $this->imageRepo->deleteByProductId($id);
-                $this->imageRepo->createMany($id, $images);
+            // Xử lý images theo từng loại riêng biệt
+            // 1. Thumbnail: nếu có thumbnail mới → xóa thumbnail cũ và thêm mới
+            if (isset($data['thumbnail']) && $data['thumbnail']) {
+                $this->imageRepo->deleteThumbnailByProductId($id);
+                $thumbnailPath = $this->uploadImage($data['thumbnail'], 'products/thumbnails');
+                if ($thumbnailPath) {
+                    $this->imageRepo->createMany($id, [[
+                        'image_url' => $thumbnailPath,
+                        'image_type' => '1',
+                        'is_thumbnail' => true,
+                        'sort_order' => 0,
+                    ]]);
+                }
+            }
+
+            // 2. Gallery: nếu có gallery mới → xóa gallery cũ và thêm mới
+            if (isset($data['gallery']) && is_array($data['gallery']) && !empty($data['gallery'])) {
+                $this->imageRepo->deleteGalleryByProductId($id);
+                $galleryImages = [];
+                $sortOrder = 0;
+                foreach ($data['gallery'] as $file) {
+                    if ($file) {
+                        $galleryPath = $this->uploadImage($file, 'products/gallery');
+                        if ($galleryPath) {
+                            $galleryImages[] = [
+                                'image_url' => $galleryPath,
+                                'image_type' => '1',
+                                'is_thumbnail' => false,
+                                'sort_order' => $sortOrder++,
+                            ];
+                        }
+                    }
+                }
+                if (!empty($galleryImages)) {
+                    $this->imageRepo->createMany($id, $galleryImages);
+                }
+            }
+
+            // 3. Floor plan: nếu có floor_plan mới → xóa floor_plan cũ và thêm mới
+            if (isset($data['floor_plan']) && is_array($data['floor_plan']) && !empty($data['floor_plan'])) {
+                $this->imageRepo->deleteFloorPlanByProductId($id);
+                $floorPlanImages = [];
+                $sortOrder = 0;
+                foreach ($data['floor_plan'] as $file) {
+                    if ($file) {
+                        $floorPlanPath = $this->uploadImage($file, 'products/floor_plans');
+                        if ($floorPlanPath) {
+                            $floorPlanImages[] = [
+                                'image_url' => $floorPlanPath,
+                                'image_type' => '2',
+                                'is_thumbnail' => false,
+                                'sort_order' => $sortOrder++,
+                            ];
+                        }
+                    }
+                }
+                if (!empty($floorPlanImages)) {
+                    $this->imageRepo->createMany($id, $floorPlanImages);
+                }
             }
 
             return $this->productRepo->findWithRelations($id);
