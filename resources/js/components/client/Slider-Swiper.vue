@@ -47,10 +47,11 @@
             backgroundColor: item.image
               ? 'transparent'
               : 'rgba(255,255,255,0.25)',
+            height: '480px'
           }"
         >
           <div
-            class="flex flex-col items-start text-white px-12 font-banque cursor-pointer"
+            class="flex flex-col items-start text-white px-12 font-banque cursor-pointer h-full relative"
           >
             <h1
               class="text-[30px] font-bold tracking-wide relative after:content-[''] after:block after:w-14 after:h-0.5 after:bg-white after:mr-auto after:mt-2 after:mb-6 ml-4 mt-16"
@@ -64,7 +65,7 @@
               {{ item.description }}
             </p>
 
-            <div class="w-[260px] h-[56px] bg-white/60 rounded-md mt-30"></div>
+            <div class="w-[260px] h-[56px] bg-white/60 rounded-md absolute left-8 bottom-4"></div>
           </div>
         </swiper-slide>
       </swiper>

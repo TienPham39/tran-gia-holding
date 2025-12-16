@@ -33,7 +33,7 @@
 
       <SliderSwiper :slides="highlightProducts" />
       <button
-        class="cursor-pointer absolute left-1/2 -translate-x-1/2 bottom-16 font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
+        class="cursor-pointer absolute left-1/2 -translate-x-1/2 bottom-8 font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
       >
         <img src="/images/homepage/phone-icon.png" class="w-6 h-6 opacity-90" />
         Liên hệ ngay
