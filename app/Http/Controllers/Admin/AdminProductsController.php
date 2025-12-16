@@ -299,9 +299,22 @@ class AdminProductsController extends Controller
             'highlights' => $product->highlights->map(function ($highlight) {
                 return ['content' => $highlight->content];
             })->toArray(),
-            'thumbnail' => $product->thumbnail ? $product->thumbnail->image_url : null,
-            'gallery' => $product->galleryImages->pluck('image_url')->toArray(),
-            'floor_plan' => $product->floorPlanImages->pluck('image_url')->toArray(),
+            'thumbnail' => $product->thumbnail ? [
+                'id' => $product->thumbnail->id,
+                'image_url' => $product->thumbnail->image_url,
+            ] : null,
+            'gallery' => $product->galleryImages->map(function ($image) {
+                return [
+                    'id' => $image->id,
+                    'image_url' => $image->image_url,
+                ];
+            })->toArray(),
+            'floor_plan' => $product->floorPlanImages->map(function ($image) {
+                return [
+                    'id' => $image->id,
+                    'image_url' => $image->image_url,
+                ];
+            })->toArray(),
         ];
 
         return Inertia::render('admin/products/Edit', [
@@ -329,6 +342,8 @@ class AdminProductsController extends Controller
             'gallery.*' => 'nullable|image|max:20480',
             'floor_plan' => 'nullable|array',
             'floor_plan.*' => 'nullable|image|max:20480',
+            'deleted_image_ids' => 'nullable|array',
+            'deleted_image_ids.*' => 'integer|exists:product_images,id',
         ]);
 
         try {

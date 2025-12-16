@@ -300,10 +300,14 @@ class ProductService
                 }
             }
 
-            // Xử lý images theo từng loại riêng biệt
-            // 1. Thumbnail: nếu có thumbnail mới → xóa thumbnail cũ và thêm mới
+            // Xử lý xóa ảnh theo danh sách ID (nếu có)
+            if (isset($data['deleted_image_ids']) && is_array($data['deleted_image_ids']) && !empty($data['deleted_image_ids'])) {
+                $this->imageRepo->deleteByIds($data['deleted_image_ids']);
+            }
+
+            // Xử lý thêm ảnh mới (chỉ thêm, không xóa ảnh cũ)
+            // 1. Thumbnail: nếu có thumbnail mới → chỉ thêm mới
             if (isset($data['thumbnail']) && $data['thumbnail']) {
-                $this->imageRepo->deleteThumbnailByProductId($id);
                 $thumbnailPath = $this->uploadImage($data['thumbnail'], 'products/thumbnails');
                 if ($thumbnailPath) {
                     $this->imageRepo->createMany($id, [[
@@ -315,9 +319,8 @@ class ProductService
                 }
             }
 
-            // 2. Gallery: nếu có gallery mới → xóa gallery cũ và thêm mới
+            // 2. Gallery: nếu có gallery mới → chỉ thêm mới
             if (isset($data['gallery']) && is_array($data['gallery']) && !empty($data['gallery'])) {
-                $this->imageRepo->deleteGalleryByProductId($id);
                 $galleryImages = [];
                 $sortOrder = 0;
                 foreach ($data['gallery'] as $file) {
@@ -338,9 +341,8 @@ class ProductService
                 }
             }
 
-            // 3. Floor plan: nếu có floor_plan mới → xóa floor_plan cũ và thêm mới
+            // 3. Floor plan: nếu có floor_plan mới → chỉ thêm mới
             if (isset($data['floor_plan']) && is_array($data['floor_plan']) && !empty($data['floor_plan'])) {
-                $this->imageRepo->deleteFloorPlanByProductId($id);
                 $floorPlanImages = [];
                 $sortOrder = 0;
                 foreach ($data['floor_plan'] as $file) {
@@ -400,15 +402,41 @@ class ProductService
      */
     protected function validateBusinessRules(array $data, ?int $productId = null)
     {
-        // Validate gallery count phải chia hết cho 6
+        // Validate gallery count phải chia hết cho 6 (tính cả ảnh cũ, ảnh xóa, ảnh mới)
+        $existingGalleryCount = 0;
+
+        if ($productId) {
+            // Lấy danh sách gallery hiện có (loại image_type = 1, không phải thumbnail)
+            $currentGalleryImages = $this->imageRepo
+                ->getByProductIdAndType($productId, '1')
+                ->filter(function ($image) {
+                    return !$image->is_thumbnail;
+                });
+
+            $existingGalleryCount = $currentGalleryImages->count();
+
+            // Trừ đi số ảnh gallery nằm trong danh sách xóa (nếu có)
+            if (!empty($data['deleted_image_ids']) && is_array($data['deleted_image_ids'])) {
+                $deletedGalleryCount = $currentGalleryImages
+                    ->whereIn('id', $data['deleted_image_ids'])
+                    ->count();
+
+                $existingGalleryCount = max(0, $existingGalleryCount - $deletedGalleryCount);
+            }
+        }
+
+        // Đếm số ảnh gallery mới được upload
+        $newGalleryCount = 0;
         if (isset($data['gallery']) && is_array($data['gallery'])) {
-            $galleryCount = count(array_filter($data['gallery'], function ($item) {
+            $newGalleryCount = count(array_filter($data['gallery'], function ($item) {
                 return !empty($item);
             }));
+        }
 
-            if ($galleryCount > 0 && $galleryCount % 6 !== 0) {
-                throw new \Exception('Số lượng ảnh gallery phải là bội số của 6 (6, 12, 18, ...)');
-            }
+        $finalGalleryCount = $existingGalleryCount + $newGalleryCount;
+
+        if ($finalGalleryCount > 0 && $finalGalleryCount % 6 !== 0) {
+            throw new \Exception('Số lượng ảnh gallery phải là bội số của 6 (6, 12, 18, ...)');
         }
     }
 

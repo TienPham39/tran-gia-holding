@@ -91,6 +91,13 @@ async function update(payload) {
       });
     }
 
+    // Deleted image IDs (gửi danh sách ID ảnh cần xóa)
+    if (payload.deleted_image_ids && payload.deleted_image_ids.length > 0) {
+      payload.deleted_image_ids.forEach((imageId) => {
+        formData.append("deleted_image_ids[]", imageId);
+      });
+    }
+
     // Use POST with _method=PUT for FormData (Laravel requirement)
     await api.post(`/admin/products/${product.value.id}`, formData, {
       headers: {

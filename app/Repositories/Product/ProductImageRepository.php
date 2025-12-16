@@ -79,6 +79,18 @@ class ProductImageRepository
     }
 
     /**
+     * Xóa nhiều images theo danh sách ID
+     */
+    public function deleteByIds(array $imageIds)
+    {
+        if (empty($imageIds)) {
+            return true;
+        }
+        
+        return $this->model->whereIn('id', $imageIds)->delete();
+    }
+
+    /**
      * Lấy images theo product_id
      */
     public function getByProductId(int $productId)
