@@ -89,12 +89,21 @@ class ProductService
         $products = $this->productRepo->getHighlight();
         
         return $products->map(function ($product) {
+            // Format area: chỉ lấy số, thêm "m²"
+            $area = $product->total_area 
+                ? number_format($product->total_area, 0, '.', '') . 'm²'
+                : '';
+            
             return [
-                'title' => $product->name,
+                'id' => $product->id,
+                'label' => $product->productType->name ?? '', // Tên loại sản phẩm
+                'name' => $product->name,
                 'description' => $product->short_description ?? '',
                 'image' => $product->thumbnail && $product->thumbnail->image_url 
                     ? $product->thumbnail->image_url 
                     : '/images/no-image.png',
+                'logo' => '/images/homepage/footer_logo.png', // Logo mặc định
+                'area' => $area,
             ];
         });
     }

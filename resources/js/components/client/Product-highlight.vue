@@ -23,7 +23,8 @@
         <div ref="carousel" class="mobile-carousel overflow-x-auto py-2 flex touch-pan-x scroll-snap-x snap-mandatory"
           @scroll="onScroll" :style="{ gap: mobileGap + 'px' }">
           <div v-for="(p, idx) in products" :key="`mobile-${idx}`" class="group shrink-0 cursor-pointer"
-            :style="{ width: mobileCardWidth + 'px', scrollSnapAlign: 'start' }">
+            :style="{ width: mobileCardWidth + 'px', scrollSnapAlign: 'start' }"
+            @click="handleProductClick(p)">
             <div class="relative rounded-lg overflow-hidden shadow-lg bg-white/5">
               <img :src="p.image" alt="project image" class="w-full h-[340px] object-cover block rounded-b-lg" />
               <div
@@ -41,8 +42,8 @@
                 <div
                   class="absolute right-4 bottom-12 font-utm font-bold uppercase text-white/90 tracking-[0.28px] flex items-end gap-1">
                   <span class="text-[42px] leading-none">{{
-                    p.area.split(".")[0]
-                    }}</span><span class="text-[20px] leading-none">.{{ p.area.split(".")[1] }}</span>
+                    p.area ? p.area.replace(/[^0-9]/g, "") : ""
+                    }}</span><span class="text-[20px] leading-none">{{ p.area ? p.area.replace(/[0-9]/g, "") : "" }}</span>
                 </div>
               </div>
             </div>
@@ -67,7 +68,8 @@
 
       <!-- Desktop/tablet: 3-column grid -->
       <div class="hidden sm:grid gap-10 grid-cols-3">
-        <div v-for="(p, idx) in products" :key="idx" class="group cursor-pointer transition-all duration-500">
+        <div v-for="(p, idx) in products" :key="idx" class="group cursor-pointer transition-all duration-500"
+          @click="handleProductClick(p)">
 
           <!-- IMAGE CARD -->
           <div class="relative rounded-lg overflow-hidden bg-white/5 shadow-lg
@@ -125,13 +127,13 @@
           <!-- TEXT CONTENT BELOW IMAGE -->
           <div class="font-mont mt-4 text-white px-1 transition-all duration-500 group-hover:translate-x-1">
             <!-- Title -->
-            <h3 class="font-mont font-bold text-xl uppercase mb-4">
+            <h3 class="font-mont font-bold text-xl uppercase mb-4 h-[28px] flex items-center">
               {{ p.name }}
             </h3>
 
             <!-- Short description -->
             <p class="text-lg text-justify text-white/90 mt-2 leading-relaxed">
-              {{ p.description }}
+              {{ p.description && p.description.length > 100 ? p.description.slice(0, 100) + '...' : p.description }}
             </p>
 
             <div class="mt-3 mb-2 flex justify-end">
@@ -147,72 +149,21 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
+import { router } from "@inertiajs/vue3";
 
-// Links (will render separators between items)
-const links = ref([
-  "TRẦN GIA VILLAGE 1",
-  "TRẦN GIA VILLAGE 2",
-  "TRẦN GIA VILLAGE 3",
-  "TRẦN GIA VILLAGE 4",
-]);
+const page = usePage();
 
-const products = ref([
-  {
-    label: "TRẦN GIA VILLAGE 1",
-    name: "TRẦN GIA VILLAGE 01",
-    description:
-      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/products/tran-gia-village-6.png",
-    logo: "/images/homepage/footer_logo.png",
-    area: "1000m²",
-  },
-  {
-    label: "TRẦN GIA VILLAGE 1",
-    name: "ĐẤT NỀN NAM BAN - VIEW ĐỒI",
-    description:
-      "Diện tích: 120m² - 500m². Thế đất dương, view trọn thung lũng, hạ tầng…",
-    image: "/images/products/tran-gia-village-6.png",
-    logo: "/images/homepage/footer_logo.png",
-    area: "1000m²",
-  },
-  {
-    label: "TRẦN GIA VILLAGE 1",
-    name: "TRẦN GIA VILLAGE 01",
-    description:
-      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/products/tran-gia-village-2.png",
-    logo: "/images/homepage/footer_logo.png",
-    area: "1000m²",
-  },
-  {
-    label: "TRẦN GIA VILLAGE 1",
-    name: "TRẦN GIA VILLAGE 01",
-    description:
-      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/products/tran-gia-village-1.png",
-    logo: "/images/homepage/footer_logo.png",
-    area: "1000m²",
-  },
-  {
-    label: "TRẦN GIA VILLAGE 1",
-    name: "ĐẤT NỀN NAM BAN - VIEW ĐỒI",
-    description:
-      "Diện tích: 120m² - 500m². Thế đất dương, view trọn thung lũng, hạ tầng…",
-    image: "/images/products/tran-gia-village-4.png",
-    logo: "/images/homepage/footer_logo.png",
-    area: "1000m²",
-  },
-  {
-    label: "TRẦN GIA VILLAGE 1",
-    name: "TRẦN GIA VILLAGE 01",
-    description:
-      "Diện tích: 500m² - 1000m². Vị trí: Lâm Hà, Lâm Đồng. Pháp lý: Sổ hồng riêng…",
-    image: "/images/products/tran-gia-village-2.png",
-    logo: "/images/homepage/footer_logo.png",
-    area: "1000m²",
-  },
-]);
+// Links từ product types (từ backend)
+const links = computed(() => {
+  return page.props.productTypeLinks || [];
+});
+
+// Products từ backend
+const products = computed(() => {
+  return page.props.highlightProducts || [];
+});
 
 // Carousel state for mobile
 const carousel = ref(null);

@@ -266,6 +266,7 @@ class AdminProductsController extends Controller
                 'solugon' => 'nullable|string',
                 'status' => 'nullable|string|in:Đang bán,Đã bán,Hot,Sắp mở bán',
                 'is_hot' => 'nullable|boolean',
+                'total_area' => 'nullable|numeric|min:0',
                 'highlights' => 'nullable|array',
                 'highlights.*.content' => 'nullable|string',
                 'thumbnail' => 'nullable|image|max:20480',
@@ -327,6 +328,7 @@ class AdminProductsController extends Controller
             'solugon' => $product->solugon,
             'status' => $product->status,
             'is_highlight' => $product->is_highlight ?? false,
+            'total_area' => $product->total_area,
             'highlights' => $product->highlights->map(function ($highlight) {
                 return ['content' => $highlight->content];
             })->toArray(),
@@ -367,6 +369,7 @@ class AdminProductsController extends Controller
             'status' => 'nullable|string|in:Đang bán,Đã bán,Hot,Sắp mở bán',
             'is_highlight' => 'nullable|boolean',
             'is_hot' => 'nullable|boolean',
+            'total_area' => 'nullable|numeric|min:0',
             'highlights' => 'nullable|array',
             'highlights.*.content' => 'nullable|string',
             'thumbnail' => 'nullable|image|max:20480',

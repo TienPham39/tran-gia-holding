@@ -19,6 +19,7 @@ class Product extends Model
         'status',
         'is_highlight',
         'is_hot',
+        'total_area',
     ];
 
     protected $casts = [

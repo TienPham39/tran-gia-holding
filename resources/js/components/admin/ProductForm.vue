@@ -40,6 +40,22 @@
           {{ errors.status[0] }}
         </p>
       </div>
+
+      <!-- Total Area -->
+      <div>
+        <label class="font-bold">Tổng diện tích (m²)</label>
+        <input 
+          type="number" 
+          v-model.number="form.total_area" 
+          class="input w-full mt-2" 
+          placeholder="Nhập số diện tích (chỉ số)"
+          step="0.01"
+          min="0"
+        />
+        <p v-if="errors.total_area" class="text-red-600 text-sm mt-1">
+          {{ errors.total_area[0] }}
+        </p>
+      </div>
     </div>
 
     <!-- Highlights Section -->
@@ -326,6 +342,7 @@ const form = ref({
   solugon: props.product?.solugon ?? "",
   short_description: props.product?.short_description ?? "",
   is_hot: props.product?.is_hot ?? 0,
+  total_area: props.product?.total_area ?? null,
   thumbnail: null, // File object
   gallery: [], // Array of file objects
   floor_plan: [], // Array of file objects
@@ -407,6 +424,7 @@ function resetForm() {
     solugon: "",
     short_description: "",
     is_hot: 0,
+    total_area: null,
     thumbnail: null,
     gallery: [],
     floor_plan: [],
