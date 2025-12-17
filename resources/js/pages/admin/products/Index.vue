@@ -14,9 +14,9 @@
           <Link :href="route('admin.products.create')">
             <a-button type="primary">Thêm Sản Phẩm</a-button>
           </Link>
-          <Link :href="route('admin.products.categories.create')">
+          <!-- <Link :href="route('admin.products.categories.create')">
             <a-button>Thêm Loại</a-button>
-          </Link>
+          </Link> -->
         </div>
       </template>
       <template #is_highlight="{ record }">

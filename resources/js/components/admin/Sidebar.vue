@@ -89,26 +89,26 @@ const links = ref([
     active: true,
     open: false,
   },
-  {
-    name: "Giới thiệu",
-    icon: "line-md:home",
-    active: true,
-    open: false,
-    children: [
-      { name: "DS. Giới thiệu", to: "/admin/introductions" },
-      { name: "Tạo thông tin giới thiệu", to: "/admin/introductions/create" },
-    ],
-  },
-  {
-    name: "Dự án",
-    icon: "icon-park-outline:chart-line",
-    active: false,
-    open: false,
-    children: [
-      { name: "DS. Dự án", to: "#" },
-      { name: "Tạo dự án mới", to: "#" },
-    ],
-  },
+  // {
+  //   name: "Giới thiệu",
+  //   icon: "line-md:home",
+  //   active: true,
+  //   open: false,
+  //   children: [
+  //     { name: "DS. Giới thiệu", to: "/admin/introductions" },
+  //     { name: "Tạo thông tin giới thiệu", to: "/admin/introductions/create" },
+  //   ],
+  // },
+  // {
+  //   name: "Dự án",
+  //   icon: "icon-park-outline:chart-line",
+  //   active: false,
+  //   open: false,
+  //   children: [
+  //     { name: "DS. Dự án", to: "#" },
+  //     { name: "Tạo dự án mới", to: "#" },
+  //   ],
+  // },
   {
     name: "Sản Phẩm",
     icon: "tabler:shopping-cart",
@@ -116,41 +116,41 @@ const links = ref([
     open: false,
     children: [
       { name: "DS. Sản Phẩm", to: route('admin.products.index') },
-      { name: "Loại Sản Phẩm", to: route('admin.products.categories.create') },
+      // { name: "Loại Sản Phẩm", to: route('admin.products.categories.create') },
     ],
   },
-  {
-    name: "Sơ đồ phân lô",
-    icon: "line-md:document-list",
-    active: false,
-    open: false,
-    children: [
-      { name: "DS. Sơ đồ phân lô", to: "#" },
-      { name: "Tạo sơ đồ phân lô", to: "#" },
-      { name: "Khách hàng ký gửi", to: "#" },
-    ],
-  },
-  {
-    name: "Hoạt động cộng đồng",
-    icon: "mdi:hand-heart",
-    active: false,
-    open: false,
-    children: [
-      { name: "DS. Hoạt động", to: "#" },
-      { name: "Tạo hoạt động mới", to: "#" },
-    ],
-  },
-  {
-    name: "Cơ hội nghề nghiệp",
-    icon: "mdi:briefcase-outline",
-    active: false,
-    open: false,
-    children: [
-      { name: "DS. Tuyển dụng", to: "#" },
-      { name: "DS. Ứng viên", to: "#" },
-      { name: "Tạo tin tuyển dụng mới", to: "#" },
-    ],
-  },
+  // {
+  //   name: "Sơ đồ phân lô",
+  //   icon: "line-md:document-list",
+  //   active: false,
+  //   open: false,
+  //   children: [
+  //     { name: "DS. Sơ đồ phân lô", to: "#" },
+  //     { name: "Tạo sơ đồ phân lô", to: "#" },
+  //     { name: "Khách hàng ký gửi", to: "#" },
+  //   ],
+  // },
+  // {
+  //   name: "Hoạt động cộng đồng",
+  //   icon: "mdi:hand-heart",
+  //   active: false,
+  //   open: false,
+  //   children: [
+  //     { name: "DS. Hoạt động", to: "#" },
+  //     { name: "Tạo hoạt động mới", to: "#" },
+  //   ],
+  // },
+  // {
+  //   name: "Cơ hội nghề nghiệp",
+  //   icon: "mdi:briefcase-outline",
+  //   active: false,
+  //   open: false,
+  //   children: [
+  //     { name: "DS. Tuyển dụng", to: "#" },
+  //     { name: "DS. Ứng viên", to: "#" },
+  //     { name: "Tạo tin tuyển dụng mới", to: "#" },
+  //   ],
+  // },
   {
     name: "Tin tức",
     icon: "mdi:newspaper-variant-outline",
@@ -161,13 +161,13 @@ const links = ref([
       { name: "Tạo tin tức mới", to: "/admin/news/create" },
     ],
   },
-  {
-    name: "Liên hệ",
-    icon: "line-md:email",
-    active: false,
-    open: false,
-    children: [{ name: "DS. Liên hệ", to: "#" }],
-  },
+  // {
+  //   name: "Liên hệ",
+  //   icon: "line-md:email",
+  //   active: false,
+  //   open: false,
+  //   children: [{ name: "DS. Liên hệ", to: "#" }],
+  // },
   {
     name: "Hệ thống",
     icon: "mdi:cog-outline",
