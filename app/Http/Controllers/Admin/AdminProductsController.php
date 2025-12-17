@@ -33,6 +33,7 @@ class AdminProductsController extends Controller
                 'product_type_name' => $product->productType->name ?? '',
                 'status' => $product->status,
                 'is_highlight' => $product->is_highlight ?? false,
+                'is_hot' => $product->is_hot ?? false,
                 'thumbnail' => $product->thumbnail ? $product->thumbnail->image_url : null,
                 'created_at' => $product->created_at,
             ];
@@ -60,6 +61,35 @@ class AdminProductsController extends Controller
             ]);
         } catch (\Exception $e) {
             \Log::error('Exception in toggleHighlight method:', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    /**
+     * API: Toggle is_hot của product
+     */
+    public function toggleHot(Request $request, $id)
+    {
+        try {
+            $product = $this->productService->toggleHot($id);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Cập nhật trạng thái hot thành công!',
+                'data' => [
+                    'is_hot' => (bool) $product->is_hot,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            \Log::error('Exception in toggleHot method:', [
                 'message' => $e->getMessage(),
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
@@ -235,6 +265,7 @@ class AdminProductsController extends Controller
                 'short_description' => 'nullable|string',
                 'solugon' => 'nullable|string',
                 'status' => 'nullable|string|in:Đang bán,Đã bán,Hot,Sắp mở bán',
+                'is_hot' => 'nullable|boolean',
                 'highlights' => 'nullable|array',
                 'highlights.*.content' => 'nullable|string',
                 'thumbnail' => 'nullable|image|max:20480',
@@ -335,6 +366,7 @@ class AdminProductsController extends Controller
             'solugon' => 'nullable|string',
             'status' => 'nullable|string|in:Đang bán,Đã bán,Hot,Sắp mở bán',
             'is_highlight' => 'nullable|boolean',
+            'is_hot' => 'nullable|boolean',
             'highlights' => 'nullable|array',
             'highlights.*.content' => 'nullable|string',
             'thumbnail' => 'nullable|image|max:20480',

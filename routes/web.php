@@ -76,6 +76,8 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
     
     // Toggle highlight
     Route::post('/{id}/toggle-highlight', [AdminProductsController::class, 'toggleHighlight'])->name('toggleHighlight');
+    // Toggle hot
+    Route::post('/{id}/toggle-hot', [AdminProductsController::class, 'toggleHot'])->name('toggleHot');
     
     // Categories
     Route::get('/categories', [AdminProductsController::class, 'categories'])->name('categories');

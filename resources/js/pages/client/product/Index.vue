@@ -12,7 +12,7 @@
         :title="item.title"
         :description="item.description"
         :isHot="item.isHot"
-        :isSelling="item.isSelling"
+        :status="item.status"
         :productId="item.id"
       />
     </div>
@@ -56,7 +56,7 @@
         :title="item.title"
         :description="item.description"
         :isHot="item.isHot"
-        :isSelling="item.isSelling"
+        :status="item.status"
         :theme="'dark'"
         :productId="item.id"
       />

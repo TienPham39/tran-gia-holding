@@ -69,8 +69,8 @@ class ProductService
                         : '/images/no-image.png',
                     'title' => $product->name,
                     'description' => $product->short_description ?? '',
-                    'isHot' => $product->status === 'Hot',
-                    'isSelling' => $product->status === 'Đang bán',
+                    'isHot' => $product->is_hot ?? false,
+                    'status' => $product->status ?? 'Đang bán',
                 ];
             }),
             'pagination' => [
@@ -384,6 +384,22 @@ class ProductService
     }
 
     /**
+     * Toggle trạng thái is_hot của sản phẩm
+     */
+    public function toggleHot(int $id)
+    {
+        $product = $this->productRepo->find($id);
+        if (!$product) {
+            throw new \Exception('Product not found');
+        }
+
+        $product->is_hot = !$product->is_hot;
+        $product->save();
+
+        return $product;
+    }
+
+    /**
      * Xóa product
      */
     public function delete(int $id)
@@ -492,6 +508,14 @@ class ProductService
             $productData['is_highlight'] = (bool)$product->is_highlight;
         } else {
             $productData['is_highlight'] = false;
+        }
+
+        if (isset($data['is_hot'])) {
+            $productData['is_hot'] = (bool)$data['is_hot'];
+        } elseif ($product && isset($product->is_hot)) {
+            $productData['is_hot'] = (bool)$product->is_hot;
+        } else {
+            $productData['is_hot'] = 0;
         }
 
         \Log::info('prepareProductData - Output data:', $productData);

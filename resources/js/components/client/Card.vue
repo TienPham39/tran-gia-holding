@@ -13,12 +13,12 @@
         <img src="/images/hot_product.png" alt="hot" />
       </div>
 
-      <!-- Badge ĐANG BÁN -->
+      <!-- Badge Status -->
       <div
-        v-if="isSelling"
+        v-if="status"
         class="absolute bottom-2 left-2 bg-white/60 text-[#6A6A6A] text-[10px] font-bold px-3 py-1 rounded-md"
       >
-        ĐANG BÁN
+        {{ status.toUpperCase() }}
       </div>
     </div>
 
@@ -62,7 +62,7 @@ const props = defineProps({
   title: { type: String, required: true },
   description: { type: String, required: true },
   isHot: { type: Boolean, default: false },
-  isSelling: { type: Boolean, default: false },
+  status: { type: String, default: "" },
   theme: { type: String, default: "light" },
   productId: { type: [Number, String], default: null },
 });

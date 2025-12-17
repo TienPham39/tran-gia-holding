@@ -18,10 +18,12 @@ class Product extends Model
         'solugon',
         'status',
         'is_highlight',
+        'is_hot',
     ];
 
     protected $casts = [
         'is_highlight' => 'boolean',
+        'is_hot' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -27,6 +27,14 @@
           un-checked-children="Không"
         />
       </template>
+      <template #is_hot="{ record }">
+        <a-switch
+          :checked="record.is_hot"
+          @change="toggleHot(record)"
+          checked-children="Có"
+          un-checked-children="Không"
+        />
+      </template>
       <template #action="{ record }">
         <a-button
           @click="editProduct(record.id)"
@@ -66,6 +74,7 @@ const columns = ref([
   { title: 'Loại', dataIndex: 'product_type_name', key: 'product_type_name' },
   { title: 'Hình ảnh', dataIndex: 'thumbnail', key: 'thumbnail', slot: 'thumbnail' },
   { title: 'Nổi bật', key: 'is_highlight', slot: 'is_highlight', width: 100, align: 'center' },
+  { title: 'Hot', key: 'is_hot', slot: 'is_hot', width: 100, align: 'center' },
   { title: 'Hành động', key: 'action', slot: 'action' },
 ]);
 
@@ -108,6 +117,23 @@ async function toggleHighlight(record) {
     }
   } catch (error) {
     console.error('Error toggling highlight:', error);
+    message.error('Có lỗi xảy ra khi cập nhật');
+  }
+}
+
+async function toggleHot(record) {
+  try {
+    const response = await api.post(route('admin.products.toggleHot', record.id));
+    
+    if (response.data.success) {
+      // Cập nhật giá trị trong local state
+      record.is_hot = response.data.data.is_hot;
+      message.success('Cập nhật thành công!');
+    } else {
+      message.error(response.data.message || 'Cập nhật thất bại');
+    }
+  } catch (error) {
+    console.error('Error toggling hot:', error);
     message.error('Có lỗi xảy ra khi cập nhật');
   }
 }

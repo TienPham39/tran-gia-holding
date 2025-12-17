@@ -325,6 +325,7 @@ const form = ref({
   highlights: props.product?.highlights?.map((h) => ({ content: h.content })) ?? [],
   solugon: props.product?.solugon ?? "",
   short_description: props.product?.short_description ?? "",
+  is_hot: props.product?.is_hot ?? 0,
   thumbnail: null, // File object
   gallery: [], // Array of file objects
   floor_plan: [], // Array of file objects
@@ -405,6 +406,7 @@ function resetForm() {
     highlights: [],
     solugon: "",
     short_description: "",
+    is_hot: 0,
     thumbnail: null,
     gallery: [],
     floor_plan: [],
