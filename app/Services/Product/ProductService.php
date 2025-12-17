@@ -527,6 +527,16 @@ class ProductService
             $productData['is_hot'] = 0;
         }
 
+        if (isset($data['total_area'])) {
+            $productData['total_area'] = $data['total_area'] !== null && $data['total_area'] !== '' 
+                ? (float)$data['total_area'] 
+                : null;
+        } elseif ($product && isset($product->total_area)) {
+            $productData['total_area'] = $product->total_area;
+        } else {
+            $productData['total_area'] = null;
+        }
+
         \Log::info('prepareProductData - Output data:', $productData);
         return $productData;
     }

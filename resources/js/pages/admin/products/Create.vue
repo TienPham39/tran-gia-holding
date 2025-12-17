@@ -44,6 +44,14 @@ async function store(payload) {
     formData.append("status", payload.status || "Đang bán");
     formData.append("short_description", payload.short_description || "");
     formData.append("solugon", payload.solugon || "");
+    
+    // Total area - convert to number to ensure proper decimal format
+    if (payload.total_area !== null && payload.total_area !== undefined && payload.total_area !== '') {
+      const totalArea = parseFloat(payload.total_area);
+      if (!isNaN(totalArea)) {
+        formData.append("total_area", totalArea);
+      }
+    }
 
     console.log("FormData basic fields added");
 

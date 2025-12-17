@@ -52,6 +52,14 @@ async function update(payload) {
     formData.append("short_description", payload.short_description || product.value.short_description || "");
     formData.append("solugon", payload.solugon || product.value.solugon || "");
     
+    // Total area - convert to number to ensure proper decimal format
+    if (payload.total_area !== null && payload.total_area !== undefined && payload.total_area !== '') {
+      const totalArea = parseFloat(payload.total_area);
+      if (!isNaN(totalArea)) {
+        formData.append("total_area", totalArea);
+      }
+    }
+    
     // Add _method for PUT request (Laravel requires this for FormData)
     formData.append("_method", "PUT");
 

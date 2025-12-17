@@ -137,7 +137,10 @@
             </p>
 
             <div class="mt-3 mb-2 flex justify-end">
-              <p class="text-[12px] tracking-wide uppercase text-white/80 hover:text-white cursor-pointer">
+              <p 
+                class="text-[12px] tracking-wide uppercase text-white/80 hover:text-white cursor-pointer"
+                @click.stop="handleProductClick(p)"
+              >
                 Xem chi tiết
               </p>
             </div>
@@ -223,6 +226,15 @@ function onScroll() {
     });
     activeIndex.value = closest;
   }, 80);
+}
+
+function handleProductClick(product) {
+  if (product.id) {
+    const routeUrl = typeof route !== 'undefined'
+      ? route('client.product.show', product.id)
+      : `/product/detail/${product.id}`;
+    router.visit(routeUrl);
+  }
 }
 
 onMounted(() => {

@@ -6,7 +6,6 @@ use App\Services\Product\ProductTypeService;
 use App\Services\Product\ProductService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
 class AdminProductsController extends Controller
 {
     protected $productTypeService;
@@ -60,12 +59,6 @@ class AdminProductsController extends Controller
                 ],
             ]);
         } catch (\Exception $e) {
-            \Log::error('Exception in toggleHighlight method:', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -89,12 +82,6 @@ class AdminProductsController extends Controller
                 ],
             ]);
         } catch (\Exception $e) {
-            \Log::error('Exception in toggleHot method:', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),
@@ -248,16 +235,6 @@ class AdminProductsController extends Controller
      */
     public function store(Request $request)
     {
-        \Log::info('=== PRODUCT STORE REQUEST START ===');
-        \Log::info('Request Method: ' . $request->method());
-        \Log::info('Request URL: ' . $request->fullUrl());
-        \Log::info('Request Data:', $request->all());
-        \Log::info('Has Files:', [
-            'thumbnail' => $request->hasFile('thumbnail'),
-            'gallery' => $request->hasFile('gallery'),
-            'floor_plan' => $request->hasFile('floor_plan'),
-        ]);
-
         try {
             $validated = $request->validate([
                 'name' => 'required|string|max:255',
@@ -276,31 +253,14 @@ class AdminProductsController extends Controller
                 'floor_plan.*' => 'nullable|image|max:20480',
             ]);
 
-            \Log::info('Validation passed. Validated data:', $validated);
-
             $product = $this->productService->create($validated);
-
-            \Log::info('Product created successfully. ID: ' . $product->id);
-            \Log::info('=== PRODUCT STORE REQUEST SUCCESS ===');
 
             return redirect()->route('admin.products.index')
                 ->with('success', 'Tạo sản phẩm thành công!');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            \Log::error('Validation failed:', [
-                'errors' => $e->errors(),
-                'message' => $e->getMessage(),
-            ]);
-            \Log::info('=== PRODUCT STORE REQUEST VALIDATION ERROR ===');
             return back()->withErrors($e->errors())
                 ->withInput();
         } catch (\Exception $e) {
-            \Log::error('Exception in store method:', [
-                'message' => $e->getMessage(),
-                'file' => $e->getFile(),
-                'line' => $e->getLine(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-            \Log::info('=== PRODUCT STORE REQUEST EXCEPTION ===');
             return back()->withErrors(['error' => $e->getMessage()])
                 ->withInput();
         }
