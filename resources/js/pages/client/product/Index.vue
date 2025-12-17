@@ -41,7 +41,7 @@
     </div>
   </section>
   <section class="relative bg-white py-20 overflow-hidden">
-    <h2 class="uppercase text-[#660000] font-bold text-5xl text-center mb-20">
+    <h2 class="uppercase text-[#660000] font-bold text-5xl text-center mb-20 font-banque">
       BĐS ký gửi
     </h2>
 

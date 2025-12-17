@@ -62,10 +62,15 @@
             <p
               class="text-[13px] leading-[1.4] opacity-90 uppercase font-mont font-semibold ml-4"
             >
-              {{ item.description }}
+              {{
+                item.description && item.description.length > 30
+                  ? item.description.slice(0, 200) + '...'
+                  : item.description
+              }}
             </p>
 
-            <div class="w-[260px] h-[56px] bg-white/60 rounded-md absolute left-8 bottom-4"></div>
+            <!-- Đổi absolute left-8 bottom-4 thành absolute left-1/2 -translate-x-1/2 bottom-4 để căn giữa -->
+            <div class="w-[260px] h-[56px] bg-white/60 rounded-md absolute left-1/2 -translate-x-1/2 bottom-4"></div>
           </div>
         </swiper-slide>
       </swiper>
