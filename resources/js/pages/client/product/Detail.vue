@@ -51,20 +51,15 @@
       />
     </div>
 
-    <!-- Box Info -->
-    <div
-      class="absolute left-1/2 -translate-x-1/2 top-[720px] bottom-[-40px] md:bottom-[-190px] flex gap-4 md:gap-8 z-30"
-    >
-      <div
-        v-for="(item, index) in infoBoxes"
-        :key="index"
-        class="w-[120px] md:w-[160px] h-[150px] md:h-[170px] flex flex-col justify-center items-center rounded-md font-extrabold uppercase text-[#00330D] text-sm md:text-2xl shadow-[0_8px_25px_rgba(0,0,0,0.35)] bg-[url('/images/homepage/linear-bg.png')] bg-cover bg-center"
-      >
-        <div
-          class="flex flex-col items-center justify-center text-center"
-        >
-          <span>{{ item.line1 }}</span>
-          <span>{{ item.line2 }}</span>
+    <div class="relative h-[100px] w-full">
+      <!-- Box Info -->
+      <div class="absolute left-1/2 -translate-x-1/2 bottom-[1px] flex gap-4 md:gap-8 z-30">
+        <div v-for="(item, index) in infoBoxes" :key="index"
+          class="w-[120px] md:w-[160px] h-[150px] md:h-[170px] flex flex-col rounded-md font-extrabold uppercase text-[#00330D] text-sm md:text-2xl shadow-[0_8px_25px_rgba(0,0,0,0.35)] bg-[url('/images/homepage/linear-bg.png')] bg-cover bg-center">
+          <div class="flex flex-col text-center pt-8">
+            <span>{{ item.line1 }}</span>
+            <span>{{ item.line2 }}</span>
+          </div>
         </div>
       </div>
     </div>

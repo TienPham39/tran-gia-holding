@@ -124,20 +124,16 @@ const computedSlides = computed(() => {
 const onSwiper = (swiper) => {
   swiperInstance.value = swiper;
 
-  // Tính toán vị trí chính giữa mảng gốc
-  const originalLength = props.slides.length;
-  if (originalLength === 0) return;
+  // Tính toán vị trí chính giữa sau khi mảng đã clone xong
+  const clonedLength = computedSlides.value.length;
+  if (clonedLength === 0) return;
 
-  // Vị trí chính giữa của mảng gốc
-  const centerIndex = Math.floor(originalLength / 2);
-  
-  // Trong mảng đã nhân bản 3 lần, vị trí init sẽ là:
-  // centerIndex (trong bản đầu tiên)
-  const initIndex = centerIndex;
+  // Vị trí chính giữa của mảng đã clone
+  const centerIndex = Math.floor(clonedLength / 2);
 
   setTimeout(() => {
-    if (originalLength > 0) {
-      swiper.slideTo(initIndex, 0);
+    if (clonedLength > 0) {
+      swiper.slideTo(centerIndex, 0);
     }
   }, 50);
 };
