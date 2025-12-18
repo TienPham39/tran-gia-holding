@@ -53,7 +53,7 @@
 
     <!-- Box Info -->
     <div
-      class="absolute left-1/2 -translate-x-1/2 bottom-[-40px] md:bottom-[-190px] flex gap-4 md:gap-8 z-30"
+      class="absolute left-1/2 -translate-x-1/2 top-[720px] bottom-[-40px] md:bottom-[-190px] flex gap-4 md:gap-8 z-30"
     >
       <div
         v-for="(item, index) in infoBoxes"

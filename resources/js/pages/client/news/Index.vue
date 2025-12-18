@@ -1,11 +1,17 @@
 <template>
   <section class="relative bg-[#660000] py-20 overflow-hidden">
     <!-- BG Map -->
-    <SliderSwiper :slides="slides" />
+     <!-- Highlight Projects -->
+     <div class="relative">
+  
+
+      <SliderSwiper :slides="highlightProducts" />
+
+    </div>
 
     <div class="flex justify-center gap-4 font-mont">
       <!-- Nút 1 -->
-      <ButtonEffect class="text-sm">
+      <ButtonEffect class="text-sm" @click="$inertia.visit('/product')">
         Xem tất cả dự án →
       </ButtonEffect>
 
@@ -42,10 +48,10 @@
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
-import { router } from "@inertiajs/vue3";
+import { ref, watch, computed } from "vue";
+import { router, usePage } from "@inertiajs/vue3";
 import { defineOptions } from "vue";
-import SliderSwiper from "../../../components/client/Slider-Swiper.vue";
+import SliderSwiper from "../../../components/client/Product-Swiper.vue";
 import Pagination from "@/Components/client/Paginate.vue";
 import NewsList from "@/Components/client/NewsList.vue";
 import Layouts from "../../../layouts/client.vue";
@@ -55,10 +61,13 @@ defineOptions({
   layout: Layouts,
 });
 
+const page = usePage();
+
 const props = defineProps({
   thiTruong: Object,
   quyHoachVung: Object,
   tranGiaHolding: Object,
+  highlightProducts: Object,
 });
 
 function onPaginate({ param, page }) {
@@ -71,7 +80,9 @@ function onPaginate({ param, page }) {
     replace: true,
   });
 }
-
+const highlightProducts = computed(() => {
+  return page.props.highlightProducts || [];
+});
 const slides = ref([
   {
     title: "TRẦN GIA GARDEN HILL",

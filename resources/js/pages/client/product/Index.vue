@@ -17,6 +17,7 @@
       />
     </div>
     <Pagination
+      :isRedBg="true"
       :currentPage="currentPageSP"
       :totalPages="paginationSP.total_pages"
       :param="'sp'"
@@ -77,7 +78,7 @@ import { usePage, router } from "@inertiajs/vue3";
 import Layouts from "../../../layouts/client.vue";
 import Card from "@/Components/client/Card.vue";
 import Pagination from "@/Components/client/Paginate.vue";
-import SliderSwiper from "../../../components/client/Slider-Swiper.vue";
+import SliderSwiper from "../../../components/client/Product-Swiper.vue";
 
 defineOptions({
   layout: Layouts,

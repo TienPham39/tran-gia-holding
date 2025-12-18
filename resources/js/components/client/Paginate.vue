@@ -30,7 +30,7 @@
       <button
         v-else
         @click="go(page)"
-        class="font-bold hover:opacity-70 cursor-pointer"
+        :class="['font-bold hover:opacity-70 cursor-pointer', isRedBg ? 'text-white' : 'text-black']"
       >
         {{ page }}
       </button>
@@ -55,10 +55,11 @@ const props = defineProps({
   currentPage: Number,
   totalPages: Number,
   theme: String,
-  param: String,   // 👈 key phân trang (thiTruongPage, quyHoachVungPage,…)
+  param: String,  
+  isRedBg: { type: Boolean, default: false },
 });
 
-const emit = defineEmits(["change"]);  // 👈 chỉ dùng 1 event chuẩn
+const emit = defineEmits(["change"]);
 
 // Emit event chung
 function go(page) {

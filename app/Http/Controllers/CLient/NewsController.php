@@ -7,14 +7,15 @@ use App\Services\News\NewsService;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\News;
-
+use App\Services\Product\ProductService;
 class NewsController extends Controller
 {
     protected $news;
-
-    public function __construct(NewsService $news)
+    protected $productService;
+    public function __construct(NewsService $news, ProductService $productService)
     {
         $this->news = $news;
+        $this->productService = $productService;
     }
 
     public function index(Request $request)
@@ -45,12 +46,14 @@ class NewsController extends Controller
             ->orderByDesc('created_at')
             ->paginate(4, ['*'], 'tranGiaHoldingPage', $tranGiaHoldingPage)
             ->appends($request->query());
-
+        // Lấy products nổi bật
+        $highlightProducts = $this->productService->getHighlightForClient();
         return Inertia::render('client/news/Index', [
             'latestNews'       => $latestNews,
             'thiTruong'        => $thiTruong,
             'quyHoachVung'     => $quyHoachVung,
             'tranGiaHolding'   => $tranGiaHolding,
+            'highlightProducts' => $highlightProducts,
         ]);
     }
     public function show($slug)

@@ -15,10 +15,11 @@ class ProductRepository
 
     /**
      * Lấy tất cả products
+     * Sắp xếp từ mới tới cũ (mới lên đầu)
      */
     public function all()
     {
-        return $this->model->with(['productType', 'thumbnail'])->get();
+        return $this->model->with(['productType', 'thumbnail'])->orderBy('created_at', 'desc')->get();
     }
 
     /**
@@ -93,6 +94,7 @@ class ProductRepository
 
     /**
      * Lấy products theo product_type slug với pagination
+     * Sắp xếp từ mới tới cũ (mới lên đầu)
      */
     public function getByTypeSlug(string $slug, int $perPage = 9, int $page = 1)
     {
@@ -101,18 +103,20 @@ class ProductRepository
             ->whereHas('productType', function($q) use ($slug) {
                 $q->where('slug', $slug);
             })
+            ->orderBy('created_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
     }
 
     /**
      * Lấy products có is_highlight = true
+     * Sắp xếp từ mới tới cũ (mới lên đầu)
      */
     public function getHighlight()
     {
         return $this->model
             ->with(['productType', 'thumbnail'])
             ->where('is_highlight', true)
+            ->orderBy('created_at', 'desc')
             ->get();
     }
 }
-
