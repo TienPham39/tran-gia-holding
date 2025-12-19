@@ -13,24 +13,24 @@
     </nav>
 
     <!-- Search -->
-    <section class="flex-1">
+    <!-- <section class="flex-1">
       <div class="form-control">
         <input
           type="text"
           placeholder="Search"
-          class="input input-bordered w-48 ml-2 md:w-auto"
+          class="input input-bordered w-48 ml-2 md:w-auto bg-white placeholder:text-black border-2 border-black"
         />
       </div>
-    </section>
+    </section> -->
 
     <!-- Actions -->
-    <section class="flex gap-6 items-center mr-2">
+    <section class="flex gap-6 items-center mr-2 ml-auto">
       <!-- Avatar dropdown -->
       <div class="dropdown dropdown-end" v-if="user">
         <button
           tabindex="0"
           role="button"
-          class="btn btn-ghost btn-circle avatar"
+          class="btn btn-ghost btn-circle avatar hover:border-black"
         >
           <div class="w-10 rounded-full">
             <img

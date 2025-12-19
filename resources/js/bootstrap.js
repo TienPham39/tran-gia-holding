@@ -1,11 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
-axios.defaults.withCredentials = true;
-axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+// axios.defaults.withCredentials = true;
+axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 
-const token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+const token = document
+  .querySelector('meta[name="csrf-token"]')
+  ?.getAttribute("content");
 if (token) {
-  axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+  axios.defaults.headers.common["X-CSRF-TOKEN"] = token;
 } else {
-  console.error('⚠️ Không tìm thấy CSRF token trong meta tag');
+  console.error("⚠️ Không tìm thấy CSRF token trong meta tag");
 }

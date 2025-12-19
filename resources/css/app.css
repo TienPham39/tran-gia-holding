@@ -12,20 +12,6 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-@theme {
-  --font-display: "Inter", "sans-serif";
-  --color-primary: #4635b1;
-  --color-background: #141122;
-}
-
-@font-face {
-  font-family: "Gotham";
-  src: url("/fonts/gotham/Gotham-Black.woff2") format("woff2");
-  font-weight: 800;
-  font-style: normal;
-}
-
 html,
 body,
 #app {

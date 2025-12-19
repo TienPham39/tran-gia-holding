@@ -1,11 +1,9 @@
 <template>
-  <ProductForm
-    mode="create"
-    :product-types="productTypes"
-    @submit="store"
-    ref="productForm"
-    @done="stopLoading"
-  />
+  <h2 class="text-xl font-bold border-b py-2 px-5 mb-4 uppercase font-banque text-[#8F0000]">
+    tạo sản phẩm mới
+  </h2>
+
+  <ProductForm mode="create" :product-types="productTypes" @submit="store" ref="productForm" @done="stopLoading" />
 </template>
 
 <script setup>
@@ -44,7 +42,7 @@ async function store(payload) {
     formData.append("status", payload.status || "Đang bán");
     formData.append("short_description", payload.short_description || "");
     formData.append("solugon", payload.solugon || "");
-    
+
     // Total area - convert to number to ensure proper decimal format
     if (payload.total_area !== null && payload.total_area !== undefined && payload.total_area !== '') {
       const totalArea = parseFloat(payload.total_area);
@@ -136,7 +134,7 @@ async function store(payload) {
     console.error("Error response:", e.response);
     console.error("Error response data:", e.response?.data);
     console.error("Error response status:", e.response?.status);
-    
+
     if (e.response?.data?.error) {
       message.error(e.response.data.error);
     } else if (e.response?.data?.message) {

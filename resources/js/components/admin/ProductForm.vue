@@ -2,8 +2,7 @@
   <div class="max-w-6xl mx-auto py-8 px-4 space-y-10 font-mont">
     <!-- Basic Info Section -->
     <div class="space-y-4">
-      <h2 class="text-xl font-bold border-b pb-2">Thông tin cơ bản</h2>
-      
+
       <!-- Name -->
       <div>
         <label class="font-bold">Tên sản phẩm <span class="text-red-500">*</span></label>
@@ -16,7 +15,7 @@
       <!-- Product Type -->
       <div>
         <label class="font-bold">Loại sản phẩm <span class="text-red-500">*</span></label>
-        <select v-model="form.product_type_id" class="input w-full mt-2">
+        <select v-model="form.product_type_id" class="input w-full mt-2 cursor-pointer">
           <option disabled value="">-- Chọn loại sản phẩm --</option>
           <option v-for="type in productTypes" :key="type.id" :value="type.id">
             {{ type.name }}
@@ -30,7 +29,7 @@
       <!-- Status -->
       <div>
         <label class="font-bold">Trạng thái</label>
-        <select v-model="form.status" class="input w-full mt-2">
+        <select v-model="form.status" class="input w-full mt-2 cursor-pointer">
           <option value="Đang bán">Đang bán</option>
           <option value="Đã bán">Đã bán</option>
           <option value="Hot">Hot</option>
@@ -44,14 +43,9 @@
       <!-- Total Area -->
       <div>
         <label class="font-bold">Tổng diện tích (m²)</label>
-        <input 
-          type="number" 
-          v-model.number="form.total_area" 
-          class="input w-full mt-2" 
-          placeholder="Nhập số diện tích (chỉ số)"
-          step="0.01"
-          min="0"
-        />
+        <input type="number" v-model.number="form.total_area"
+          class="mt-2 input w-full h-[60px] border border-gray-300 rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500"
+          placeholder="Nhập số diện tích (chỉ số)" step="0.01" min="0" />
         <p v-if="errors.total_area" class="text-red-600 text-sm mt-1">
           {{ errors.total_area[0] }}
         </p>
@@ -62,27 +56,17 @@
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-2">
         <h2 class="text-xl font-bold">Đặc điểm nổi bật</h2>
-        <button
-          type="button"
-          @click="addHighlight"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >
+        <button type="button" @click="addHighlight" :disabled="form.highlights.length >= 5" class="px-4 py-2 rounded text-white cursor-pointer transition
+          bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
           + Thêm đặc điểm
         </button>
       </div>
 
       <div v-for="(highlight, index) in form.highlights" :key="index" class="flex gap-2 items-start">
-        <textarea
-          v-model="highlight.content"
-          class="input flex-1"
-          rows="3"
-          :placeholder="`Đặc điểm nổi bật ${index + 1}`"
-        ></textarea>
-        <button
-          type="button"
-          @click="removeHighlight(index)"
-          class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-        >
+        <textarea v-model="highlight.content" class="input flex-1 border rounded h-14 px-3 leading-relaxed resize-none"
+          style="line-height: 3.5rem" rows="1" :placeholder="`Đặc điểm nổi bật ${index + 1}`"></textarea>
+        <button type="button" @click="removeHighlight(index)"
+          class="px-4 py-3 bg-red-600 text-white rounded hover:bg-red-700 font-semibold cursor-pointer">
           Xóa
         </button>
       </div>
@@ -95,12 +79,8 @@
     <!-- Solugon Section -->
     <div>
       <h2 class="text-xl font-bold border-b pb-2 mb-4">Solugon</h2>
-      <textarea
-        v-model="form.solugon"
-        class="input w-full"
-        rows="4"
-        placeholder="Nhập câu solugon cho dự án"
-      ></textarea>
+      <textarea v-model="form.solugon" rows="4" placeholder="Nhập câu solugon cho dự án"
+        class="input w-full h-[60px] border border-gray-300 rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
       <p v-if="errors.solugon" class="text-red-600 text-sm mt-1">
         {{ errors.solugon[0] }}
       </p>
@@ -109,12 +89,9 @@
     <!-- Short Description Section -->
     <div>
       <h2 class="text-xl font-bold border-b pb-2 mb-4">Mô tả ngắn</h2>
-      <textarea
-        v-model="form.short_description"
-        class="input w-full"
-        rows="4"
-        placeholder="Nhập mô tả ngắn về sản phẩm"
-      ></textarea>
+      <textarea v-model="form.short_description"
+        class="input w-full h-[60px] border border-gray-300 rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500"
+        rows="4" placeholder="Nhập mô tả ngắn về sản phẩm"></textarea>
       <p v-if="errors.short_description" class="text-red-600 text-sm mt-1">
         {{ errors.short_description[0] }}
       </p>
@@ -125,8 +102,7 @@
       <h2 class="text-xl font-bold border-b pb-2 mb-4">Thumbnail</h2>
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
-        @click="$refs.thumbnailInput.click()"
-      >
+        @click="$refs.thumbnailInput.click()">
         <img src="/images/upload-img.png" class="w-10 opacity-60 mb-2" />
         <p class="text-gray-600 text-sm">
           Kéo thả ảnh vào đây hoặc
@@ -135,13 +111,7 @@
         <p class="text-gray-400 text-xs">(1 ảnh – jpg, png, webp)</p>
       </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        class="hidden"
-        ref="thumbnailInput"
-        @change="onThumbnailChange"
-      />
+      <input type="file" accept="image/*" class="hidden" ref="thumbnailInput" @change="onThumbnailChange" />
 
       <p class="mt-3 text-sm text-gray-600">
         Đã chọn:
@@ -149,23 +119,15 @@
       </p>
 
       <div class="mt-4 w-40">
-        <div
-          v-if="previewThumbnail && !previewThumbnail.deleted"
-          class="relative group w-full h-32 rounded-lg overflow-hidden border shadow"
-        >
+        <div v-if="previewThumbnail && !previewThumbnail.deleted"
+          class="relative group w-full h-32 rounded-lg overflow-hidden border shadow">
           <img :src="previewThumbnail.image_url" class="object-cover w-full h-full" />
-          <button
-            v-if="previewThumbnail.isExisting"
-            @click.stop="deleteThumbnail"
-            class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button v-if="previewThumbnail.isExisting" @click.stop="deleteThumbnail"
+            class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
-          <button
-            v-else
-            @click.stop="removeThumbnail"
-            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button v-else @click.stop="removeThumbnail"
+            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
         </div>
@@ -184,8 +146,7 @@
 
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
-        @click="$refs.galleryInput.click()"
-      >
+        @click="$refs.galleryInput.click()">
         <img src="/images/upload-img.png" class="w-10 opacity-60 mb-2" />
         <p class="text-gray-600 text-sm">
           Kéo thả ảnh vào đây hoặc
@@ -193,43 +154,29 @@
         </p>
       </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        class="hidden"
-        ref="galleryInput"
-        @change="onGalleryChange"
-      />
+      <input type="file" accept="image/*" multiple class="hidden" ref="galleryInput" @change="onGalleryChange" />
 
       <p class="mt-3 text-sm text-gray-600">
         Đã chọn:
-        <span class="font-semibold">{{ previewGallery.filter(img => !img.deleted).length }}</span>
+        <span class="font-semibold">{{previewGallery.filter(img => !img.deleted).length}}</span>
         <span v-if="galleryError" class="text-red-600 ml-2">{{ galleryError }}</span>
-        <span v-else-if="previewGallery.filter(img => !img.deleted).length > 0 && previewGallery.filter(img => !img.deleted).length % 6 === 0" class="text-green-600 ml-2">
+        <span
+          v-else-if="previewGallery.filter(img => !img.deleted).length > 0 && previewGallery.filter(img => !img.deleted).length % 6 === 0"
+          class="text-green-600 ml-2">
           ✓ Hợp lệ
         </span>
       </p>
 
       <div class="grid grid-cols-3 gap-4 mt-4">
-        <div
-          v-for="(img, idx) in previewGallery.filter(img => !img.deleted)"
-          :key="img.id || `new-${idx}`"
-          class="relative group w-full h-32 rounded-lg overflow-hidden shadow"
-        >
+        <div v-for="(img, idx) in previewGallery.filter(img => !img.deleted)" :key="img.id || `new-${idx}`"
+          class="relative group w-full h-32 rounded-lg overflow-hidden shadow">
           <img :src="img.image_url" class="object-cover w-full h-full" />
-          <button
-            v-if="img.isExisting"
-            @click.stop="deleteGalleryImage(img.id)"
-            class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button v-if="img.isExisting" @click.stop="deleteGalleryImage(img.id)"
+            class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
-          <button
-            v-else
-            @click.stop="removeGalleryImageByObject(img)"
-            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button v-else @click.stop="removeGalleryImageByObject(img)"
+            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
         </div>
@@ -246,8 +193,7 @@
 
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
-        @click="$refs.floorPlanInput.click()"
-      >
+        @click="$refs.floorPlanInput.click()">
         <img src="/images/upload-img.png" class="w-10 opacity-60 mb-2" />
         <p class="text-gray-600 text-sm">
           Kéo thả ảnh vào đây hoặc
@@ -255,39 +201,23 @@
         </p>
       </div>
 
-      <input
-        type="file"
-        accept="image/*"
-        multiple
-        class="hidden"
-        ref="floorPlanInput"
-        @change="onFloorPlanChange"
-      />
+      <input type="file" accept="image/*" multiple class="hidden" ref="floorPlanInput" @change="onFloorPlanChange" />
 
       <p class="mt-3 text-sm text-gray-600">
         Đã chọn:
-        <span class="font-semibold">{{ previewFloorPlan.filter(img => !img.deleted).length }}</span>
+        <span class="font-semibold">{{previewFloorPlan.filter(img => !img.deleted).length}}</span>
       </p>
 
       <div class="grid grid-cols-3 gap-4 mt-4">
-        <div
-          v-for="(img, idx) in previewFloorPlan.filter(img => !img.deleted)"
-          :key="img.id || `new-${idx}`"
-          class="relative group w-full h-32 rounded-lg overflow-hidden shadow"
-        >
+        <div v-for="(img, idx) in previewFloorPlan.filter(img => !img.deleted)" :key="img.id || `new-${idx}`"
+          class="relative group w-full h-32 rounded-lg overflow-hidden shadow">
           <img :src="img.image_url" class="object-cover w-full h-full" />
-          <button
-            v-if="img.isExisting"
-            @click.stop="deleteFloorPlanImage(img.id)"
-            class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button v-if="img.isExisting" @click.stop="deleteFloorPlanImage(img.id)"
+            class="absolute top-2 left-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
-          <button
-            v-else
-            @click.stop="removeFloorPlanImageByObject(img)"
-            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition"
-          >
+          <button v-else @click.stop="removeFloorPlanImageByObject(img)"
+            class="absolute top-2 right-2 bg-black/60 text-white rounded-full w-7 h-7 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
             ✕
           </button>
         </div>
@@ -299,11 +229,8 @@
     </div>
 
     <!-- Submit Button -->
-    <button
-      class="cursor-pointer px-6 py-3 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
-      :disabled="isSubmitting"
-      @click="handleSubmit"
-    >
+    <button class="cursor-pointer px-6 py-3 bg-red-700 text-white rounded hover:bg-red-800 disabled:opacity-50"
+      :disabled="isSubmitting" @click="handleSubmit">
       <span v-if="!isSubmitting">
         {{ mode === "create" ? "Lưu sản phẩm" : "Cập nhật sản phẩm" }}
       </span>
@@ -357,14 +284,18 @@ const previewFloorPlan = ref([]);
 const galleryError = ref("");
 const deletedImageIds = ref([]); // Danh sách ID ảnh cần xóa
 
+const maxHighlights = 5;
+const galleryStep = 6;    
+const maxGallery = 18;
+
 // Load existing data
 if (props.product) {
   // Thumbnail: lưu cả ID và URL
   if (props.product.thumbnail) {
-    const thumbUrl = typeof props.product.thumbnail === 'string' 
+    const thumbUrl = typeof props.product.thumbnail === 'string'
       ? (props.product.thumbnail.startsWith("/storage/") ? props.product.thumbnail : `/storage/${props.product.thumbnail}`)
       : (props.product.thumbnail.image_url?.startsWith("/storage/") ? props.product.thumbnail.image_url : `/storage/${props.product.thumbnail.image_url}`);
-    
+
     previewThumbnail.value = {
       id: props.product.thumbnail.id || null,
       image_url: thumbUrl,
@@ -378,7 +309,7 @@ if (props.product) {
       const imgUrl = typeof img === 'string'
         ? (img.startsWith("/storage/") ? img : `/storage/${img}`)
         : (img.image_url?.startsWith("/storage/") ? img.image_url : `/storage/${img.image_url}`);
-      
+
       return {
         id: img.id || null,
         image_url: imgUrl,
@@ -393,7 +324,7 @@ if (props.product) {
       const imgUrl = typeof img === 'string'
         ? (img.startsWith("/storage/") ? img : `/storage/${img}`)
         : (img.image_url?.startsWith("/storage/") ? img.image_url : `/storage/${img.image_url}`);
-      
+
       return {
         id: img.id || null,
         image_url: imgUrl,
@@ -443,6 +374,10 @@ function stopLoading() {
 
 // Highlights
 function addHighlight() {
+  if (form.value.highlights.length >= maxHighlights) {
+    return;
+  }
+
   form.value.highlights.push({ content: "" });
 }
 
@@ -485,6 +420,22 @@ function deleteThumbnail() {
 // Gallery
 function onGalleryChange(e) {
   const files = Array.from(e.target.files);
+  const currentCount = previewGallery.value.filter(img => !img.deleted).length;
+  const incomingCount = files.length;
+  const totalCount = currentCount + incomingCount;
+
+  if (totalCount > maxGallery) {
+    message.error(`Gallery chỉ cho phép tối đa ${maxGallery} ảnh`);
+    e.target.value = null;
+    return;
+  }
+
+  if (totalCount % galleryStep !== 0) {
+    message.error(`Tổng số ảnh gallery phải là bội số của ${galleryStep}`);
+    e.target.value = null;
+    return;
+  }
+
   for (const f of files) {
     previewGallery.value.push({
       id: null,
@@ -499,18 +450,18 @@ function onGalleryChange(e) {
 
 function removeGalleryImageByObject(img) {
   if (!img || img.isExisting) return;
-  
+
   if (img.image_url && img.image_url.startsWith("blob:")) {
     URL.revokeObjectURL(img.image_url);
   }
-  
+
   // Tìm index trong previewGallery
   const index = previewGallery.value.findIndex(item => item === img);
   if (index === -1) return;
-  
+
   // Xóa khỏi previewGallery
   previewGallery.value.splice(index, 1);
-  
+
   // Xóa file khỏi form.gallery (đếm số ảnh mới trước index này)
   let newImageCount = 0;
   for (let i = 0; i < index; i++) {
@@ -550,18 +501,18 @@ function onFloorPlanChange(e) {
 
 function removeFloorPlanImageByObject(img) {
   if (!img || img.isExisting) return;
-  
+
   if (img.image_url && img.image_url.startsWith("blob:")) {
     URL.revokeObjectURL(img.image_url);
   }
-  
+
   // Tìm index trong previewFloorPlan
   const index = previewFloorPlan.value.findIndex(item => item === img);
   if (index === -1) return;
-  
+
   // Xóa khỏi previewFloorPlan
   previewFloorPlan.value.splice(index, 1);
-  
+
   // Xóa file khỏi form.floor_plan (đếm số ảnh mới trước index này)
   let newImageCount = 0;
   for (let i = 0; i < index; i++) {
@@ -594,7 +545,7 @@ async function handleSubmit() {
   }
 
   isSubmitting.value = true;
-  
+
   // Emit form data kèm deleted_image_ids
   emit("submit", {
     ...form.value,
@@ -602,5 +553,3 @@ async function handleSubmit() {
   });
 }
 </script>
-
-

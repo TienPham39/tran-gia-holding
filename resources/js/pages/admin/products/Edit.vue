@@ -1,12 +1,9 @@
 <template>
-  <ProductForm
-    mode="edit"
-    :product="product"
-    :product-types="productTypes"
-    @submit="update"
-    @done="stopLoading"
-    ref="productForm"
-  />
+  <h2 class="text-xl font-bold border-b py-2 px-5 mb-4 uppercase font-banque text-[#8F0000]">
+    cập nhật sản phẩm
+  </h2>
+  <ProductForm mode="edit" :product="product" :product-types="productTypes" @submit="update" @done="stopLoading"
+    ref="productForm" />
 </template>
 
 <script setup>
@@ -32,7 +29,7 @@ async function update(payload) {
     // Validate required fields
     const name = payload.name || product.value.name;
     const productTypeId = payload.product_type_id || product.value.product_type_id;
-    
+
     if (!name || name.trim() === "") {
       message.error("Tên sản phẩm là bắt buộc");
       return;
@@ -51,7 +48,7 @@ async function update(payload) {
     formData.append("status", payload.status || product.value.status || "Đang bán");
     formData.append("short_description", payload.short_description || product.value.short_description || "");
     formData.append("solugon", payload.solugon || product.value.solugon || "");
-    
+
     // Total area - convert to number to ensure proper decimal format
     if (payload.total_area !== null && payload.total_area !== undefined && payload.total_area !== '') {
       const totalArea = parseFloat(payload.total_area);
@@ -59,7 +56,7 @@ async function update(payload) {
         formData.append("total_area", totalArea);
       }
     }
-    
+
     // Add _method for PUT request (Laravel requires this for FormData)
     formData.append("_method", "PUT");
 
@@ -124,7 +121,7 @@ async function update(payload) {
   } catch (e) {
     console.error("Lỗi cập nhật sản phẩm:", e);
     console.error("Response data:", e.response?.data);
-    
+
     // Hiển thị lỗi validation từ server
     if (e.response?.data?.errors) {
       const errors = e.response.data.errors;
@@ -146,4 +143,3 @@ function stopLoading() {
   productForm.value.stopLoading();
 }
 </script>
-

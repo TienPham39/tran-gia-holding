@@ -3,7 +3,7 @@
     <input type="checkbox" id="my-drawer" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <Navbar @toggle-drawer="toggleDrawer" />
-      <main class="flex-1 p-4 bg-base">
+      <main class="flex-1 p-4">
         <slot />
       </main>
     </div>
