@@ -1,24 +1,20 @@
 <template>
   <section class="relative bg-[#660000] py-20 overflow-hidden">
-    <!-- BG Map -->
-     <!-- Highlight Projects -->
-     <div class="relative">
-  
-
+    <div class="relative">
       <SliderSwiper :slides="highlightProducts" />
-
     </div>
 
     <div class="flex justify-center gap-4 font-mont">
       <!-- Nút 1 -->
-      <ButtonEffect class="text-sm" @click="$inertia.visit('/product')">
-        Xem tất cả dự án →
+      <ButtonEffect class="uppercase text-xl flex items-center gap-2" @click="$inertia.visit('/product')">
+        <span>Xem tất cả dự án</span>
+        <ArrowRight class="w-4 h-4" />
       </ButtonEffect>
 
       <!-- Nút 2 -->
-      <ButtonEffect>
+      <ButtonEffect class="flex justify-center uppercase text-xl">
         <template #icon>
-          <img src="/images/homepage/phone-icon.png" class="w-6 h-6 opacity-90 text-sm" />
+          <img src="/images/homepage/phone-icon.png" class="w-5 h-5 opacity-90" />
         </template>
         Liên hệ ngay
       </ButtonEffect>
@@ -35,7 +31,6 @@
     </div>
 
     <div class="relative w-full md:px-0 pt-20 pb-30 text-black min-h-[750px]" style="background-color: #f3f3f3">
-      <!-- Decorative BG under everything -->
       <img src="/images/homepage/bg-contact.png"
         class="hidden md:block absolute bottom-0 right-[16%] w-[400px] opacity-40 pointer-events-none z-0" alt="" />
 

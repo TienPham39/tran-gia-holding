@@ -86,7 +86,7 @@ class AdminNewsController extends Controller
     public function edit($id)
     {
         $news = News::findOrFail($id);
-        
+
         // Chuyển gallery từ comma-separated → array cho frontend
         $newsData = $news->toArray();
         if (!empty($news->gallery_base64)) {
@@ -94,7 +94,7 @@ class AdminNewsController extends Controller
         } else {
             $newsData['gallery_base64'] = [];
         }
-        
+
         return Inertia::render("admin/news/Edit", [
             "news" => $newsData
         ]);
@@ -158,9 +158,6 @@ class AdminNewsController extends Controller
             ->route('admin.news.index')
             ->with('success', 'Đã cập nhật tin tức thành công!');
     }
-
-
-
 
     public function uploadImage(Request $request)
     {

@@ -33,12 +33,12 @@
       </h2>
 
       <SliderSwiper :slides="highlightProducts" />
-      <button
-        class="cursor-pointer absolute left-1/2 -translate-x-1/2 bottom-8 font-semibold text-base px-8 py-2 text-white uppercase tracking-wider rounded-sm flex items-center gap-2 transition bg-[url('/images/homepage/bg-button.png')] bg-cover bg-center border-l border-r border-white hover:brightness-110 hover:scale-[1.03] hover:border-white"
-      >
-        <img src="/images/homepage/phone-icon.png" class="w-6 h-6 opacity-90" />
+      <ButtonEffect class="absolute left-1/2 -translate-x-1/2 bottom-8 flex justify-center uppercase items-center text-xl font-mont">
+        <template #icon>
+          <img src="/images/homepage/phone-icon.png" class="w-5 h-5 opacity-90" />
+        </template>
         Liên hệ ngay
-      </button>
+      </ButtonEffect>
     </div>
   </section>
   <section class="relative bg-white py-20 overflow-hidden">
