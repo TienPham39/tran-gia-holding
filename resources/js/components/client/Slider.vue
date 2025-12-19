@@ -2,8 +2,7 @@
   <div class="w-full bg-white">
     <!-- Hero Section -->
     <section
-      class="relative flex justify-center items-center bg-[url('/images/Banner.png?v=1')] bg-cover bg-center w-full h-[300px] md:h-[500px] lg:h-[694px]"
-    >
+      class="relative flex justify-center items-center bg-[url('/images/Banner.png?v=1')] bg-cover bg-center w-full h-[300px] md:h-[500px] lg:h-[694px]">
       <!-- Lớp phủ đỏ -->
       <div class="absolute inset-0 bg-[#660000]/75"></div>
 
@@ -14,14 +13,10 @@
           KHỞI TÂM VƯƠN TẦM
         </h1>
 
-        <button
-          class="hover-effect font-mont uppercase cursor-pointer font-semibold text-white text-2xl rounded-md flex items-center justify-center gap-2">
-          <span></span>
+        <ButtonEffect class="flex justify-center uppercase items-center">
           đăng ký tư vấn
           <ArrowRight :size="20" stroke-width="2.3" />
-          <div class="bottom-left"></div>
-          <div class="bottom-right"></div>
-        </button>
+        </ButtonEffect>
       </div>
     </section>
 

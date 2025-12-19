@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\News;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,20 @@ class AppServiceProvider extends ServiceProvider
             // Web routes
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
-        });
+        }); {
+            Inertia::share('sharedNews', function () {
+                return News::latest()
+                    ->select(
+                        'id',
+                        'title',
+                        'slug',
+                        'excerpt',
+                        'thumbnail_base64',
+                        'created_at'
+                    )
+                    ->take(2)
+                    ->get();
+            });
+        }
     }
 }
