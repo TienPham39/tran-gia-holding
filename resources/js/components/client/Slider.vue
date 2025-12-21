@@ -13,7 +13,7 @@
           KHỞI TÂM VƯƠN TẦM
         </h1>
 
-        <ButtonEffect class="flex justify-center uppercase items-center">
+        <ButtonEffect class="flex justify-center uppercase items-center" @click="goToContact">
           đăng ký tư vấn
           <ArrowRight :size="20" stroke-width="2.3" />
         </ButtonEffect>
@@ -96,6 +96,12 @@
 
 <script setup>
 import { ref, computed, onMounted, onBeforeUnmount } from "vue";
+
+const emit = defineEmits(["scroll-to-contact"]);
+
+const goToContact = () => {
+  emit("scroll-to-contact");
+};
 
 /* 🔹 Dữ liệu slide */
 const slides = ref([

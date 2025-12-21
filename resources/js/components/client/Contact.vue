@@ -47,7 +47,7 @@
             class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px]"></textarea>
 
           <button type="submit"
-            class="flex items-center gap-2 bg-[#9B1C1C] md:text-xl text-white font-semibold px-6 py-3 rounded-md hover:bg-[#7d1a1a] transition uppercase tracking-wide">
+            class="cursor-pointer flex items-center gap-2 bg-[#9B1C1C] md:text-xl text-white font-semibold px-6 py-3 rounded-md hover:bg-[#7d1a1a] transition uppercase tracking-wide">
             Gửi ngay <ChevronsRight class="w-6 h-6 text-white" />
           </button>
         </form>

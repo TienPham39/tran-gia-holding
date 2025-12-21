@@ -41,4 +41,19 @@ class ContactRepository
         $contact->status = $status;
         return $contact->save();
     }
+
+    public function paginate(int $perPage = 10)
+    {
+        return Contact::orderBy('created_at', 'desc')->paginate($perPage);
+    }
+
+    public function delete(int $id): bool
+    {
+        $contact = Contact::find($id);
+        if (!$contact) {
+            return false;
+        }
+
+        return $contact->delete();
+    }
 }

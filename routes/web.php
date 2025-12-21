@@ -12,6 +12,7 @@ use App\Http\Controllers\Client\CommunityController;
 use App\Http\Controllers\Client\CareerController;
 use App\Http\Controllers\Admin\AdminNewsController;
 use App\Http\Controllers\Admin\AdminProductsController;
+use App\Http\Controllers\Admin\AdminContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Middleware\VerifyCsrfToken;
@@ -66,19 +67,19 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
 
   Route::prefix('products')->name('admin.products.')->group(function () {
     Route::get('/', [AdminProductsController::class, 'index'])->name('index');
-    
+
     // Product CRUD
     Route::get('/create', [AdminProductsController::class, 'create'])->name('create');
     Route::post('/', [AdminProductsController::class, 'store'])->name('store');
     Route::get('/{id}/edit', [AdminProductsController::class, 'edit'])->name('edit');
     Route::put('/{id}', [AdminProductsController::class, 'update'])->name('update');
     Route::delete('/{id}', [AdminProductsController::class, 'destroy'])->name('destroy');
-    
+
     // Toggle highlight
     Route::post('/{id}/toggle-highlight', [AdminProductsController::class, 'toggleHighlight'])->name('toggleHighlight');
     // Toggle hot
     Route::post('/{id}/toggle-hot', [AdminProductsController::class, 'toggleHot'])->name('toggleHot');
-    
+
     // Categories
     Route::get('/categories', [AdminProductsController::class, 'categories'])->name('categories');
     Route::get('/categories/create', [AdminProductsController::class, 'category'])->name('categories.create');
@@ -102,4 +103,21 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
 
     Route::post('/upload-image', [AdminNewsController::class, 'uploadImage'])->name('uploadImage');
   });
+
+  Route::prefix('contacts')
+    ->name('admin.contacts.')
+    ->group(function () {
+
+      Route::get('/', [AdminContactController::class, 'index'])
+        ->name('index');
+
+      Route::get('/contacts/{id}', [AdminContactController::class, 'show'])
+        ->name('show');
+
+      Route::put('/{id}/mark-as-read', [AdminContactController::class, 'markAsRead'])
+        ->name('markAsRead');
+
+      Route::delete('/{id}', [AdminContactController::class, 'destroy'])
+        ->name('destroy');
+    });
 });

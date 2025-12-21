@@ -12,7 +12,7 @@
       </ButtonEffect>
 
       <!-- Nút 2 -->
-      <ButtonEffect class="flex justify-center uppercase text-xl">
+      <ButtonEffect class="flex justify-center uppercase text-xl" @click="scrollToContact">
         <template #icon>
           <img src="/images/homepage/phone-icon.png" class="w-5 h-5 opacity-90" />
         </template>
@@ -40,6 +40,9 @@
       <NewsList title="Trần Gia Holding" :data="props.tranGiaHolding" paginateParam="tranGiaHoldingPage" />
     </div>
   </section>
+  <div ref="contactRef">
+    <Contact />
+  </div>
 </template>
 
 <script setup>
@@ -51,6 +54,7 @@ import Pagination from "@/Components/client/Paginate.vue";
 import NewsList from "@/Components/client/NewsList.vue";
 import Layouts from "../../../layouts/client.vue";
 import BaseButton from "@/components/client/ButtonEffect.vue";
+import Contact from "../../../components/client/Contact.vue";
 
 defineOptions({
   layout: Layouts,
@@ -65,16 +69,15 @@ const props = defineProps({
   highlightProducts: Object,
 });
 
-function onPaginate({ param, page }) {
-  const params = new URLSearchParams(window.location.search);
-  params.set(param, page);
+const contactRef = ref(null);
 
-  router.visit(`/news?${params.toString()}`, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
+const scrollToContact = () => {
+  contactRef.value?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
   });
-}
+};
+
 const highlightProducts = computed(() => {
   return page.props.highlightProducts || [];
 });

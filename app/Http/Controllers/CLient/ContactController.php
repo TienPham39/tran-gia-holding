@@ -34,21 +34,4 @@ class ContactController extends Controller
             'data' => $contact,
         ]);
     }
-
-    /**
-     * Lấy danh sách contact (Admin)
-     */
-    public function index()
-    {
-        return response()->json($this->service->getAll());
-    }
-
-    /**
-     * Đánh dấu đã đọc
-     */
-    public function markAsRead($id)
-    {
-        $this->service->markAsRead($id);
-        return response()->json(['message' => 'Đã cập nhật trạng thái.']);
-    }
 }
