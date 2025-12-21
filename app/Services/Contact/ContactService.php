@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Request;
 
 class ContactService
 {
-    protected $repository;
+    protected ContactRepository $repository;
 
     public function __construct(ContactRepository $repository)
     {
@@ -15,11 +15,10 @@ class ContactService
     }
 
     /**
-     * Xử lý lưu liên hệ
+     * Client gửi liên hệ
      */
     public function store(array $data)
     {
-        // Gắn thêm IP của người gửi
         $data['ip_address'] = Request::ip();
         $data['status'] = 'new';
 
@@ -27,18 +26,23 @@ class ContactService
     }
 
     /**
-     * Lấy toàn bộ contact
+     * Admin: lấy danh sách liên hệ
      */
     public function getAll()
     {
-        return $this->repository->all();
+        return $this->repository->paginate(10);
     }
 
     /**
-     * Cập nhật trạng thái
+     * Admin: đánh dấu đã đọc
      */
-    public function markAsRead(int $id)
+    public function markAsRead(int $id): bool
     {
         return $this->repository->updateStatus($id, 'read');
+    }
+
+    public function delete(int $id): bool
+    {
+        return $this->repository->delete($id);
     }
 }

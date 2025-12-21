@@ -162,13 +162,13 @@ const links = ref([
       { name: "Tạo tin tức mới", to: "/admin/news/create" },
     ],
   },
-  // {
-  //   name: "Liên hệ",
-  //   icon: "line-md:email",
-  //   active: false,
-  //   open: false,
-  //   children: [{ name: "DS. Liên hệ", to: "#" }],
-  // },
+  {
+    name: "Liên hệ",
+    icon: "line-md:email",
+    active: false,
+    open: false,
+    children: [{ name: "DS. Liên hệ", to: "/admin/contacts" }],
+  },
   {
     name: "Hệ thống",
     icon: "mdi:cog-outline",
