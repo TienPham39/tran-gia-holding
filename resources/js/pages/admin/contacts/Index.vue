@@ -115,49 +115,6 @@ const columns = [
   },
 ];
 
-// ACTION
-// async function markAsRead(record) {
-//   try {
-//     await api.put(route("admin.contacts.markAsRead", record.id));
-//     record.status = "read";
-//     message.success("Đã đánh dấu liên hệ là đã đọc");
-//   } catch (error) {
-//     console.error(error);
-//     message.error("Không thể cập nhật trạng thái");
-//   }
-// }
-
-// function viewContact(record) {
-//   Modal.info({
-//     title: "Chi tiết liên hệ",
-//     width: 600,
-//     okText: "Đóng",
-//     content: h("div", { class: "space-y-3" }, [
-//       h("p", [h("strong", "Họ tên: "), record.name]),
-//       h("p", [h("strong", "Email: "), record.email]),
-//       h("p", [h("strong", "SĐT: "), record.phone]),
-//       h("p", [h("strong", "Nội dung:")]),
-//       h(
-//         "div",
-//         {
-//           class:
-//             "p-3 bg-gray-100 rounded-md whitespace-pre-line text-gray-800",
-//         },
-//         record.message
-//       ),
-//       h(
-//         "p",
-//         { class: "text-sm text-gray-500 mt-2" },
-//         "Gửi lúc: " + new Date(record.created_at).toLocaleString("vi-VN")
-//       ),
-//     ]),
-//   });
-
-//   if (record.status === "new") {
-//     markAsRead(record);
-//   }
-// }
-
 async function deleteContact(id) {
   Modal.confirm({
     title: "Xác nhận xóa liên hệ",
@@ -169,7 +126,9 @@ async function deleteContact(id) {
 
     async onOk() {
       try {
-        await api.delete(`/admin/contacts/${id}`);
+        await api.post(
+          route("admin.contacts.destroy", { id })
+        );
 
         message.success("Xóa liên hệ thành công!");
 

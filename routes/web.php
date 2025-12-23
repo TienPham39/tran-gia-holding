@@ -62,8 +62,6 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
   Route::post('/users/{id}/destroy', [UserController::class, 'destroy'])->name('admin.users.destroy');
   Route::put('/users/{id}/status', [UserController::class, 'updateStatus'])->name('admin.users.status');
   Route::get('/profile', fn() => Inertia::render('admin/profile/index'))->name('admin.profile');
-  Route::get('/contacts', [ContactController::class, 'index'])->name('admin.contacts.index');
-  Route::put('/contacts/{id}/mark-as-read', [ContactController::class, 'markAsRead'])->name('admin.contacts.markAsRead');
 
   Route::prefix('products')->name('admin.products.')->group(function () {
     Route::get('/', [AdminProductsController::class, 'index'])->name('index');
@@ -104,20 +102,14 @@ Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function ()
     Route::post('/upload-image', [AdminNewsController::class, 'uploadImage'])->name('uploadImage');
   });
 
-  Route::prefix('contacts')
-    ->name('admin.contacts.')
-    ->group(function () {
+  Route::prefix('contacts')->name('admin.contacts.')->group(function () {
+    Route::get('/', [AdminContactController::class, 'index'])->name('index');
 
-      Route::get('/', [AdminContactController::class, 'index'])
-        ->name('index');
+    Route::get('/{id}', [AdminContactController::class, 'show'])->name('show');
 
-      Route::get('/contacts/{id}', [AdminContactController::class, 'show'])
-        ->name('show');
+    Route::post('/{id}/mark-as-read', [AdminContactController::class, 'markAsRead'])
+    ->name('markAsRead');
 
-      Route::put('/{id}/mark-as-read', [AdminContactController::class, 'markAsRead'])
-        ->name('markAsRead');
-
-      Route::delete('/{id}', [AdminContactController::class, 'destroy'])
-        ->name('destroy');
-    });
+    Route::post('/{id}/destroy', [AdminContactController::class, 'destroy'])->name('destroy');
+  });
 });
