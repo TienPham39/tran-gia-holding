@@ -41,7 +41,7 @@
 
     <div class="mt-8 flex justify-end gap-3">
       <!-- ĐÁNH DẤU ĐÃ ĐỌC -->
-      <a-button v-if="contact.status === 'new'" type="primary" ghost @click="markAsRead">
+      <a-button v-if="contact.status === 'new'" type="primary" ghost html-type="button" @click.prevent="markAsRead">
         Đánh dấu đã đọc
       </a-button>
 
@@ -57,26 +57,23 @@
 import admin from "@/layouts/admin.vue";
 import { router, usePage } from "@inertiajs/vue3";
 import { Modal, message, PageHeader } from "ant-design-vue";
+import api from "@/api.js";
+import { ref } from "vue";
 
 defineOptions({ layout: admin });
 
 const { contact } = usePage().props;
 
-function markAsRead() {
-  router.put(
-    route("admin.contacts.markAsRead", contact.id),
-    {},
-    {
-      preserveScroll: true,
-      onSuccess: () => {
-        contact.status = "read";
-        message.success("Đã đánh dấu liên hệ là đã đọc");
-      },
-      onError: () => {
-        message.error("Không thể cập nhật trạng thái");
-      },
-    }
-  );
+async function markAsRead() {
+  try {
+    await api.post(
+      route("admin.contacts.markAsRead", contact.id)
+    );
+    contact.status = "read";
+    message.success("Đã đánh dấu liên hệ là đã đọc");
+  } catch (e) {
+    message.error("Không thể cập nhật trạng thái");
+  }
 }
 
 function confirmDelete() {
@@ -85,15 +82,11 @@ function confirmDelete() {
     content: "Bạn có chắc chắn muốn xóa liên hệ này?",
     okType: "danger",
     async onOk() {
-      await router.delete(
-        route("admin.contacts.destroy", contact.id),
-        {
-          onSuccess: () => {
-            message.success("Đã xóa liên hệ");
-            router.visit(route("admin.contacts.index"));
-          },
-        }
-      );
+      await router.post(route("admin.contacts.destroy", contact.id), {}, {
+        onSuccess: () => {
+          message.success("Đã xóa liên hệ");
+        },
+      });
     },
   });
 }

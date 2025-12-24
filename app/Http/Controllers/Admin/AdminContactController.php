@@ -47,16 +47,10 @@ class AdminContactController extends Controller
 
     public function destroy($id)
     {
-        $deleted = $this->contactService->delete($id);
+        $this->contactService->delete($id);
 
-        if (!$deleted) {
-            return response()->json([
-                'message' => 'Không tìm thấy liên hệ'
-            ], 404);
-        }
-
-        return response()->json([
-            'message' => 'Đã xóa liên hệ'
-        ], 200);
+        return redirect()
+            ->route('admin.contacts.index')
+            ->with('success', 'Đã xóa liên hệ');
     }
 }
