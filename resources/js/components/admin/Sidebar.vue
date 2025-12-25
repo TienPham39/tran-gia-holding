@@ -1,70 +1,40 @@
 <template>
   <aside class="drawer-side bg-white border-r border-gray-200">
-    <label
-      for="my-drawer"
-      aria-label="Close sidebar"
-      class="drawer-overlay"
-    ></label>
+    <label for="my-drawer" aria-label="Close sidebar" class="drawer-overlay"></label>
 
-    <nav
-      class="menu p-4 w-80 min-h-full text-gray-800"
-      aria-label="Main navigation"
-    >
+    <nav class="menu p-4 w-80 min-h-full text-gray-800" aria-label="Main navigation">
       <!-- Logo -->
       <header class="mb-2 flex justify-center p-2">
-        <img
-          src="/images/homepage/career-logo.png"
-          alt="Logo"
-          class="hidden md:block max-h-20 w-auto object-contain"
-        />
+        <Link :href="route('admin.dashboard')" class="cursor-pointer">
+          <img src="/images/homepage/career-logo.png" alt="Logo"
+            class="hidden md:block max-h-20 w-auto object-contain hover:opacity-90 transition" />
+        </Link>
       </header>
 
       <!-- Menu items -->
       <ul role="menu">
-        <li
-          role="none"
-          class="p-2"
-          v-for="(lin, index) in links"
-          :key="index"
-        >
+        <li role="none" class="p-2" v-for="(lin, index) in links" :key="index">
           <!-- Nếu không có children thì navigate thẳng -->
-          <Link
-            v-if="!lin.children"
-            :href="lin.to"
-            :class="{ 'bg-gray-200 font-semibold': currentUrl === lin.to }"
-            class="flex items-center w-full text-left hover:bg-gray-100 text-black"
-          >
+          <Link v-if="!lin.children" :href="lin.to" :class="{ 'bg-gray-200 font-semibold': currentUrl === lin.to }"
+            class="flex items-center w-full text-left hover:bg-gray-100 text-black">
             <Icon :icon="lin.icon" class="h-5 w-5" />
             <span class="ml-2">{{ lin.name }}</span>
           </Link>
 
           <!-- Nếu có children thì hiển thị toggle -->
-          <button
-            v-else
-            role="menuitem"
-            :aria-expanded="lin.open"
-            @click="setActive(index)"
-            class="flex items-center w-full text-left hover:bg-gray-100 text-black"
-          >
+          <button v-else role="menuitem" :aria-expanded="lin.open" @click="setActive(index)"
+            class="flex items-center w-full text-left hover:bg-gray-100 text-black">
             <Icon :icon="lin.icon" class="h-5 w-5" />
             <span class="ml-2">{{ lin.name }}</span>
             <span class="ml-auto dropdown-icon">
-              <Icon
-                :icon="lin.open ? 'line-md:chevron-down' : 'line-md:chevron-right'"
-              />
+              <Icon :icon="lin.open ? 'line-md:chevron-down' : 'line-md:chevron-right'" />
             </span>
           </button>
 
           <!-- Submenu -->
           <ul v-if="lin.children && lin.open">
-            <li
-              v-for="(child, childIndex) in lin.children"
-              :key="childIndex"
-            >
-              <Link
-                :href="child.to"
-                class="block py-1 hover:bg-gray-100 text-black"
-              >
+            <li v-for="(child, childIndex) in lin.children" :key="childIndex">
+              <Link :href="child.to" class="block py-1 hover:bg-gray-100 text-black">
                 {{ child.name }}
               </Link>
             </li>
@@ -85,9 +55,9 @@ const links = ref([
   {
     name: "Analytics",
     icon: "mdi:view-dashboard",
-    to: "/admin/analytics",
-    active: true,
-    open: false,
+    children: [
+      { name: "Tổng quan", to: route('admin.dashboard') },
+    ],
   },
   // {
   //   name: "Giới thiệu",

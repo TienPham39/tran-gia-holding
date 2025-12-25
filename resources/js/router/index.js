@@ -13,7 +13,7 @@ const routes = [
   {
     path: "/admin/analytics",
     name: "admin-analytics",
-    component: () => import("../pages/admin/analytics/index.vue"),
+    component: () => import("../pages/admin/analytics/Index.vue"),
     meta: { requiresAuth: true },
   },
   {
