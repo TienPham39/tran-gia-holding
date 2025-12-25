@@ -34,21 +34,23 @@
 
         <form @submit.prevent="submitForm" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mont">
-            <input v-model="form.name" type="text" placeholder="HỌ VÀ TÊN"
+            <input ref="nameInput" v-model="form.name" type="text" required placeholder="HỌ VÀ TÊN"
               class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]" />
-            <input v-model="form.phone" type="text" placeholder="SỐ ĐIỆN THOẠI"
-              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]" />
+            <input ref="phoneInput" v-model="form.phone" type="tel" required pattern="^0\d{9,10}$"
+              placeholder="SỐ ĐIỆN THOẠI" class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]"
+              @input="validatePhone" />
           </div>
 
-          <input v-model="form.email" type="email" placeholder="EMAIL"
-            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px]" />
+          <input ref="emailInput" v-model="form.email" type="email" required placeholder="EMAIL"
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px] font-mont" @input="validateEmail" />
 
           <textarea v-model="form.message" rows="4" placeholder="LỜI NHẮN..."
             class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px]"></textarea>
 
           <button type="submit"
             class="cursor-pointer flex items-center gap-2 bg-[#9B1C1C] md:text-xl text-white font-semibold px-6 py-3 rounded-md hover:bg-[#7d1a1a] transition uppercase tracking-wide">
-            Gửi ngay <ChevronsRight class="w-6 h-6 text-white" />
+            Gửi ngay
+            <ChevronsRight class="w-6 h-6 text-white" />
           </button>
         </form>
       </div>
@@ -68,16 +70,20 @@
         <div class="grid grid-cols-2 gap-4">
 
           <!-- NAME -->
-          <input v-model="form.name" type="text" placeholder="HỌ VÀ TÊN" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]" />
+          <input ref="nameInput" v-model="form.name" type="text" required placeholder="HỌ VÀ TÊN"
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]" />
 
           <!-- PHONE -->
-          <input v-model="form.phone" type="text" placeholder="SỐ ĐIỆN THOẠI" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
-                placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]" />
+          <input ref="phoneInput" v-model="form.phone" type="tel" required pattern="^0\d{9,10}$"
+            placeholder="SỐ ĐIỆN THOẠI"
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]"
+            @input="validatePhone" />
         </div>
 
         <!-- EMAIL -->
-        <input v-model="form.email" type="email" placeholder="EMAIL" class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
-              placeholder:text-sm placeholder:items-center placeholder:text-[#D3D3D3]" />
+        <input ref="emailInput" v-model="form.email" type="email" required placeholder="EMAIL"
+          class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]"
+          @input="validateEmail" />
 
         <!-- MESSAGE -->
         <textarea v-model="form.message" rows="4" placeholder="LỜI NHẮN...." class="border border-[#9B1C1C] bg-white px-3 py-2 rounded w-full
@@ -129,6 +135,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { message } from "ant-design-vue";
 const form = ref({
+  category_code: "real_estate",
   name: "",
   phone: "",
   email: "",
@@ -136,14 +143,78 @@ const form = ref({
 });
 
 const isSubmitting = ref(false);
+
+const nameInput = ref(null);
+const phoneInput = ref(null);
+const emailInput = ref(null);
+
+const validateName = () => {
+  const input = nameInput.value;
+  if (!input) return;
+
+  if (input.validity.valueMissing) {
+    input.setCustomValidity("Vui lòng nhập họ và tên");
+  } else {
+    input.setCustomValidity("");
+  }
+};
+
+const validatePhone = () => {
+  const input = phoneInput.value;
+  if (!input) return;
+
+  if (input.validity.valueMissing) {
+    input.setCustomValidity("Vui lòng nhập số điện thoại");
+  } else if (input.validity.patternMismatch) {
+    input.setCustomValidity("Số điện thoại không hợp lệ");
+  } else {
+    input.setCustomValidity("");
+  }
+};
+
+const validateEmail = () => {
+  const input = emailInput.value;
+  if (!input) return;
+
+  if (input.validity.valueMissing) {
+    input.setCustomValidity("Vui lòng nhập email");
+  } else if (input.validity.typeMismatch) {
+    input.setCustomValidity("Email không hợp lệ");
+  } else {
+    input.setCustomValidity("");
+  }
+};
+
 const submitForm = async () => {
   if (isSubmitting.value) return;
+
+  validateName();
+  validatePhone();
+  validateEmail();
+
+  if (!nameInput.value.checkValidity()) {
+    nameInput.value.reportValidity();
+    return;
+  }
+
+  if (!phoneInput.value.checkValidity()) {
+    phoneInput.value.reportValidity();
+    return;
+  }
+
+  if (!emailInput.value.checkValidity()) {
+    emailInput.value.reportValidity();
+    return;
+  }
+
   isSubmitting.value = true;
 
   try {
-    const response = await axios.post("/contacts", form.value);
+    await axios.post("/contacts", {
+      ...form.value,
+      phone: form.value.phone.replace(/\s+/g, ""),
+    });
 
-    // Nếu dùng ant-design-vue:
     message.success("Gửi liên hệ thành công!");
 
     // Reset form
@@ -151,8 +222,6 @@ const submitForm = async () => {
     form.value.phone = "";
     form.value.email = "";
     form.value.message = "";
-
-    console.log("Response:", response.data);
   } catch (error) {
     console.error("Lỗi gửi liên hệ:", error);
     message.error("Đã xảy ra lỗi, vui lòng thử lại!");
@@ -160,6 +229,7 @@ const submitForm = async () => {
     isSubmitting.value = false;
   }
 };
+
 </script>
 
 <style scoped>

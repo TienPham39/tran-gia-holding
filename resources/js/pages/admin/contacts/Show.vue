@@ -25,11 +25,20 @@
       </div>
 
       <div>
+        <p class="font-semibold text-gray-600">Loại liên hệ</p>
+        <a-tag v-if="contact.category" :color="contact.category.code === 'recruitment' ? 'blue' : 'green'">
+          {{ contact.category.name }}
+        </a-tag>
+
+        <span v-else class="text-gray-400">—</span>
+      </div>
+
+      <!-- <div>
         <p class="font-semibold text-gray-600">Trạng thái</p>
         <a-tag :color="contact.status === 'new' ? 'red' : 'green'">
           {{ contact.status === 'new' ? 'Chưa đọc' : 'Đã đọc' }}
         </a-tag>
-      </div>
+      </div> -->
     </div>
 
     <div class="mt-6">
@@ -41,9 +50,9 @@
 
     <div class="mt-8 flex justify-end gap-3">
       <!-- ĐÁNH DẤU ĐÃ ĐỌC -->
-      <a-button v-if="contact.status === 'new'" type="primary" ghost html-type="button" @click.prevent="markAsRead">
+      <!-- <a-button v-if="contact.status === 'new'" type="primary" ghost html-type="button" @click.prevent="markAsRead">
         Đánh dấu đã đọc
-      </a-button>
+      </a-button> -->
 
       <!-- XÓA -->
       <a-button danger @click="confirmDelete">

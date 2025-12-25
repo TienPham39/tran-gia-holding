@@ -28,7 +28,13 @@ class AdminContactController extends Controller
 
     public function show(int $id)
     {
-        $contact = Contact::findOrFail($id);
+        $contact = $this->contactService->getById($id);
+
+        if ($contact && $contact->status === 'new') {
+            $this->contactService->markAsRead($id);
+            // refresh lại model sau khi update
+            $contact->status = 'read';
+        }
 
         return Inertia::render('admin/contacts/Show', [
             'contact' => $contact,
