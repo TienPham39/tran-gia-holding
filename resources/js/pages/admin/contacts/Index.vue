@@ -2,12 +2,23 @@
   <div class="bg-white rounded-2xl border border-gray-200 shadow-lg hover:shadow-2xl transition-shadow duration-300">
     <a-card title="Quản lý liên hệ" :bordered="false">
       <!-- TABLE -->
-      <a-table :dataSource="contacts" :columns="columns" :pagination="pagination" rowKey="id"
-        @change="handleTableChange">
+      <a-table :rowClassName="(record) => record.status === 'new' ? 'unread-row' : ''" :dataSource="contacts"
+        :columns="columns" :pagination="pagination" rowKey="id" @change="handleTableChange">
         <template #bodyCell="{ column, index, record }">
           <!-- STT -->
           <template v-if="column.key === 'index'">
             {{ (pagination.current - 1) * pagination.pageSize + index + 1 }}
+          </template>
+
+          <!-- CATEGORY -->
+          <template v-else-if="column.key === 'category'">
+            <span v-if="record.category" class="inline-block px-3 py-1 rounded-full text-xs font-semibold" :class="record.category.code === 'recruitment'
+              ? 'bg-blue-100 text-blue-700'
+              : 'bg-green-100 text-green-700'">
+              {{ record.category.name }}
+            </span>
+
+            <span v-else class="text-gray-400">—</span>
           </template>
 
           <!-- MESSAGE -->
@@ -98,6 +109,7 @@ function handleTableChange(p) {
 // COLUMNS
 const columns = [
   { title: "#", key: "index", width: 60, align: "center" },
+  { title: "Loại", key: "category", width: 180, align: "center" },
   { title: "Họ tên", dataIndex: "name", key: "name", width: 150, },
   { title: "SĐT", dataIndex: "phone", key: "phone", width: 150 },
   { title: "Email", dataIndex: "email", key: "email", width: 150 },
@@ -144,3 +156,10 @@ async function deleteContact(id) {
   });
 }
 </script>
+
+<style>
+.unread-row {
+  font-weight: 600;
+  background-color: #fff7f7;
+}
+</style>

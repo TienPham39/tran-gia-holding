@@ -21,9 +21,13 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'    => 'required|string|max:100',
+            'category_code' => 'nullable|in:real_estate,recruitment',
+
+            // name chỉ bắt buộc khi KHÔNG phải tuyển dụng
+            'name' => 'required_if:category_code,real_estate|string|max:100',
+
             'phone'   => 'nullable|string|max:20',
-            'email'   => 'nullable|email|max:150',
+            'email'   => 'required|email|max:150',
             'message' => 'required|string',
         ]);
 

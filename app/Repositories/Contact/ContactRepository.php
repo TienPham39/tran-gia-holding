@@ -27,7 +27,7 @@ class ContactRepository
      */
     public function find(int $id): ?Contact
     {
-        return Contact::find($id);
+        return Contact::with('category')->find($id);
     }
 
     /**
@@ -39,12 +39,19 @@ class ContactRepository
         if (!$contact) return false;
 
         $contact->status = $status;
+
+        if ($status === 'read') {
+            $contact->read_at = now();
+        }
+
         return $contact->save();
     }
 
     public function paginate(int $perPage = 10)
     {
-        return Contact::orderBy('created_at', 'desc')->paginate($perPage);
+        return Contact::with('category')
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
     }
 
     public function delete(int $id): bool
