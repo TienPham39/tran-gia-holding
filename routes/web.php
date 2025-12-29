@@ -52,7 +52,7 @@ Route::withoutMiddleware([VerifyCsrfToken::class])
   });
 
 // Admin
-Route::middleware(['auth', 'checkRole:1,2'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'checkRole:admin,marketing_manager'])->prefix('admin')->group(function () {
   Route::get('/dashboard', fn() => Inertia::render('admin/analytics/Index'))->name('admin.dashboard');
   Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
   Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');

@@ -19,14 +19,12 @@ class CheckRole
     {
         $user = $request->user();
 
-        if (!$user) {
-            return response()->json(['message' => 'Bạn chưa đăng nhập'], 401);
-            
+        if (!$user || !$user->role) {
+            abort(403);
         }
 
-        // Nếu user.roles_id không nằm trong danh sách roles cho phép
-        if (!in_array($user->roles_id, $roles)) {
-            return response()->json(['message' => 'Bạn không có quyền truy cập'], 403);
+        if (!in_array($user->role->code, $roles)) {
+            abort(403);
         }
 
         return $next($request);
