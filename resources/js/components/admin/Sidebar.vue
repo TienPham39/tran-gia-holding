@@ -52,13 +52,13 @@ const page = usePage()
 const currentUrl = page.url
 
 const links = ref([
-  {
-    name: "Analytics",
-    icon: "mdi:view-dashboard",
-    children: [
-      { name: "Tổng quan", to: route('admin.dashboard') },
-    ],
-  },
+  // {
+  //   name: "Analytics",
+  //   icon: "mdi:view-dashboard",
+  //   children: [
+  //     { name: "Tổng quan", to: route('admin.dashboard') },
+  //   ],
+  // },
   // {
   //   name: "Giới thiệu",
   //   icon: "line-md:home",

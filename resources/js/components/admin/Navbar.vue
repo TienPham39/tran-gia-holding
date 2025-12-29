@@ -44,7 +44,7 @@
         <!-- Dropdown menu -->
         <ul
           tabindex="0"
-          class="mt-5 z-1 p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-58 space-y-3 font-semibold text-base"
+          class="text-black mt-5 z-1 p-2 shadow menu menu-sm dropdown-content bg-white rounded-box w-58 space-y-3 font-semibold text-base"
         >
           <li>
             <Link
@@ -55,7 +55,7 @@
             </Link>
           </li>
 
-          <li><a>Settings</a></li>
+          <!-- <li><a>Settings</a></li> -->
 
           <!-- Logout button -->
           <li>

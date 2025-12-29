@@ -307,7 +307,7 @@ async function handleLoginSubmit() {
     api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
     message.success("Đăng nhập thành công!");
-    router.visit("/admin/dashboard");
+    router.visit("/admin/products");
   } catch (error) {
     const res = error.response;
     if (res?.status === 422) {
