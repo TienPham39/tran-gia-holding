@@ -70,7 +70,7 @@
               <!-- Buttons -->
               <div class="grid grid-cols-2 gap-4 justify-center md:justify-start">
                 <button v-for="(btn, idx) in currentSlide.buttons" :key="idx"
-                  class="py-3 px-6 font-semibold rounded-[7px] border-2 border-[#720000] transition-all duration-300 cursor-pointer"
+                  class="py-3 px-6 font-semibold rounded-[7px] border-2 border-[#720000] transition-all duration-300"
                   :style="{
                     backgroundColor: hover === idx ? '#720000' : 'transparent',
                     color: hover === idx ? '#fff' : '#720000',
