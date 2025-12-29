@@ -1,12 +1,12 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+  <div class="bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 border-[#000000]">
     <div
       v-for="(stat, index) in statsData"
       :key="index"
-      class="stats bg-base-100 shadow"
+      class="stats bg-white shadow "
     >
-      <div class="stat">
-        <div class="stat-title">{{ stat.title }}</div>
+      <div class="stat bg-white text-black">
+        <div class="stat-title text-[#838383] bont semibold">{{ stat.title }}</div>
         <div class="stat-value">{{ stat.value }}</div>
         <div
           class="stat-desc"
@@ -21,9 +21,9 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-    <div class="bg-base-100 p-6 rounded-xl shadow-md">
-      <h2 class="text-lg font-semibold mb-4">Monthly Revenue</h2>
+  <div class="bg-white grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-black text-lg font-mont font-semibold mb-4">Monthly Revenue</h2>
       <Line
         :data="revenueChartData"
         :options="lineChartOptions"
@@ -32,8 +32,8 @@
       />
     </div>
 
-    <div class="bg-base-100 p-6 rounded-xl shadow-md">
-      <h2 class="text-lg font-semibold mb-4">Revenue Sources</h2>
+    <div class="bg-white p-6 rounded-xl shadow-md">
+      <h2 class="text-black text-lg font-mont font-semibold mb-4">Revenue Sources</h2>
       <Doughnut
         :data="doughnutChartData"
         :options="doughnutChartOptions"

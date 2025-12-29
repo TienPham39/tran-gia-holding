@@ -1,5 +1,5 @@
 <template>
-  <div class="drawer lg:drawer-open font-sans">
+  <div class="bg-white drawer lg:drawer-open font-sans">
     <input type="checkbox" id="my-drawer" class="drawer-toggle" />
     <div class="drawer-content flex flex-col">
       <Navbar @toggle-drawer="toggleDrawer" />
