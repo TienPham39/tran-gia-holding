@@ -4,7 +4,7 @@
       <!-- Nút tạo tin tức -->
       <template #extra>
         <Link :href="route('admin.news.create')"
-          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-white! bg-blue-900! rounded-full shadow hover:bg-blue-800! transition-all duration-200">
+          class="inline-flex items-center gap-2 px-3 py-1 text-sm font-semibold text-white! bg-[#8F0000]! hover:bg-[#7A0000]! rounded-full shadow transition-all duration-200">
           <span>Tạo tin tức</span>
         </Link>
       </template>

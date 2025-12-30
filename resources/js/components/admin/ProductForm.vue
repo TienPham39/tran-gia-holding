@@ -5,8 +5,9 @@
 
       <!-- Name -->
       <div>
-        <label class="font-bold">Tên sản phẩm <span class="text-red-500">*</span></label>
-        <input type="text" v-model="form.name" class="input w-full mt-2" />
+        <label class="font-bold text-[#444444]">Tên sản phẩm <span class="text-red-500">*</span></label>
+        <input type="text" v-model="form.name"
+          class="input w-full mt-2 bg-white border-[#000000] text-black focus:ring-1 focus:ring-[#8F0000]" placeholder="Nhập tên sản phẩm"/>
         <p v-if="errors.name" class="text-red-600 text-sm mt-1">
           {{ errors.name[0] }}
         </p>
@@ -14,9 +15,10 @@
 
       <!-- Product Type -->
       <div>
-        <label class="font-bold">Loại sản phẩm <span class="text-red-500">*</span></label>
-        <select v-model="form.product_type_id" class="input w-full mt-2 cursor-pointer">
-          <option disabled value="">-- Chọn loại sản phẩm --</option>
+        <label class="text-[#444444] font-bold">Loại sản phẩm <span class="text-red-500">*</span></label>
+        <select v-model="form.product_type_id"
+          class="input w-full mt-2 cursor-pointer bg-white text-black border-[#000000] focus:ring-1 focus:ring-[#8F0000]">
+          <option disabled value="" class="">-- Chọn loại sản phẩm --</option>
           <option v-for="type in productTypes" :key="type.id" :value="type.id">
             {{ type.name }}
           </option>
@@ -28,8 +30,9 @@
 
       <!-- Status -->
       <div>
-        <label class="font-bold">Trạng thái</label>
-        <select v-model="form.status" class="input w-full mt-2 cursor-pointer">
+        <label class="text-[#444444] font-bold">Trạng thái</label>
+        <select v-model="form.status"
+          class="input w-full mt-2 cursor-pointer bg-white text-black border-[#000000] focus:ring-1 focus:ring-[#8F0000]">
           <option value="Đang bán">Đang bán</option>
           <option value="Đã bán">Đã bán</option>
           <option value="Hot">Hot</option>
@@ -42,9 +45,9 @@
 
       <!-- Total Area -->
       <div>
-        <label class="font-bold">Tổng diện tích (m²)</label>
+        <label class="text-[#444444] font-bold">Tổng diện tích (m²)</label>
         <input type="number" v-model.number="form.total_area"
-          class="mt-2 input w-full h-[60px] border border-gray-300 rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="bg-white text-black border-[#000000] mt-2 input w-full h-[60px] border rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-1 focus:ring-[#8F0000]"
           placeholder="Nhập số diện tích (chỉ số)" step="0.01" min="0" />
         <p v-if="errors.total_area" class="text-red-600 text-sm mt-1">
           {{ errors.total_area[0] }}
@@ -55,18 +58,18 @@
     <!-- Highlights Section -->
     <div class="space-y-4">
       <div class="flex items-center justify-between border-b pb-2">
-        <h2 class="text-xl font-bold">Đặc điểm nổi bật</h2>
+        <h2 class="text-[#444444] text-xl font-bold">Đặc điểm nổi bật</h2>
         <button type="button" @click="addHighlight" :disabled="form.highlights.length >= 5" class="px-4 py-2 rounded text-white cursor-pointer transition
-          bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed">
+          bg-[#8F0000] hover:bg-[#7A0000] hover:shadow-lg hover:-translate-y-[1px] disabled:bg-gray-400 disabled:cursor-not-allowed">
           + Thêm đặc điểm
         </button>
       </div>
 
       <div v-for="(highlight, index) in form.highlights" :key="index" class="flex gap-2 items-start">
-        <textarea v-model="highlight.content" class="input flex-1 border rounded h-14 px-3 leading-relaxed resize-none"
+        <textarea v-model="highlight.content" class="bg-white text-black border-[#000000] focus:ring-1 focus:ring-[#8F0000] input flex-1 border rounded h-14 px-3 leading-relaxed resize-none"
           style="line-height: 3.5rem" rows="1" :placeholder="`Đặc điểm nổi bật ${index + 1}`"></textarea>
         <button type="button" @click="removeHighlight(index)"
-          class="px-4 py-3 bg-red-600 text-white rounded hover:bg-red-700 font-semibold cursor-pointer">
+          class="mt-1 px-4 py-3 bg-red-600 text-white rounded hover:bg-red-700 font-semibold cursor-pointer">
           Xóa
         </button>
       </div>
@@ -78,9 +81,9 @@
 
     <!-- Solugon Section -->
     <div>
-      <h2 class="text-xl font-bold border-b pb-2 mb-4">Solugon</h2>
+      <h2 class="text-[#444444] text-xl font-bold border-b pb-2 mb-4">Solugon</h2>
       <textarea v-model="form.solugon" rows="4" placeholder="Nhập câu solugon cho dự án"
-        class="input w-full h-[60px] border border-gray-300 rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+        class="bg-white text-black border-[#000000] input w-full h-[60px] border rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-1 focus:ring-[#8F0000]"></textarea>
       <p v-if="errors.solugon" class="text-red-600 text-sm mt-1">
         {{ errors.solugon[0] }}
       </p>
@@ -88,9 +91,9 @@
 
     <!-- Short Description Section -->
     <div>
-      <h2 class="text-xl font-bold border-b pb-2 mb-4">Mô tả ngắn</h2>
+      <h2 class="text-[#444444] text-xl font-bold border-b pb-2 mb-4">Mô tả ngắn</h2>
       <textarea v-model="form.short_description"
-        class="input w-full h-[60px] border border-gray-300 rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-2 focus:ring-blue-500"
+        class="bg-white text-black border-[#000000] input w-full h-[60px] border rounded-md px-4 py-4 leading-relaxed focus:outline-none focus:ring-1 focus:ring-[#8F0000]"
         rows="4" placeholder="Nhập mô tả ngắn về sản phẩm"></textarea>
       <p v-if="errors.short_description" class="text-red-600 text-sm mt-1">
         {{ errors.short_description[0] }}
@@ -99,7 +102,7 @@
 
     <!-- Thumbnail Section -->
     <div class="mt-10">
-      <h2 class="text-xl font-bold border-b pb-2 mb-4">Thumbnail</h2>
+      <h2 class="text-[#444444] text-xl font-bold border-b pb-2 mb-4">Thumbnail</h2>
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
         @click="$refs.thumbnailInput.click()">
@@ -140,7 +143,7 @@
 
     <!-- Gallery Section -->
     <div class="mt-10">
-      <h2 class="text-xl font-bold border-b pb-2 mb-4">
+      <h2 class="text-[#444444] text-xl font-bold border-b pb-2 mb-4">
         Gallery (phải là bội số của 6: 6, 12, 18, ...)
       </h2>
 
@@ -189,7 +192,7 @@
 
     <!-- Floor Plan Section -->
     <div class="mt-10">
-      <h2 class="text-xl font-bold border-b pb-2 mb-4">Sơ đồ phân lô</h2>
+      <h2 class="text-[#444444] text-xl font-bold border-b pb-2 mb-4">Sơ đồ phân lô</h2>
 
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
@@ -285,7 +288,7 @@ const galleryError = ref("");
 const deletedImageIds = ref([]); // Danh sách ID ảnh cần xóa
 
 const maxHighlights = 5;
-const galleryStep = 6;    
+const galleryStep = 6;
 const maxGallery = 18;
 
 // Load existing data
