@@ -1,4 +1,8 @@
 <template>
+  <h2 class="text-xl font-bold border-b py-2 px-5 mb-2 uppercase font-banque text-[#8F0000]">
+    tạo tin tức mới
+  </h2>
+
   <NewsForm mode="create" @submit="store" ref="newsForm" @done="stopLoading"/>
 </template>
 

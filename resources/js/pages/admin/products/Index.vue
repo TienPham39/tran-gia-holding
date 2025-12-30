@@ -1,18 +1,16 @@
 <template>
   <div class="w-full">
-    <CustomTable
-      :title="'Danh Sách Sản Phẩm'"
-      :data="products"
-      :columns="columns"
-      :pagination="pagination"
-      :getThumbnail="getThumbnail"
-      :categoryClass="categoryClass"
-      @change="handleTableChange"
-    >
+    <CustomTable :title="'Danh Sách Sản Phẩm'" :data="products" :columns="columns" :pagination="pagination"
+      :getThumbnail="getThumbnail" :categoryClass="categoryClass" @change="handleTableChange">
       <template #btn>
         <div class="flex justify-end gap-2">
-          <Link :href="route('admin.products.create')">
-            <a-button type="primary">Thêm Sản Phẩm</a-button>
+          <Link :href="route('admin.products.create')" class="inline-flex items-center gap-2
+          px-3 py-1 text-sm font-semibold
+        text-white!
+        bg-[#8F0000]! hover:bg-[#7A0000]!
+          rounded-full shadow
+          transition-all duration-200">
+            <span>Thêm sản phẩm</span>
           </Link>
           <!-- <Link :href="route('admin.products.categories.create')">
             <a-button>Thêm Loại</a-button>
@@ -20,36 +18,19 @@
         </div>
       </template>
       <template #is_highlight="{ record }">
-        <a-switch
-          :checked="record.is_highlight"
-          @change="toggleHighlight(record)"
-          checked-children="Có"
-          un-checked-children="Không"
-        />
+        <a-switch :checked="record.is_highlight" @change="toggleHighlight(record)" checked-children="Có"
+          un-checked-children="Không" />
       </template>
       <template #is_hot="{ record }">
-        <a-switch
-          :checked="record.is_hot"
-          @change="toggleHot(record)"
-          checked-children="Có"
-          un-checked-children="Không"
-        />
+        <a-switch :checked="record.is_hot" @change="toggleHot(record)" checked-children="Có"
+          un-checked-children="Không" />
       </template>
       <template #action="{ record }">
-        <a-button
-          @click="editProduct(record.id)"
-          type="link"
-          class="text-blue-600"
-          title="Sửa sản phẩm"
-        >
+        <a-button @click="editProduct(record.id)" type="link" class="text-blue-600" title="Sửa sản phẩm">
           <EditOutlined />
         </a-button>
-        <a-button
-          @click="deleteProduct(record.id)"
-          type="link"
-          class="!text-red-600 hover:!text-red-400"
-          title="Xóa sản phẩm"
-        >
+        <a-button @click="deleteProduct(record.id)" type="link" class="!text-red-600 hover:!text-red-400"
+          title="Xóa sản phẩm">
           <DeleteOutlined />
         </a-button>
       </template>
@@ -107,7 +88,7 @@ function editProduct(id) {
 async function toggleHighlight(record) {
   try {
     const response = await api.post(route('admin.products.toggleHighlight', record.id));
-    
+
     if (response.data.success) {
       // Cập nhật giá trị trong local state
       record.is_highlight = response.data.data.is_highlight;
@@ -124,7 +105,7 @@ async function toggleHighlight(record) {
 async function toggleHot(record) {
   try {
     const response = await api.post(route('admin.products.toggleHot', record.id));
-    
+
     if (response.data.success) {
       // Cập nhật giá trị trong local state
       record.is_hot = response.data.data.is_hot;
@@ -150,16 +131,16 @@ async function deleteProduct(id) {
       try {
         const routeUrl = route('admin.products.destroy', id);
         await api.delete(routeUrl);
-        
+
         message.success("Xóa sản phẩm thành công!");
-        
+
         // Xóa sản phẩm khỏi danh sách local
         const index = products.value.findIndex(p => p.id === id);
         if (index !== -1) {
           products.value.splice(index, 1);
           pagination.value.total = products.value.length;
         }
-        
+
         // Reload trang để đảm bảo dữ liệu đồng bộ
         router.reload({ only: ['products'] });
       } catch (error) {

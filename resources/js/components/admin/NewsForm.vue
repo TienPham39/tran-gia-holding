@@ -1,9 +1,11 @@
 <template>
-  <div class="max-w-6xl mx-auto py-8 px-4 space-y-10 font-mont">
+  <div class="max-w-6xl mx-auto py-8 px-4 space-y-10 font-mont text-black">
     <!-- Title -->
     <div>
       <label class="font-bold">Tiêu đề</label>
-      <input type="text" v-model="form.title" class="input w-full mt-2" />
+      <input type="text" v-model="form.title"
+        class="input w-full mt-2 bg-white text-black border-[#000000] focus:ring-1 focus:ring-[#8F0000]"
+        placeholder="Nhập tiêu đề" />
       <p v-if="errors.title" class="text-red-600 text-sm mt-1">
         {{ errors.title[0] }}
       </p>
@@ -12,7 +14,8 @@
     <!-- Category -->
     <div>
       <label class="font-bold">Danh mục</label>
-      <select v-model="form.category_id" class="input w-full mt-2">
+      <select v-model="form.category_id"
+        class="input w-full mt-2 bg-white text-black border-[#000000] focus:ring-1 focus:ring-[#8F0000]">
         <option disabled value="">-- Chọn danh mục --</option>
         <option value="2">Tin thị trường</option>
         <option value="3">Quy hoạch vùng</option>
@@ -83,7 +86,7 @@
 
     <!-- GALLERY -->
     <div class="mt-10">
-      <label class="font-bold block mb-3">Gallery (tối đa 6 ảnh)</label>
+      <label class="font-bold block mb-3">Gallery yêu cầu tối thiểu 6 ảnh để hiển thị</label>
 
       <div
         class="w-full border-2 border-dashed border-gray-300 rounded-lg p-6 bg-gray-50 hover:bg-gray-100 transition cursor-pointer flex flex-col items-center justify-center text-center"
@@ -120,7 +123,7 @@
       :disabled="isSubmitting" @click="handleSubmit">
       <span v-if="!isSubmitting">{{
         mode === "create" ? "Lưu bài viết" : "Cập nhật bài viết"
-      }}
+        }}
       </span>
       <span v-else>Đang xử lý...</span>
     </button>
@@ -135,6 +138,8 @@ import { message } from "ant-design-vue";
 
 const page = usePage();
 const TINYMCE_KEY = page.props.tinymce_api_key;
+const galleryMin = 6;
+
 // Props
 const props = defineProps({
   mode: { type: String, default: "create" }, // "create" | "edit"
@@ -239,8 +244,8 @@ function removeGalleryImage(i) {
 
 // Submit wrapper (gửi toàn bộ dữ liệu sang trang cha Create.vue hoặc Edit.vue)
 async function handleSubmit() {
-  if (previewGallery.value.length < 6) {
-    message.error("Gallery phải có it nhất 6 ảnh");
+  if (previewGallery.value.length < galleryMin) {
+    message.error(`Gallery yêu cầu tối thiểu ${galleryMin} ảnh để hiển thị`);
     return;
   }
   isSubmitting.value = true;

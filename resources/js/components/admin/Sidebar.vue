@@ -5,7 +5,7 @@
     <nav class="menu p-4 w-80 min-h-full text-gray-800" aria-label="Main navigation">
       <!-- Logo -->
       <header class="mb-2 flex justify-center p-2">
-        <Link :href="route('admin.dashboard')" class="cursor-pointer">
+        <Link :href="route('admin.users.index')" class="cursor-pointer">
           <img src="/images/homepage/career-logo.png" alt="Logo"
             class="hidden md:block max-h-20 w-auto object-contain hover:opacity-90 transition" />
         </Link>
