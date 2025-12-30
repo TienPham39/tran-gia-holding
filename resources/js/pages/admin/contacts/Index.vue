@@ -108,8 +108,8 @@ function handleTableChange(p) {
 
 // COLUMNS
 const columns = [
-  { title: "#", key: "index", width: 60, align: "center" },
-  { title: "Loại", key: "category", width: 180, align: "center" },
+  { title: "#", key: "index", width: 50, align: "center" },
+  { title: "Danh mục liên hệ", key: "category", width: 180, align: "center" },
   { title: "Họ tên", dataIndex: "name", key: "name", width: 150, },
   { title: "SĐT", dataIndex: "phone", key: "phone", width: 150 },
   { title: "Email", dataIndex: "email", key: "email", width: 150 },
