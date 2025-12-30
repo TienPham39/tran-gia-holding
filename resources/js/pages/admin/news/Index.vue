@@ -160,13 +160,3 @@ function editNews(id) {
   });
 }
 </script>
-
-<style>
-.title-col {
-  max-width: 350px !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  display: inline-block !important;
-}
-</style>
