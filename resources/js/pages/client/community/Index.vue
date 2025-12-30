@@ -210,7 +210,7 @@
     </div>
   </section>
 
-  <section class="w-full py-20 px-6 md:px-62 font-mont">
+  <section class="bg-white w-full py-20 px-6 md:px-62 font-mont">
     <!-- HEADER -->
     <div class="flex justify-between items-center mb-12">
       <h2 class="text-3xl md:text-5xl font-extrabold tracking-wide text-[#7A0000] font-banque">

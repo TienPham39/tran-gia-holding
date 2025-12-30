@@ -28,7 +28,7 @@
     </div>
   </section>
 
-  <section class="w-full py-20">
+  <section class="bg-white w-full py-20">
     <div class="container mx-auto px-20 grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
       <!-- LEFT CONTENT -->
       <div class="text-left font-gotham">
@@ -154,7 +154,7 @@
     </div>
   </section>
 
-  <section class="w-full py-20">
+  <section class="bg-white w-full py-20">
     <div class="container mx-auto px-20 grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
       <!-- LEFT CONTENT -->
       <div class="text-left font-gotham">

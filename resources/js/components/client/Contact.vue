@@ -1,5 +1,5 @@
 <template>
-  <section id="contact" class="relative w-full py-20 md:py-30 hidden md:block">
+  <section id="contact" class="bg-white relative w-full py-20 md:py-30 hidden md:block">
     <!-- Decorative BG under everything -->
     <img src="/images/homepage/bg-contact.png"
       class="hidden md:block absolute bottom-0 right-[26%] w-[460px] opacity-60 pointer-events-none z-0" alt="" />
@@ -35,17 +35,17 @@
         <form @submit.prevent="submitForm" class="space-y-4">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 font-mont">
             <input ref="nameInput" v-model="form.name" type="text" required placeholder="HỌ VÀ TÊN"
-              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]" />
+              class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px] placeholder:text-[#D3D3D3]" />
             <input ref="phoneInput" v-model="form.phone" type="tel" required pattern="^0\d{9,10}$"
-              placeholder="SỐ ĐIỆN THOẠI" class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px]"
+              placeholder="SỐ ĐIỆN THOẠI" class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px] placeholder:text-[#D3D3D3]"
               @input="validatePhone" />
           </div>
 
           <input ref="emailInput" v-model="form.email" type="email" required placeholder="EMAIL"
-            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px] font-mont" @input="validateEmail" />
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full placeholder:text-[12px] placeholder:text-[#D3D3D3] font-mont" @input="validateEmail" />
 
           <textarea v-model="form.message" rows="4" placeholder="LỜI NHẮN..."
-            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px]"></textarea>
+            class="border-2 border-[#9B1C1C] bg-white px-4 py-2 rounded-xs w-full font-mont placeholder:text-[12px] placeholder:text-[#D3D3D3]"></textarea>
 
           <button type="submit"
             class="cursor-pointer flex items-center gap-2 bg-[#9B1C1C] md:text-xl text-white font-semibold px-6 py-3 rounded-md hover:bg-[#7d1a1a] transition uppercase tracking-wide">
@@ -58,7 +58,7 @@
   </section>
 
   <!-- MOBILE VERSION -->
-  <section id="contact" class="w-full py-10 px-4 md:hidden">
+  <section id="contact" class="bg-white w-full py-10 px-4 md:hidden">
 
     <!-- FORM MOBILE -->
     <div class="bg-[#D5D5D5] rounded-md p-6 shadow-md w-full">

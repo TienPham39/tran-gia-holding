@@ -1,7 +1,7 @@
 <template>
   <!-- Navbar Desktop -->
   <section
-    class="relative z-[100] h-[80px] font-mont items-center justify-end xl:justify-center hidden xl:flex bg-transparent"
+    class="relative z-[100] h-[80px] font-mont items-center justify-end xl:justify-center hidden xl:flex bg-white"
   >
     <!-- Logo -->
     <img
@@ -31,7 +31,7 @@
 
   <!-- Navbar Mobile -->
   <section
-    class="relative z-[100] h-[80px] flex items-center justify-between md:justify-end px-6 xl:hidden bg-transparent"
+    class="bg-white relative z-[100] h-[80px] flex items-center justify-between md:justify-end px-6 xl:hidden"
   >
     <!-- Logo cho Tablet -->
     <img

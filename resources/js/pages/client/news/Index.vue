@@ -26,7 +26,7 @@
       <NewsList title="Thị trường" :data="props.thiTruong" paginateParam="thiTruongPage" />
     </div>
 
-    <div>
+    <div class="bg-white">
       <NewsList title="Quy hoạch vùng" :data="props.quyHoachVung" paginateParam="quyHoachVungPage" />
     </div>
 
