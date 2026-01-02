@@ -81,14 +81,14 @@
             </small>
           </div>
 
-          <div class="text-right">
+          <!-- <div class="text-right">
             <a
               href="#"
               class="text-sm text-blue-600 hover:text-blue-700 font-medium"
             >
               Quên mật khẩu?
             </a>
-          </div>
+          </div> -->
 
           <button
             type="submit"
