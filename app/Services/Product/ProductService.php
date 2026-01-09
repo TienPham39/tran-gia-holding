@@ -47,7 +47,9 @@ class ProductService
                 'short_description' => $product->short_description ?? '',
                 'status' => $product->status ?? 'Đang bán',
                 'thumbnail_url' => $product->thumbnail && $product->thumbnail->image_url 
-                    ? $product->thumbnail->image_url 
+                    ? (str_starts_with($product->thumbnail->image_url, '/storage/') || str_starts_with($product->thumbnail->image_url, 'http')
+                        ? $product->thumbnail->image_url
+                        : '/storage/' . $product->thumbnail->image_url)
                     : '/images/no-image.png',
             ];
         });
