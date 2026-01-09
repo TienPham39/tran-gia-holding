@@ -15,13 +15,20 @@ use App\Http\Controllers\Admin\AdminProductsController;
 use App\Http\Controllers\Admin\AdminContactController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use App\Http\Middleware\VerifyCsrfToken;
 
+
 // Public routes
-Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware([VerifyCsrfToken::class]);
+// ✅ Bật CSRF cho login - cần gửi CSRF token từ frontend
+Route::post('/login', [AuthController::class, 'login'])->withoutMiddleware([ValidateCsrfToken::class]);
 
 Route::post('/register', [RegisterController::class, 'store'])->name('register')->withoutMiddleware([VerifyCsrfToken::class]);
 Route::get('/auth', fn() => Inertia::render('auth/Register'))->name('auth');
+
+Route::get('/debug-auth', function() {
+    dd(Auth::user(), session()->all());
+});
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -52,7 +59,10 @@ Route::withoutMiddleware([VerifyCsrfToken::class])
   });
 
 // Admin
-Route::middleware(['auth', 'checkRole:admin,marketing_manager'])->prefix('admin')->group(function () {
+Route::middleware(['auth', 'checkRole:admin,marketing_manager'])
+  ->prefix('admin')
+  ->withoutMiddleware([ValidateCsrfToken::class])
+  ->group(function () {
   Route::get('/dashboard', fn() => Inertia::render('admin/analytics/Index'))->name('admin.dashboard');
   Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
   Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');

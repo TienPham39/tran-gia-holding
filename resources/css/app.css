@@ -12,10 +12,66 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* Prevent browser theme (Chrome dark mode) from affecting the page */
+html {
+  color-scheme: light only;
+  background-color: #ffffff;
+}
+
+body {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  /* Prevent browser from applying dark theme */
+  color-scheme: light only;
+}
+
 html,
 body,
 #app {
   font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+/* Prevent browser from auto-styling form elements based on theme */
+input,
+textarea,
+select,
+button {
+  color-scheme: light;
+}
+
+/* Ensure input fields are not affected by browser theme */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+input[type="search"],
+textarea,
+select {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+/* Prevent autofill from changing colors */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #ffffff inset !important;
+  -webkit-text-fill-color: #000000 !important;
+  color: #000000 !important;
+  background-color: #ffffff !important;
+}
+
+/* Prevent Chrome from applying dark theme to form controls */
+input::-webkit-credentials-auto-fill-button {
+  background-color: #ffffff !important;
 }
 
 :root {

@@ -300,20 +300,41 @@ async function handleLoginSubmit() {
   isSubmitting.value = true;
 
   try {
-    await api.ensureCsrfCookie();
+    // ✅ Với Laravel + Inertia (cùng origin), không cần gọi /sanctum/csrf-cookie
+    // CSRF token từ meta tag đã có sẵn và đúng vì page được render từ Laravel
+    // Token trong meta tag luôn khớp với session hiện tại
+    
+    // ✅ Log để debug - kiểm tra token trước khi gửi request
+    const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    if (!metaToken) {
+      console.error('❌ CSRF token không tìm thấy trong meta tag!');
+      message.error("Lỗi: Không tìm thấy CSRF token. Vui lòng tải lại trang.");
+      return;
+    }
+    
+    console.log('🔍 Before login request:');
+    console.log('  - Meta token:', metaToken.substring(0, 20) + '...');
+    console.log('  - Token length:', metaToken.length);
+    
     const { data } = await api.post("/login", formLoginData);
 
     localStorage.setItem("auth_token", data.token);
     api.defaults.headers.common["Authorization"] = `Bearer ${data.token}`;
 
     message.success("Đăng nhập thành công!");
-    router.visit("/admin/products");
+    
+    window.location.href = "/admin/products";
   } catch (error) {
     const res = error.response;
     if (res?.status === 422) {
       errors.value = res.data.errors;
     } else if (res?.status === 401) {
       errors.value = { email: [res.data.message] };
+    } else if (res?.status === 419) {
+      // ✅ CSRF token mismatch - thông báo lỗi rõ ràng
+      message.error("CSRF token không hợp lệ. Vui lòng tải lại trang và thử lại.");
+      console.error("CSRF Token Error:", error);
+      errors.value = { email: ["Lỗi bảo mật. Vui lòng tải lại trang và thử lại."] };
     } else {
       console.error("Login error:", error);
       message.error("Đã xảy ra lỗi khi đăng nhập");
@@ -323,7 +344,19 @@ async function handleLoginSubmit() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // ✅ Với Laravel + Inertia, session đã được khởi tạo khi load page
+  // CSRF token trong meta tag đã có sẵn và đúng
+  // Không cần gọi /sanctum/csrf-cookie vì cùng origin
+  
+  // ✅ Kiểm tra CSRF token có sẵn không
+  const metaToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+  if (metaToken) {
+    console.log("✅ CSRF token sẵn sàng từ meta tag:", metaToken.substring(0, 20) + '...');
+  } else {
+    console.warn("⚠️ CSRF token không tìm thấy trong meta tag");
+  }
+
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get("token");
 
@@ -335,7 +368,7 @@ onMounted(() => {
     window.history.replaceState({}, document.title, "/auth");
 
     message.success("Đăng nhập Google thành công");
-    router.visit("/admin/dashboard");
+    router.visit("/admin/products");
   }
 });
 
@@ -367,6 +400,41 @@ async function handleRegisterSubmit() {
 </script>
 
 <style scoped>
+/* Prevent browser theme from affecting login page */
+:deep(*) {
+  color-scheme: light only;
+}
+
+/* Ensure background colors are not affected by browser theme */
+:deep(.bg-white) {
+  background-color: #ffffff !important;
+}
+
+:deep(.bg-gray-100) {
+  background-color: #f3f4f6 !important;
+}
+
+/* Prevent input fields from being affected by browser theme */
+:deep(.ant-input),
+:deep(.ant-input-password input),
+:deep(.ant-input-password) {
+  background-color: #ffffff !important;
+  color: #000000 !important;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+:deep(.ant-input::placeholder),
+:deep(.ant-input-password input::placeholder) {
+  color: #9ca3af !important;
+}
+
+/* Ensure buttons are not affected */
+:deep(button) {
+  color-scheme: light;
+}
+
 /* Animation nhỏ */
 @keyframes fadeIn {
   from {

@@ -16,6 +16,15 @@ class AuthController extends Controller
 {
   public function login(Request $request)
   {
+    \Log::info('Login Request CSRF Debug', [
+      'session_id' => $request->session()->getId(),
+      'session_token' => $request->session()->token(),
+      'header_x_csrf' => $request->header('X-CSRF-TOKEN'),
+      'header_x_xsrf' => $request->header('X-XSRF-TOKEN'),
+      'input_token' => $request->input('_token'),
+      'cookie_xsrf' => $request->cookie('XSRF-TOKEN'),
+    ]);
+
     $validator = Validator::make($request->all(), [
       "email" => "required|email",
       "password" => "required|string|min:6",

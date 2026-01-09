@@ -141,11 +141,8 @@ class ProductService
         // Format highlights: split content thành 2 dòng, hiển thị tất cả highlights
         $highlights = $product->highlights->map(function ($highlight) {
             $content = trim($highlight->content ?? '');
-            $parts = explode(' ', $content, 2);
-            
             return [
-                'line1' => $parts[0] ?? '',
-                'line2' => $parts[1] ?? ($parts[0] ?? ''),
+                'content' => $content,
             ];
         })->toArray();
 
@@ -160,9 +157,13 @@ class ProductService
         
         // Convert to array and get images for current page
         $allImages = $galleryImages->map(function ($image) {
+            $url = $image->image_url;
+            if ($url && !str_starts_with($url, '/storage/') && !str_starts_with($url, 'http')) {
+                $url = '/storage/' . $url;
+            }
             return [
                 'id' => $image->id,
-                'image_url' => $image->image_url,
+                'image_url' => $url,
             ];
         })->toArray();
         
@@ -172,9 +173,13 @@ class ProductService
 
         // Format floor plan images
         $floorPlans = $product->floorPlanImages->map(function ($image) {
+            $url = $image->image_url;
+            if ($url && !str_starts_with($url, '/storage/') && !str_starts_with($url, 'http')) {
+                $url = '/storage/' . $url;
+            }
             return [
                 'id' => $image->id,
-                'image_url' => $image->image_url,
+                'image_url' => $url,
             ];
         })->toArray();
 
