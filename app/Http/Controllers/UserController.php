@@ -47,7 +47,8 @@ class UserController extends Controller
             "user_name" => "required|unique:users,user_name,",
             "name" => "required",
             "email" => "required|email|unique:users,email,",
-            "password" => "required|confirmed|min:6",
+            "password" => "required|min:6",
+            "password_confirmation" => "required|same:password",
             "roles_id" => "required|exists:roles,id",
         ], [
             "user_name.required" => "Nhập tên tài khoản",
@@ -56,9 +57,13 @@ class UserController extends Controller
             "email.required" => "Nhập email",
             "email.email" => "Email không đúng định dạng",
             "email.unique" => "Email đã tồn tại",
-            "password.required" => "Nhập password",
-            "password.confirmed" => "Mật khẩu xác nhận không khớp",
+
+            "password.required" => "Nhập mật khẩu",
             "password.min" => "Mật khẩu tối thiểu 6 ký tự",
+
+            "password_confirmation.required" => "Vui lòng xác nhận mật khẩu",
+            "password_confirmation.same" => "Mật khẩu xác nhận không khớp",
+
             "roles_id.required" => "Chọn vai trò",
             "roles_id.exists" => "Vai trò không hợp lệ",
         ]);
@@ -135,11 +140,13 @@ class UserController extends Controller
         // Nếu admin tick “Đổi mật khẩu”
         if ($request->boolean('change_password')) {
             $request->validate([
-                'password' => 'required|confirmed|min:6',
+                'password' => 'required|min:6',
+                'password_confirmation' => 'required|same:password',
             ], [
                 'password.required' => 'Vui lòng nhập mật khẩu mới',
-                'password.confirmed' => 'Xác nhận mật khẩu không khớp',
                 'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự',
+                'password_confirmation.required' => 'Vui lòng xác nhận mật khẩu',
+                'password_confirmation.same' => 'Xác nhận mật khẩu không khớp',
             ]);
 
             $data['password'] = Hash::make($request->password);
@@ -249,7 +256,6 @@ class UserController extends Controller
                 'message' => 'Cập nhật hồ sơ thành công!',
                 'user' => $user->fresh(),
             ], 200);
-
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         }
