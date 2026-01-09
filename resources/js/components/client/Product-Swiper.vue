@@ -50,8 +50,9 @@
             height: '480px'
           }"
         >
-          <div
+            <div
             class="flex flex-col items-start text-white px-12 font-banque cursor-pointer h-full relative"
+            @click="handleSlideClick(item.id)"
           >
             <h1
               class="text-[30px] font-bold tracking-wide relative after:content-[''] after:block after:w-14 after:h-0.5 after:bg-white after:mr-auto after:mt-2 after:mb-6 ml-4 mt-16"
@@ -70,7 +71,9 @@
             </p>
 
             <!-- Đổi absolute left-8 bottom-4 thành absolute left-1/2 -translate-x-1/2 bottom-4 để căn giữa -->
-            <div class="w-[260px] h-[56px] bg-white/60 rounded-md absolute left-1/2 -translate-x-1/2 bottom-4"></div>
+            <div class="w-[260px] h-[56px] bg-white/60 rounded-md absolute left-1/2 -translate-x-1/2 bottom-4 flex items-center justify-center text-[#00310F] font-bold tracking-wider text-sm hover:bg-white transition-colors uppercase">
+               Xem chi tiết
+            </div>
           </div>
         </swiper-slide>
       </swiper>
@@ -95,6 +98,7 @@ import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import { EffectCoverflow } from "swiper/modules";
+import { router } from "@inertiajs/vue3";
 
 const props = defineProps({
   slides: { type: Array, required: true },
@@ -140,6 +144,11 @@ const onSwiper = (swiper) => {
 
 const next = () => swiperInstance.value?.slideNext();
 const prev = () => swiperInstance.value?.slidePrev();
+
+const handleSlideClick = (id) => {
+  if (!id) return;
+  router.visit(`/product/detail/${id}`);
+};
 </script>
 
 <style scoped>

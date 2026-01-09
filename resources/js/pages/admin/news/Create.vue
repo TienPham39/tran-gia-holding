@@ -62,7 +62,12 @@ async function store(payload) {
     newsForm.value.resetForm();
   } catch (e) {
     console.error("Lỗi tạo tin:", e);
-    message.error("Lỗi tạo tin");
+    if (e.response && e.response.status === 422) {
+      newsForm.value.setErrors(e.response.data.errors);
+      message.error("Vui lòng kiểm tra lại thông tin nhập vào");
+    } else {
+      message.error(e.response?.data?.message || "Đã có lỗi xảy ra khi tạo tin");
+    }
   } finally {
     newsForm.value?.$emit("done");
   }

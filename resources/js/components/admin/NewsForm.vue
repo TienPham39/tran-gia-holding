@@ -149,7 +149,8 @@ const props = defineProps({
 const emit = defineEmits(["submit", "done"]);
 defineExpose({
   resetForm,
-  stopLoading
+  stopLoading,
+  setErrors: (errs) => (errors.value = errs),
 });
 
 // Form state
@@ -242,12 +243,56 @@ function removeGalleryImage(i) {
   form.value.gallery.splice(i, 1);
 }
 
-// Submit wrapper (gửi toàn bộ dữ liệu sang trang cha Create.vue hoặc Edit.vue)
+// Validate Client-side
+function validate() {
+  const errs = {};
+  let isValid = true;
+
+  if (!form.value.title?.trim()) {
+    errs.title = ["Tiêu đề không được để trống"];
+    isValid = false;
+  }
+
+  if (!form.value.category_id) {
+    errs.category_id = ["Vui lòng chọn danh mục"];
+    isValid = false;
+  }
+
+  if (!form.value.excerpt?.trim()) {
+    errs.excerpt = ["Mô tả ngắn không được để trống"];
+    isValid = false;
+  }
+
+  // Kiểm tra Thumbnail: Phải có ảnh hiển thị (previewThumbnail)
+  if (!previewThumbnail.value) {
+    errs.thumbnail = ["Vui lòng chọn ảnh Thumbnail"];
+    isValid = false;
+  }
+
+  if (!form.value.content?.trim()) {
+    errs.content = ["Nội dung không được để trống"];
+    isValid = false;
+  }
+
+  errors.value = errs;
+  return isValid;
+}
+
+// Submit wrapper
 async function handleSubmit() {
+  // 1. Validate các trường cơ bản
+  if (!validate()) {
+    message.error("Vui lòng nhập đầy đủ thông tin!");
+    return;
+  }
+
+  // 2. Validate Gallery (đã có sẵn nhưng chuyển xuống dưới cho logic tuần tự)
   if (previewGallery.value.length < galleryMin) {
     message.error(`Gallery yêu cầu tối thiểu ${galleryMin} ảnh để hiển thị`);
     return;
   }
+
+  // 3. Nếu OK hết thì gửi
   isSubmitting.value = true;
   emit("submit", form.value);
 }
