@@ -23,17 +23,17 @@ class NewsSeeder extends Seeder
             'title' => 'XU HƯỚNG “BỎ PHỐ VỀ RỪNG”: SECOND HOME LÊN NGÔI MẠNH MẼ CUỐI 2025',
             'slug' => 'bo-pho-ve-rung-second-home-len-ngoi-2025',
             'excerpt' => 'Xu hướng “bỏ phố về rừng” đang trở thành lựa chọn sống và đầu tư phổ biến từ 2024–2025.',
-            'thumbnail' => '/images/news/tintucthitruong-1.png',
+            'thumbnail_base64' => '/images/news/tintucthitruong-1.png',
 
             // gallery 6 ảnh giống component
-            'gallery' => [
+            'gallery_base64' => json_encode([
                 '/images/news/tintucthitruong-1.png',
                 '/images/news/tintucthitruong-2.png',
                 '/images/news/tintucthitruong-3.png',
                 '/images/news/tintucthitruong-1.png',
                 '/images/news/tintucthitruong-2.png',
                 '/images/news/tintucthitruong-3.png',
-            ],
+            ]),
 
             'content' => <<<HTML
 <p>Trong 2 năm trở lại đây, đặc biệt giai đoạn 2024–2025...</p>
@@ -61,10 +61,10 @@ HTML,
             'title' => 'Quy hoạch vùng Nam Ban giai đoạn 2030 – Định hướng phát triển',
             'slug' => 'quy-hoach-vung-nam-ban-2030',
             'excerpt' => 'UBND tỉnh Lâm Đồng vừa phê duyệt quy hoạch mới...',
-            'thumbnail' => '/images/news/tintucthitruong-2.png',
+            'thumbnail_base64' => '/images/news/tintucthitruong-2.png',
             'content' => fake()->paragraph(12),
             'author' => 'Admin',
-            'gallery' => [],
+            'gallery_base64' => json_encode([]),
             'category_id' => $quyhoach->id,
         ]);
     }
